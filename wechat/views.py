@@ -34,7 +34,10 @@ class Wechat(View):
             # 将加密后的字符串和signatrue对比，如果相同返回echostr,表示验证成功
             if hashcode == signature:
                 print("成功")
-                return JsonResponse(int(echostr), safe=False)
+                if echostr:
+                    return JsonResponse(int(echostr), safe=False)
+                else:
+                    return JsonResponse({"msg": "fail"})
             else:
                 return JsonResponse({"msg": "fail"})
 
@@ -73,38 +76,9 @@ class Wechat(View):
             return HttpResponse("sucess!")
 
 
-class MediaApi(View):
-    def get(self, request):
-        return JsonResponse({"result": "success"})
-
-    def post(self, request):
-        received_json_data = json.loads(request.body)
-        data = received_json_data.get("data")
-        account = received_json_data.get("account")
-        from_id = received_json_data.get("from")
-        realName = ""
-        if isinstance(account, dict):
-            phoneNumber = account.get("phoneNumber", "")
-            realName = account.get("realName", "")
-            if phoneNumber:
-                account = phoneNumber
-            elif realName:
-                account = realName
-        if data and account:
-            if not isinstance(data, dict):
-                data = json.loads(data)
-
-            data["account"] = account
-            # ios
-            if from_id:
-                data['ua'] = 'ios'
-                data['adxml'] = from_id
-                data['realName'] = realName
-                rdc_local.lpush("all_data", json.dumps(data))
-            else:
-                rdc_local.lpush("all_data", json.dumps(data))
-        return JsonResponse({"result": "success"})
-
+class tutorial(View):
+    def get(self,request):
+        return render(request,"tutorial.html")
 
 class Weteam(View):
 

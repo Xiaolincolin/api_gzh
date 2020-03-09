@@ -76,9 +76,14 @@ class Wechat(View):
             return HttpResponse("sucess!")
 
 
-class tutorial(View):
+class Tutorial(View):
     def get(self,request):
         return render(request,"tutorial.html")
+
+class Index(View):
+    def get(self,request):
+        return render(request,"index.html")
+
 
 class Weteam(View):
 

@@ -18,11 +18,12 @@ from django.urls import path
 from django.conf.urls import url
 from django.views.decorators.csrf import csrf_exempt
 
-from wechat.views import Wechat, Weteam, tutorial
+from wechat.views import Wechat, Weteam, Tutorial, Index
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^$', csrf_exempt(Wechat.as_view()), name="wechat"),
     url(r'^api/wechat$', csrf_exempt(Weteam.as_view()), name="weteam"),
-    url(r'^tutorial$', csrf_exempt(tutorial.as_view()), name="tutorial"),
+    url(r'^tutorial$', csrf_exempt(Tutorial.as_view()), name="tutorial"),
+    url(r'^index$', csrf_exempt(Index.as_view()), name="index"),
 ]

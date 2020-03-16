@@ -65,7 +65,7 @@ class Wechat(View):
 
                 msg_xml_str = self.request.body
                 if not msg_xml_str:
-                    return HttpResponse("success")
+                    return JsonResponse("success", safe=False)
                 # 解析消息
                 msg_xml_dict_all = xmltodict.parse(msg_xml_str)
                 msg_xml_dict = msg_xml_dict_all["xml"]
@@ -89,17 +89,17 @@ class Wechat(View):
                         # 用户关注公众号, 回复感谢信息
                         response_dict["xml"]["Content"] = "感谢您的关注!"
                         response_xml_str = xmltodict.unparse(response_dict)
-                        return HttpResponse(response_xml_str)
+                        return JsonResponse(response_xml_str, safe=False)
                 elif msg_type == "text":
                     # 文本消息, 获取消息内容, 用户发送 哈哈, 回复 呵呵
                     msg_body = msg_xml_dict["Content"]
                     if msg_body == "哈哈":
                         response_dict["xml"]["Content"] = "呵呵"
                         response_xml_str = xmltodict.unparse(response_dict)
-                        return HttpResponse(response_xml_str)
+                        return JsonResponse(response_xml_str, safe=False)
                 # 其他一律回复 success
                 else:
-                    return HttpResponse("success")
+                    return JsonResponse("success", safe=False)
         except Exception as e:
             print(e)
 

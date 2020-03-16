@@ -63,9 +63,9 @@ class Wechat(View):
                 # 校验上述服务器URL是否可用, 所以对于我们不需要处理的消息, 可以直接回复 "success"(微信推荐) 或者 "",
                 # 这样微信服务器将不会发送错误提示到微信, 也不会去重新校验服务器URL
 
-                msg_xml_str = self.request.body
+                msg_xml_str = request.body
                 if not msg_xml_str:
-                    return JsonResponse("success", safe=False)
+                    return HttpResponse("success")
                 # 解析消息
                 msg_xml_dict_all = xmltodict.parse(msg_xml_str)
                 msg_xml_dict = msg_xml_dict_all["xml"]
@@ -89,20 +89,20 @@ class Wechat(View):
                         # 用户关注公众号, 回复感谢信息
                         response_dict["xml"]["Content"] = "感谢您的关注!"
                         response_xml_str = xmltodict.unparse(response_dict)
-                        return JsonResponse(response_xml_str, safe=False)
+                        return HttpResponse(response_xml_str)
                 elif msg_type == "text":
                     # 文本消息, 获取消息内容, 用户发送 哈哈, 回复 呵呵
                     msg_body = msg_xml_dict["Content"]
                     if msg_body == "哈哈":
                         response_dict["xml"]["Content"] = "呵呵"
                         response_xml_str = xmltodict.unparse(response_dict)
-                        return JsonResponse(response_xml_str, safe=False)
+                        return HttpResponse(response_xml_str)
                 # 其他一律回复 success
                 else:
-                    return JsonResponse("success", safe=False)
+                    return HttpResponse("success")
         except Exception as e:
             print(e)
-            return JsonResponse("success", safe=False)
+            return HttpResponse("success")
 
 class Tutorial(View):
     def get(self, request):

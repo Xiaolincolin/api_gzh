@@ -57,9 +57,8 @@ class Wechat(View):
             xml_data = request.body
             if xml_data:
                 xml_data = str(xml_data, encoding="utf-8")
-                print(xml_data)
                 json_data = xmltodict.parse(xml_data)
-                print(json_data)
+                json.dumps(json_data)
             list = [token, timestamp, nonce]
             list.sort()
 
@@ -69,12 +68,11 @@ class Wechat(View):
             hashcode = sha1.hexdigest()
 
             # 将加密后的字符串和signatrue对比，如果相同返回echostr,表示验证成功
-            return JsonResponse("success", safe=False)
-
+            return JsonResponse("", safe=False)
 
         except Exception as e:
             print(e)
-            return JsonResponse("success", safe=False)
+            return JsonResponse("", safe=False)
 
 
 class Tutorial(View):

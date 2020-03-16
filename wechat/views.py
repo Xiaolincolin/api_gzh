@@ -55,8 +55,11 @@ class Wechat(View):
             # 使用字典序排序（按照字母或数字的大小顺序进行排序）
             print(signature)
             xml_data = request.body
-            json_data = xmltodict.parse(str(xml_data))
-            print(json_data)
+            if xml_data:
+                xml_data = str(xml_data, encoding="utf-8")
+                print(xml_data)
+                json_data = xmltodict.parse(xml_data)
+                print(json_data)
             list = [token, timestamp, nonce]
             list.sort()
 

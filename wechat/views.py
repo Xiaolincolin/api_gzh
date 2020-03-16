@@ -58,6 +58,7 @@ class Wechat(View):
             sign_temp_str = "".join(sign_list)
             sign_str = hashlib.sha1(sign_temp_str).hexdigest()
             if signature == sign_str:
+                print("成功")
                 # 请求来自微信服务器, 获取消息, 根据微信公众平台提示, 微信用户发送消息到公众号之后, 不管该消息
                 # 是否是我们需要处理的, 都要在5秒内进行处理并回复, 否则微信将会给用户发送错误提示, 并且重新进行
                 # 校验上述服务器URL是否可用, 所以对于我们不需要处理的消息, 可以直接回复 "success"(微信推荐) 或者 "",
@@ -66,6 +67,8 @@ class Wechat(View):
                 msg_xml_str = request.body
                 if not msg_xml_str:
                     return HttpResponse("success")
+                else:
+                    msg_xml_str = str(msg_xml_str,encoding="utf-8")
                 # 解析消息
                 msg_xml_dict_all = xmltodict.parse(msg_xml_str)
                 msg_xml_dict = msg_xml_dict_all["xml"]

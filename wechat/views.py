@@ -69,27 +69,22 @@ class Wechat(View):
             hashcode = sha1.hexdigest()
 
             # 将加密后的字符串和signatrue对比，如果相同返回echostr,表示验证成功
-            if hashcode == signature:
-                print("成功")
-                if echostr:
-                    return JsonResponse(int(echostr), safe=False)
-                else:
-                    return JsonResponse({"msg": "fail"})
-            else:
-                return JsonResponse({"msg": "fail"})
+            return JsonResponse("success", safe=False)
+
 
         except Exception as e:
             print(e)
-            return JsonResponse({"msg": "fail"})
+            return JsonResponse("success", safe=False)
 
 
 class Tutorial(View):
-    def get(self,request):
-        return render(request,"tutorial.html")
+    def get(self, request):
+        return render(request, "tutorial.html")
+
 
 class Index(View):
-    def get(self,request):
-        return render(request,"index.html")
+    def get(self, request):
+        return render(request, "index.html")
 
 
 class Weteam(View):

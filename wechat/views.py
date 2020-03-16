@@ -54,6 +54,8 @@ class Wechat(View):
             token = "sldmlsmlm"  # 自己设置的token
             # 使用字典序排序（按照字母或数字的大小顺序进行排序）
             print(signature)
+            data = request.json()
+            print(data)
             list = [token, timestamp, nonce]
             list.sort()
 

@@ -66,13 +66,22 @@ class Wechat(View):
             temp = ''.join(list)
             sha1 = hashlib.sha1(temp.encode('utf-8'))
             hashcode = sha1.hexdigest()
+            xml_str = """
+            <xml>
+          <ToUserName><![CDATA[toUser]]></ToUserName>
+          <FromUserName><![CDATA[fromUser]]></FromUserName>
+          <CreateTime>12345678</CreateTime>
+          <MsgType><![CDATA[text]]></MsgType>
+          <Content><![CDATA[你好]]></Content>
+        </xml>
+            """
 
             # 将加密后的字符串和signatrue对比，如果相同返回echostr,表示验证成功
-            return JsonResponse("", safe=False)
+            return JsonResponse(xml_str, safe=False)
 
         except Exception as e:
             print(e)
-            return JsonResponse("", safe=False)
+            return JsonResponse(xml_str)
 
 
 class Tutorial(View):

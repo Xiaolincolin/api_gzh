@@ -102,7 +102,7 @@ class Wechat(View):
                     return JsonResponse("success", safe=False)
         except Exception as e:
             print(e)
-
+            return JsonResponse("success", safe=False)
 
 class Tutorial(View):
     def get(self, request):

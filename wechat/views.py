@@ -1,6 +1,6 @@
 import hashlib
 import json
-
+import xmltodict
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render
 from django.views.generic import View
@@ -54,8 +54,9 @@ class Wechat(View):
             token = "sldmlsmlm"  # 自己设置的token
             # 使用字典序排序（按照字母或数字的大小顺序进行排序）
             print(signature)
-            data = request.body
-            print(data)
+            xml_data = request.body
+            json_data = xmltodict.parse(str(xml_data))
+            print(json_data)
             list = [token, timestamp, nonce]
             list.sort()
 

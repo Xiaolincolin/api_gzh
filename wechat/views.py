@@ -52,12 +52,19 @@ class Wechat(View):
             signature = request.GET.get("signature")  # 先获取加密签名
             timestamp = request.GET.get("timestamp")  # 获取时间戳
             nonce = request.GET.get("nonce")  # 获取随机数
+            echostr = request.GET.get("echostr")  # 获取随机字符串
             token = "sldmlsmlm"  # 自己设置的token
-            sign_list = [token, timestamp, nonce]
-            sign_list.sort()
-            sign_temp_str = "".join(sign_list)
-            sign_str = hashlib.sha1(sign_temp_str).hexdigest()
-            if signature == sign_str:
+            # 使用字典序排序（按照字母或数字的大小顺序进行排序）
+            list = [token, timestamp, nonce]
+            list.sort()
+
+            # 进行sha1加密
+            temp = ''.join(list)
+            sha1 = hashlib.sha1(temp.encode('utf-8'))
+            hashcode = sha1.hexdigest()
+
+            # 将加密后的字符串和signatrue对比，如果相同返回echostr,表示验证成功
+            if hashcode == signature:
                 print("成功")
                 # 请求来自微信服务器, 获取消息, 根据微信公众平台提示, 微信用户发送消息到公众号之后, 不管该消息
                 # 是否是我们需要处理的, 都要在5秒内进行处理并回复, 否则微信将会给用户发送错误提示, 并且重新进行

@@ -176,7 +176,6 @@ class BeginMakeMoney(View):
     def get(self, request):
         try:
             code = request.GET.get("code")  # 获取随机字符串
-
             if code:
                 url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx96f147a2125ebb3a&secret=a063a2cfbdbe0a948b2af3cbaa62e45d&code={code}&grant_type=authorization_code".format(code=code)
                 res = requests.get(url)

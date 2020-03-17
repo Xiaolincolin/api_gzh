@@ -245,6 +245,7 @@ class Weteam(View):
                 if not isinstance(message, dict):
                     message = json.loads(message)
                 messageType = message.get("messageType", "")
+                print(messageType)
                 if str(messageType) == str(1):
                     data = message.get("data",{})
                     if data:
@@ -269,6 +270,22 @@ class Weteam(View):
                                     info = self.sendMsg(fromUser)
                                     if info:
                                         print("发送成功")
+                                    else:
+                                        print("发送消息失败")
+                                else:
+                                    print("fromuser为空",fromUser)
+                            else:
+                                print("不是业务码",)
+                        else:
+                            print("conetent不等32位",str(len(content)))
+                    else:
+                        print("获取data有误")
+                else:
+                    print("messageytpe不等于1")
+            else:
+                print("获取message有误")
+        else:
+            print("json_Data有误")
         return JsonResponse({"result": "success"})
 
     def sendMsg(self,wcId):

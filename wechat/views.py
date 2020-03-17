@@ -2,6 +2,7 @@ import hashlib
 import json
 import time
 
+import requests
 import xmltodict
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render
@@ -23,26 +24,44 @@ class Wechat(View):
             timestamp = request.GET.get("timestamp")  # 获取时间戳
             nonce = request.GET.get("nonce")  # 获取随机数
             echostr = request.GET.get("echostr")  # 获取随机字符串
+            code = request.GET.get("code")  # 获取随机字符串
             token = "sldmlsmlm"  # 自己设置的token
             # 使用字典序排序（按照字母或数字的大小顺序进行排序）
-            list = [token, timestamp, nonce]
-            list.sort()
 
-            # 进行sha1加密
-            temp = ''.join(list)
-            sha1 = hashlib.sha1(temp.encode('utf-8'))
-            hashcode = sha1.hexdigest()
+            if not code:
+                # 没有code是验证，有code是授权获得openid
+                list = [token, timestamp, nonce]
+                list.sort()
 
-            # 将加密后的字符串和signatrue对比，如果相同返回echostr,表示验证成功
-            if hashcode == signature:
-                print("成功")
-                if echostr:
-                    return JsonResponse(int(echostr), safe=False)
+                # 进行sha1加密
+                temp = ''.join(list)
+                sha1 = hashlib.sha1(temp.encode('utf-8'))
+                hashcode = sha1.hexdigest()
+
+                # 将加密后的字符串和signatrue对比，如果相同返回echostr,表示验证成功
+                if hashcode == signature:
+                    print("成功")
+                    if echostr:
+                        return JsonResponse(int(echostr), safe=False)
+                    else:
+                        return JsonResponse({"msg": "fail"})
                 else:
                     return JsonResponse({"msg": "fail"})
             else:
-                return JsonResponse({"msg": "fail"})
-
+                url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx96f147a2125ebb3a&secret=a063a2cfbdbe0a948b2af3cbaa62e45d&code={code}&grant_type=authorization_code".format(code=code)
+                res = requests.get(url)
+                if res.status_code==200:
+                    json_data = res.json()
+                    if json_data:
+                        access_token = json_data.get("access_token","")
+                        expires_in = json_data.get("expires_in","")
+                        refresh_token = json_data.get("refresh_token","")
+                        openid = json_data.get("openid","")
+                        scope = json_data.get("scope","")
+                        print([access_token,expires_in,refresh_token,openid,scope])
+                        return render(request,"index.html",{
+                            "openid":openid
+                        })
         except Exception as e:
             print(e)
             return JsonResponse({"msg": "fail"})

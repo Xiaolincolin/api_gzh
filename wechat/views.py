@@ -236,13 +236,42 @@ class Weteam(View):
         print(res)
         return JsonResponse({"result": "success"})
 
-    def post(self,request):
+    def post(self, request):
         res = request.body.decode()
-        print(res)
+        json_data = json.loads(res)
+        if json_data:
+            message = json_data.get("message", {})
+            if message:
+                if not isinstance(message, dict):
+                    message = json.loads(message)
+                messageType = message.get("messageType", "")
+                if str(messageType) == str(1):
+                    data = message.get("data",{})
+                    if data:
+                        if not isinstance(data,dict):
+                            data = json.loads(data)
+                        content = data.get("content","")
+                        if len(content)==32:
+                            flag = 0
+                            if not isinstance(content,str):
+                                content = str(content)
+                            for per in content:
+                                if per.isdigit():
+                                    flag+=1
+                                elif per.encode('utf-8').isalpha():
+                                    flag+=1
+                                else:
+                                    continue
+                            print("32位",flag)
+                            if flag==32:
+                                fromUser = data.get("fromUser","")
+                                if fromUser:
+                                    info = self.sendMsg(fromUser)
+                                    if info:
+                                        print("发送成功")
         return JsonResponse({"result": "success"})
 
-
-    def sendMsg(self, request,wcId):
+    def sendMsg(self,wcId):
         Authorization = rdc_local.get("Authorization")
         wid = rdc_local.get("wid")
         url = "http://134.175.73.113:8080/sendText"
@@ -252,13 +281,19 @@ class Weteam(View):
         }
         data = {
             "wId": wid,
-            "wcId": "azhichao",
+            "wcId": wcId,
             "content": "绑定客服成功！接下来开始刷广告之旅吧！详情关注公众号（球球趣玩)"
         }
         res = requests.post(url=url, headers=headers, json=data)
         if res.status_code == 200:
-            print(res.json())
-
-        res = request.body.decode()
-        redis_conn.rpush(json.dumps(res))
-        return JsonResponse({"result": "success"})
+            result = res.json()
+            if result:
+                code = result.get("code","")
+                if str(code)==str(1000):
+                    return True
+                else:
+                    return False
+            else:
+                return False
+        else:
+            return False

@@ -11,7 +11,7 @@ from django.views.generic import View
 import redis
 import hashlib
 
-rdp_local = redis.ConnectionPool(host='47.95.217.37', port=6379, db=0)  # 默认db=0，测试使用db=1
+rdp_local = redis.ConnectionPool(host='47.95.217.37', port=6379, db=1)  # 默认db=0，测试使用db=1
 rdc_local = redis.StrictRedis(connection_pool=rdp_local)
 redis_conn = redis.Redis(connection_pool=redis.ConnectionPool(host='47.95.217.37', port=6379, db=2))
 from django.db import connection
@@ -281,7 +281,7 @@ class Weteam(View):
                     else:
                         print("获取data有误")
                 else:
-                    print("messageytpe不等于1")
+                    print("messageytpe不等于2")
             else:
                 print("获取message有误")
         else:

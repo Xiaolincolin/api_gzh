@@ -245,39 +245,62 @@ class Weteam(View):
                 if not isinstance(message, dict):
                     message = json.loads(message)
                 messageType = message.get("messageType", "")
-                print(messageType)
                 if str(messageType) == str(2):
-                    data = message.get("data",{})
+                    data = message.get("data", {})
                     if data:
-                        if not isinstance(data,dict):
+                        if not isinstance(data, dict):
                             data = json.loads(data)
-                        content = data.get("content","")
-                        if len(content)==32:
+                        content = data.get("content", "")
+                        if len(content) == 32:
                             flag = 0
-                            if not isinstance(content,str):
+                            if not isinstance(content, str):
                                 content = str(content)
                             for per in content:
                                 if per.isdigit():
-                                    flag+=1
+                                    flag += 1
                                 elif per.encode('utf-8').isalpha():
-                                    flag+=1
+                                    flag += 1
                                 else:
                                     continue
-                            print("32位",flag)
-                            if flag==32:
-                                fromUser = data.get("fromUser","")
+                            print("32位", flag)
+                            if flag == 32:
+                                fromUser = data.get("fromUser", "")
                                 if fromUser:
-                                    info = self.sendMsg(fromUser)
-                                    if info:
-                                        print("发送成功")
+                                    select_sql = "SELECT openid,flag from wechat_related where openid='{oid}'".format(oid=content)
+                                    select_result = self.select_openid(select_sql)
+                                    if select_result:
+                                        select_result = list(select_result)
+                                        per_result = select_result[0]
+                                        relate_code = per_result[1]
+                                        if not relate_code:
+                                            insert_sql = "insert into wechat_related(wx_id,update_time,flag) VALUES(%s,NOW(),1)"
+                                            self.insert_wxid(insert_sql, fromUser)
+                                            content = "绑定客服成功！接下来开始刷广告之旅吧！详情关注公众号（球球趣玩)"
+                                            info = self.sendMsg(fromUser, content)
+                                            if info:
+                                                print("发送成功")
+                                            else:
+                                                print("发送消息失败")
+                                        else:
+                                            content = "您已经绑定过客服了，详情关注公众号（球球趣玩)"
+                                            info = self.sendMsg(fromUser, content)
+                                            if info:
+                                                print("发送成功")
+                                            else:
+                                                print("发送消息失败")
                                     else:
-                                        print("发送消息失败")
+                                        content = "绑定客服失败！请关注公众号（球球趣玩)提取业务码"
+                                        info = self.sendMsg(fromUser, content)
+                                        if info:
+                                            print("发送成功")
+                                        else:
+                                            print("发送消息失败")
                                 else:
-                                    print("fromuser为空",fromUser)
+                                    print("fromuser为空", fromUser)
                             else:
-                                print("不是业务码",)
+                                print("不是业务码", )
                         else:
-                            print("conetent不等32位",str(len(content)))
+                            print("conetent不等32位", str(len(content)))
                     else:
                         print("获取data有误")
                 else:
@@ -288,7 +311,7 @@ class Weteam(View):
             print("json_Data有误")
         return JsonResponse({"result": "success"})
 
-    def sendMsg(self,wcId):
+    def sendMsg(self, wcId, content):
         Authorization = rdc_local.get("Authorization")
         wid = rdc_local.get("wid")
         Authorization = str(Authorization, encoding='utf-8')
@@ -301,15 +324,15 @@ class Weteam(View):
         data = {
             "wId": wid,
             "wcId": wcId,
-            "content": "绑定客服成功！接下来开始刷广告之旅吧！详情关注公众号（球球趣玩)"
+            "content": content
         }
         res = requests.post(url=url, headers=headers, json=data)
         if res.status_code == 200:
             result = res.json()
             print(result)
             if result:
-                code = result.get("code","")
-                if str(code)==str(1000):
+                code = result.get("code", "")
+                if str(code) == str(1000):
                     return True
                 else:
                     return False
@@ -317,3 +340,24 @@ class Weteam(View):
                 return False
         else:
             return False
+
+    def insert_wxid(self, sql, param):
+        try:
+            cursor = connection.cursor()
+            cursor.execute(sql, param)
+            cursor.close()
+        except Exception as e:
+            print(e)
+            print("插入openid有误")
+
+    def select_openid(self, sql):
+        try:
+            cursor = connection.cursor()
+            cursor.execute(sql)
+            info = cursor.fetchone()
+            cursor.close()
+            return info
+        except Exception as e:
+            print(e)
+            print("查询openid有误")
+            return 0

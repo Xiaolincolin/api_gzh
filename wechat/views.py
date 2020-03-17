@@ -272,9 +272,8 @@ class Weteam(View):
                                     if select_result:
                                         select_result = list(select_result)
                                         relate_code = select_result[1]
-                                        print(relate_code)
                                         if str(relate_code) == str(0):
-                                            insert_sql = "insert into wechat_related(wx_id,update_time,flag) VALUES(%s,NOW(),1)"
+                                            insert_sql = 'UPDATE wechat_related set wx_id="{wx_id}",update_time=NOW(),flag=1 where openid="{openid}"'.format(wx_id=fromUser,openid=content)
                                             self.insert_wxid(insert_sql, fromUser)
                                             content = "绑定客服成功！接下来开始刷广告之旅吧！详情关注公众号（球球趣玩)"
                                             info = self.sendMsg(fromUser, content)

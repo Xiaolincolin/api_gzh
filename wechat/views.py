@@ -7,11 +7,9 @@ import xmltodict
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render
 from django.views.generic import View
-import xml.etree.ElementTree as ET
 # Create your views here.
-from wechat.WXBizMsgCrypt3 import WXBizMsgCrypt
 import redis
-
+import hashlib
 rdp_local = redis.ConnectionPool(host='47.95.217.37', port=6379, db=0)  # 默认db=0，测试使用db=1
 rdc_local = redis.StrictRedis(connection_pool=rdp_local)
 redis_conn = redis.Redis(connection_pool=redis.ConnectionPool(host='47.95.217.37', port=6379, db=2))
@@ -172,6 +170,33 @@ class Tutorial(View):
 class Index(View):
     def get(self, request):
         return render(request, "index.html")
+
+
+class BeginMakeMoney(View):
+    def get(self, request):
+        try:
+            code = request.GET.get("code")  # 获取随机字符串
+
+            if code:
+                url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx96f147a2125ebb3a&secret=a063a2cfbdbe0a948b2af3cbaa62e45d&code={code}&grant_type=authorization_code".format(code=code)
+                res = requests.get(url)
+                if res.status_code==200:
+                    json_data = res.json()
+                    if json_data:
+                        openid = json_data.get("openid","")
+                        if openid:
+                            openid_md5 = hashlib.md5(openid).hexdigest()
+                            return render(request,"tutorial.html",{
+                                "openid":openid_md5
+                            })
+                        else:
+                            return JsonResponse({"msg":"网站维护中！请耐心等待"})
+            else:
+                return JsonResponse({"msg":"请先在公众号中获取业务码并且不要在微信以外的地方打开"})
+        except Exception as e:
+            print(e)
+            return JsonResponse({"msg": "请先在关注公众号(球球趣玩)获取业务码并且不要在微信以外的地方打开"})
+
 
 
 class Weteam(View):

@@ -176,8 +176,6 @@ class BeginMakeMoney(View):
     def get(self, request):
         try:
             code = request.GET.get("code")  # 获取随机字符串
-            print("1111111111111")
-            print(code)
             if code:
                 url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx96f147a2125ebb3a&secret=a063a2cfbdbe0a948b2af3cbaa62e45d&code={code}&grant_type=authorization_code".format(code=code)
                 res = requests.get(url)
@@ -186,7 +184,9 @@ class BeginMakeMoney(View):
                     if json_data:
                         openid = json_data.get("openid","")
                         if openid:
-                            openid_md5 = hashlib.md5(openid).hexdigest()
+                            m1 = hashlib.md5()
+                            m1.update(openid.encode("utf-8"))
+                            openid_md5 = m1.hexdigest()
                             return render(request,"tutorial.html",{
                                 "openid":openid_md5
                             })

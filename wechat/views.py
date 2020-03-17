@@ -10,9 +10,11 @@ from django.views.generic import View
 # Create your views here.
 import redis
 import hashlib
+
 rdp_local = redis.ConnectionPool(host='47.95.217.37', port=6379, db=0)  # 默认db=0，测试使用db=1
 rdc_local = redis.StrictRedis(connection_pool=rdp_local)
 redis_conn = redis.Redis(connection_pool=redis.ConnectionPool(host='47.95.217.37', port=6379, db=2))
+from django.db import connection
 
 
 class Wechat(View):
@@ -46,19 +48,20 @@ class Wechat(View):
                 else:
                     return JsonResponse({"msg": "fail"})
             else:
-                url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx96f147a2125ebb3a&secret=a063a2cfbdbe0a948b2af3cbaa62e45d&code={code}&grant_type=authorization_code".format(code=code)
+                url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx96f147a2125ebb3a&secret=a063a2cfbdbe0a948b2af3cbaa62e45d&code={code}&grant_type=authorization_code".format(
+                    code=code)
                 res = requests.get(url)
-                if res.status_code==200:
+                if res.status_code == 200:
                     json_data = res.json()
                     if json_data:
-                        access_token = json_data.get("access_token","")
-                        expires_in = json_data.get("expires_in","")
-                        refresh_token = json_data.get("refresh_token","")
-                        openid = json_data.get("openid","")
-                        scope = json_data.get("scope","")
-                        print([access_token,expires_in,refresh_token,openid,scope])
-                        return render(request,"index.html",{
-                            "openid":openid
+                        access_token = json_data.get("access_token", "")
+                        expires_in = json_data.get("expires_in", "")
+                        refresh_token = json_data.get("refresh_token", "")
+                        openid = json_data.get("openid", "")
+                        scope = json_data.get("scope", "")
+                        print([access_token, expires_in, refresh_token, openid, scope])
+                        return render(request, "index.html", {
+                            "openid": openid
                         })
         except Exception as e:
             print(e)
@@ -92,7 +95,7 @@ class Wechat(View):
                 if not msg_xml_str:
                     return HttpResponse("success")
                 else:
-                    msg_xml_str = str(msg_xml_str,encoding="utf-8")
+                    msg_xml_str = str(msg_xml_str, encoding="utf-8")
                 # 解析消息
                 msg_xml_dict_all = xmltodict.parse(msg_xml_str)
                 print(msg_xml_dict_all)
@@ -121,7 +124,7 @@ class Wechat(View):
                     elif msg_event == "VIEW":
                         menuid = msg_xml_dict["MenuId"]
                         print(menuid)
-                        return render(request,"index.html")
+                        return render(request, "index.html")
 
                         pass
                 elif msg_type == "text":
@@ -139,29 +142,29 @@ class Wechat(View):
             return HttpResponse("success")
 
 
-
 class Tutorial(View):
     def get(self, request):
         try:
             code = request.GET.get("code")  # 获取随机字符串
 
             if code:
-                url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx96f147a2125ebb3a&secret=a063a2cfbdbe0a948b2af3cbaa62e45d&code={code}&grant_type=authorization_code".format(code=code)
+                url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx96f147a2125ebb3a&secret=a063a2cfbdbe0a948b2af3cbaa62e45d&code={code}&grant_type=authorization_code".format(
+                    code=code)
                 res = requests.get(url)
-                if res.status_code==200:
+                if res.status_code == 200:
                     json_data = res.json()
                     if json_data:
-                        access_token = json_data.get("access_token","")
-                        expires_in = json_data.get("expires_in","")
-                        refresh_token = json_data.get("refresh_token","")
-                        openid = json_data.get("openid","")
-                        scope = json_data.get("scope","")
-                        print([access_token,expires_in,refresh_token,openid,scope])
-                        return render(request,"index.html",{
-                            "openid":openid
+                        access_token = json_data.get("access_token", "")
+                        expires_in = json_data.get("expires_in", "")
+                        refresh_token = json_data.get("refresh_token", "")
+                        openid = json_data.get("openid", "")
+                        scope = json_data.get("scope", "")
+                        print([access_token, expires_in, refresh_token, openid, scope])
+                        return render(request, "index.html", {
+                            "openid": openid
                         })
             else:
-                return JsonResponse({"msg":"only open in wechat"})
+                return JsonResponse({"msg": "only open in wechat"})
         except Exception as e:
             print(e)
             return JsonResponse({"msg": "fail"})
@@ -177,27 +180,54 @@ class BeginMakeMoney(View):
         try:
             code = request.GET.get("code")  # 获取随机字符串
             if code:
-                url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx96f147a2125ebb3a&secret=a063a2cfbdbe0a948b2af3cbaa62e45d&code={code}&grant_type=authorization_code".format(code=code)
+                url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx96f147a2125ebb3a&secret=a063a2cfbdbe0a948b2af3cbaa62e45d&code={code}&grant_type=authorization_code".format(
+                    code=code)
                 res = requests.get(url)
-                if res.status_code==200:
+                if res.status_code == 200:
                     json_data = res.json()
                     if json_data:
-                        openid = json_data.get("openid","")
+                        openid = json_data.get("openid", "")
                         if openid:
                             m1 = hashlib.md5()
                             m1.update(openid.encode("utf-8"))
                             openid_md5 = m1.hexdigest()
-                            return render(request,"tutorial.html",{
-                                "openid":openid_md5
+                            select_sql = "SELECT * from wechat_related where openid='{oid}'".format(oid=openid_md5)
+                            info = self.select_openid(select_sql)
+                            if not info:
+                                insert_sql = "insert into wechat_related(openid,add_time) VALUES(%s,NOW())"
+                                self.insert_openid(insert_sql,openid_md5)
+
+                            return render(request, "tutorial.html", {
+                                "openid": openid_md5
                             })
                         else:
-                            return JsonResponse({"msg":"网站维护中！请耐心等待"})
+                            return JsonResponse({"msg": "网站维护中！请耐心等待"})
             else:
-                return JsonResponse({"msg":"请先在公众号中获取业务码并且不要在微信以外的地方打开"})
+                return JsonResponse({"msg": "请先在公众号中获取业务码并且不要在微信以外的地方打开"})
         except Exception as e:
             print(e)
             return JsonResponse({"msg": "请先在关注公众号(球球趣玩)获取业务码并且不要在微信以外的地方打开"})
 
+    def select_openid(self, sql):
+        try:
+            cursor = connection.cursor()
+            info = cursor.execute(sql)
+            cursor.close()
+            return info
+        except Exception as e:
+            print(e)
+            print("查询openid有误")
+            return 0
+
+    def insert_openid(self, sql, param):
+        try:
+            cursor = connection.cursor()
+            cursor.execute(sql, param)
+            cursor.commit()
+            cursor.close()
+        except Exception as e:
+            print(e)
+            print("插入openid有误")
 
 
 class Weteam(View):

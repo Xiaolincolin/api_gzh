@@ -274,7 +274,7 @@ class Weteam(View):
                                         relate_code = select_result[1]
                                         if str(relate_code) == str(0):
                                             insert_sql = 'UPDATE wechat_related set wx_id="{wx_id}",update_time=NOW(),flag=1 where openid="{openid}"'.format(wx_id=fromUser,openid=content)
-                                            self.insert_wxid(insert_sql, fromUser)
+                                            self.update_wxid(insert_sql)
                                             content = "绑定客服成功！接下来开始刷广告之旅吧！详情关注公众号（球球趣玩)"
                                             info = self.sendMsg(fromUser, content)
                                             if info:
@@ -340,14 +340,14 @@ class Weteam(View):
         else:
             return False
 
-    def insert_wxid(self, sql, param):
+    def update_wxid(self, sql):
         try:
             cursor = connection.cursor()
-            cursor.execute(sql, param)
+            cursor.execute(sql)
             cursor.close()
         except Exception as e:
             print(e)
-            print("插入openid有误")
+            print("插入微信id有误")
 
     def select_openid(self, sql):
         try:

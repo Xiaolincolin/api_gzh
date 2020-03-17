@@ -270,6 +270,7 @@ class Weteam(View):
                                     select_result = self.select_openid(select_sql)
                                     if select_result:
                                         select_result = list(select_result)
+                                        print(select_result)
                                         per_result = select_result[0]
                                         relate_code = per_result[1]
                                         if not relate_code:

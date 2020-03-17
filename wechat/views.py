@@ -103,6 +103,8 @@ class Wechat(View):
                         return HttpResponse(response_xml_str)
                     elif msg_event == "VIEW":
                         menuid = msg_xml_dict["MenuId"]
+                        print(menuid)
+                        return render(request,"index.html")
 
                         pass
                 elif msg_type == "text":

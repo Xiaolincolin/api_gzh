@@ -17,11 +17,13 @@ from django.contrib import admin
 from django.urls import path
 from django.conf.urls import url
 from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import TemplateView
 
 from wechat.views import Wechat, Weteam, Tutorial, Index
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('MP_verify_uDpBz4xRXeQ3bjPp.txt',TemplateView.as_view(template_name='MP_verify_uDpBz4xRXeQ3bjPp.txt', content_type='text/plain')),
     url(r'^$', csrf_exempt(Wechat.as_view()), name="wechat"),
     url(r'^api/wechat$', csrf_exempt(Weteam.as_view()), name="weteam"),
     url(r'^tutorial$', csrf_exempt(Tutorial.as_view()), name="tutorial"),

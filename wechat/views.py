@@ -195,7 +195,7 @@ class BeginMakeMoney(View):
                             info = self.select_openid(select_sql)
                             if not info:
                                 insert_sql = "insert into wechat_related(openid,add_time) VALUES(%s,NOW())"
-                                self.insert_openid(insert_sql,openid_md5)
+                                self.insert_openid(insert_sql, openid_md5)
 
                             return render(request, "tutorial.html", {
                                 "openid": openid_md5
@@ -223,7 +223,6 @@ class BeginMakeMoney(View):
         try:
             cursor = connection.cursor()
             cursor.execute(sql, param)
-            cursor.commit()
             cursor.close()
         except Exception as e:
             print(e)
@@ -234,10 +233,32 @@ class Weteam(View):
 
     def get(self, request):
         res = request.body.decode()
-        redis_conn.rpush(json.dumps(res))
+        print(res)
         return JsonResponse({"result": "success"})
 
-    def post(self, request):
+    def post(self,request):
+        res = request.body.decode()
+        print(res)
+        return JsonResponse({"result": "success"})
+
+
+    def sendMsg(self, request,wcId):
+        Authorization = rdc_local.get("Authorization")
+        wid = rdc_local.get("wid")
+        url = "http://134.175.73.113:8080/sendText"
+        headers = {
+            'Content-Type': 'application/json',
+            'Authorization': Authorization
+        }
+        data = {
+            "wId": wid,
+            "wcId": "azhichao",
+            "content": "绑定客服成功！接下来开始刷广告之旅吧！详情关注公众号（球球趣玩)"
+        }
+        res = requests.post(url=url, headers=headers, json=data)
+        if res.status_code == 200:
+            print(res.json())
+
         res = request.body.decode()
         redis_conn.rpush(json.dumps(res))
         return JsonResponse({"result": "success"})

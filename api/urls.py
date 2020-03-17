@@ -25,9 +25,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('MP_verify_uDpBz4xRXeQ3bjPp.txt',
          TemplateView.as_view(template_name='MP_verify_uDpBz4xRXeQ3bjPp.txt', content_type='text/plain')),
-    url(r'', csrf_exempt(Wechat.as_view()), name="wechat"),
+    url(r'^$', csrf_exempt(Wechat.as_view()), name="wechat"),
     url(r'^api/wechat$', csrf_exempt(Weteam.as_view()), name="weteam"),
     url(r'^tutorial$', csrf_exempt(Tutorial.as_view()), name="tutorial"),
     url(r'^index$', csrf_exempt(Index.as_view()), name="index"),
-    url(r'^getcode', BeginMakeMoney.as_view(), name="index"),
+    url(r'^getcode$', BeginMakeMoney.as_view(), name="begin"),
 ]

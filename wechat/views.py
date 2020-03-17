@@ -291,6 +291,8 @@ class Weteam(View):
     def sendMsg(self,wcId):
         Authorization = rdc_local.get("Authorization")
         wid = rdc_local.get("wid")
+        Authorization = str(Authorization, encoding='utf-8')
+        wid = str(wid, encoding='utf-8')
         url = "http://134.175.73.113:8080/sendText"
         headers = {
             'Content-Type': 'application/json',
@@ -304,6 +306,7 @@ class Weteam(View):
         res = requests.post(url=url, headers=headers, json=data)
         if res.status_code == 200:
             result = res.json()
+            print(result)
             if result:
                 code = result.get("code","")
                 if str(code)==str(1000):

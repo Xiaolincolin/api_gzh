@@ -246,7 +246,7 @@ class Weteam(View):
                     message = json.loads(message)
                 messageType = message.get("messageType", "")
                 print(messageType)
-                if str(messageType) == str(1):
+                if str(messageType) == str(2):
                     data = message.get("data",{})
                     if data:
                         if not isinstance(data,dict):

@@ -140,9 +140,33 @@ class Wechat(View):
             print(e)
             return HttpResponse("success")
 
+
+
 class Tutorial(View):
     def get(self, request):
-        return render(request, "tutorial.html")
+        try:
+            code = request.GET.get("code")  # 获取随机字符串
+
+            if code:
+                url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx96f147a2125ebb3a&secret=a063a2cfbdbe0a948b2af3cbaa62e45d&code={code}&grant_type=authorization_code".format(code=code)
+                res = requests.get(url)
+                if res.status_code==200:
+                    json_data = res.json()
+                    if json_data:
+                        access_token = json_data.get("access_token","")
+                        expires_in = json_data.get("expires_in","")
+                        refresh_token = json_data.get("refresh_token","")
+                        openid = json_data.get("openid","")
+                        scope = json_data.get("scope","")
+                        print([access_token,expires_in,refresh_token,openid,scope])
+                        return render(request,"index.html",{
+                            "openid":openid
+                        })
+            else:
+                return JsonResponse({"msg":"only open in wechat"})
+        except Exception as e:
+            print(e)
+            return JsonResponse({"msg": "fail"})
 
 
 class Index(View):

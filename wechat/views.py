@@ -78,6 +78,7 @@ class Wechat(View):
                     msg_xml_str = str(msg_xml_str,encoding="utf-8")
                 # 解析消息
                 msg_xml_dict_all = xmltodict.parse(msg_xml_str)
+                print(msg_xml_dict_all)
                 msg_xml_dict = msg_xml_dict_all["xml"]
                 # 获取消息类型, 消息内容等信息
                 msg_type = msg_xml_dict["MsgType"]

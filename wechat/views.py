@@ -266,14 +266,14 @@ class Weteam(View):
                             if flag == 32:
                                 fromUser = data.get("fromUser", "")
                                 if fromUser:
-                                    select_sql = "SELECT openid,flag from wechat_related where openid='{oid}'".format(oid=content)
+                                    select_sql = "SELECT openid,flag from wechat_related where openid='{oid}'".format(
+                                        oid=content)
                                     select_result = self.select_openid(select_sql)
                                     if select_result:
                                         select_result = list(select_result)
-                                        print(select_result)
-                                        per_result = select_result[0]
-                                        relate_code = per_result[1]
-                                        if not relate_code:
+                                        relate_code = select_result[1]
+                                        print(relate_code)
+                                        if str(relate_code) == str(0):
                                             insert_sql = "insert into wechat_related(wx_id,update_time,flag) VALUES(%s,NOW(),1)"
                                             self.insert_wxid(insert_sql, fromUser)
                                             content = "绑定客服成功！接下来开始刷广告之旅吧！详情关注公众号（球球趣玩)"
@@ -330,7 +330,6 @@ class Weteam(View):
         res = requests.post(url=url, headers=headers, json=data)
         if res.status_code == 200:
             result = res.json()
-            print(result)
             if result:
                 code = result.get("code", "")
                 if str(code) == str(1000):

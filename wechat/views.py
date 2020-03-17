@@ -101,6 +101,10 @@ class Wechat(View):
                         response_dict["xml"]["Content"] = "感谢您的关注!"
                         response_xml_str = xmltodict.unparse(response_dict)
                         return HttpResponse(response_xml_str)
+                    elif msg_event == "VIEW":
+                        menuid = msg_xml_dict["MenuId"]
+
+                        pass
                 elif msg_type == "text":
                     # 文本消息, 获取消息内容, 用户发送 哈哈, 回复 呵呵
                     msg_body = msg_xml_dict["Content"]

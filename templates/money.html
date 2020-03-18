@@ -19,27 +19,27 @@
 		<div class="aui-money-head" style="background-image: url('{% static 'assets/img/head.png' %}')">
 			
 			<div class="aui-palace aui-palace-one">
-				<a href="javascript:;" class="aui-palace-grid">
+				<a href="javascript:" class="aui-palace-grid">
 					<div class="aui-palace-grid-text">
-						<h1>300</h1>
+						<h1>{{ totalmoney }}</h1>
 						<p>总金额(元)</p>
 					</div>
 				</a>
-				<a href="javascript:;" class="aui-palace-grid">
+				<a href="javascript:" class="aui-palace-grid">
 					<div class="aui-palace-grid-text">
-						<h1>100</h1>
+						<h1>{{ withdrawable }}</h1>
 						<p>可提现金额(元)</p>
 					</div>
 				</a>
-				<a href="javascript:;" class="aui-palace-grid">
+				<a href="javascript:" class="aui-palace-grid">
 					<div class="aui-palace-grid-text">
-						<h1>200</h1>
+						<h1>{{ alread }}</h1>
 						<p>已提现(元)</p>
 					</div>
 				</a>
-				<a href="javascript:;" class="aui-palace-grid">
+				<a href="javascript:" class="aui-palace-grid">
 					<div class="aui-palace-grid-text">
-						<h1>0</h1>
+						<h1>{{ surplus }}</h1>
 						<p>剩余金额(元)</p>
 					</div>
 				</a>
@@ -56,25 +56,27 @@
 			</div>
 		</div>
 		<div class="aui-palace aui-palace-three">
-			<form action="#">
+			<form method="post" action="{% url 'launch' %}">
 				<div class="input-group">
 					<label for="khname" style="padding-left:34px;">姓名</label>
-					<input type="text" id="khname" placeholder="请输入您的姓名">
+					<input type="text" id="name" name="user" placeholder="请输入您的姓名">
 				</div>
 				<div class="input-group">
 					<label for="khname" style="padding-left:34px;">账号</label>
-					<input type="text" id="khname" placeholder="请输入您的手机号码">
+					<input type="text" id="account" name="account" placeholder="请输入您的手机号码">
 				</div>
 				<div class="input-group">
 					<label for="khname" style="padding-left:34px;">金额</label>
-					<input type="text" id="khname" placeholder="请输入您的提现金额">
+					<input type="text" id="money" name="money" placeholder="请输入您的提现金额">
 				</div>
 				
 				<div class="input-group" >
 					<label for="khname" style="padding-left:34px;">备注</label>
-					<input type="text" id="khname" placeholder="备注">
+					<input type="text" id="remarks" name="remark" placeholder="备注">
 				</div>
-				<button>确定</button>
+                <input type='hidden' name='openid' value='{{ openid }}' />
+				<button type="submit" id="sublogin">确定</button>
+                {% csrf_token %}
 			</form>
 		</div>
 		<div class="divHeight"></div>
@@ -136,5 +138,22 @@
 		h = $('.news_li li').length * 20;
 		setTimeout(b, 3000);
 	})
+</script>
+<script>
+    let surplus = {{ surplus }};
+    if(!surplus){
+        surplus = 0
+    }
+    if (surplus < 10){
+        let obj = document.getElementById("sublogin");
+        obj.disabled=ture;
+        obj.style.background = "#cccccc"
+    }
+    let input=document.getElementById("money");
+    input.onblur=function(){
+        if(parseFloat(input.value) > surplus ||  parseFloat(input.value) <10){
+            document.getElementById("sublogin").disabled=ture;
+        }
+    }
 </script>
 </html>

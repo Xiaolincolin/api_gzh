@@ -217,40 +217,98 @@ class Index(View):
 
 
 class CashWithdrawal(View):
-    # 发起提现
+    # 转发到页面提现
     def get(self, request):
-        return render(request,'money.html')
-        # try:
-        #     code = request.GET.get("code")  # 获取随机字符串
-        #     if code:
-        #         url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx96f147a2125ebb3a&secret=a063a2cfbdbe0a948b2af3cbaa62e45d&code={code}&grant_type=authorization_code".format(
-        #             code=code)
-        #         res = requests.get(url)
-        #         if res.status_code == 200:
-        #             json_data = res.json()
-        #             if json_data:
-        #                 openid = json_data.get("openid", "")
-        #                 if openid:
-        #                     m1 = hashlib.md5()
-        #                     m1.update(openid.encode("utf-8"))
-        #                     openid_md5 = m1.hexdigest()
-        #                     select_sql = "SELECT * from wechat_related where openid='{oid}'".format(oid=openid_md5)
-        #                     info = self.select_openid(select_sql)
-        #                     if not info:
-        #                         insert_sql = "insert into wechat_related(openid,add_time) VALUES(%s,NOW())"
-        #                         self.insert_openid(insert_sql, openid_md5)
-        #
-        #                     return render(request, "tutorial.html", {
-        #                         "openid": openid_md5
-        #                     })
-        #                 else:
-        #                     return JsonResponse({"msg": "网站维护中！请耐心等待"})
-        #     else:
-        #         return JsonResponse({"msg": "请先在公众号中获取业务码并且不要在微信以外的地方打开"})
-        # except Exception as e:
-        #     print(e)
-        #     return JsonResponse({"msg": "请先在关注公众号(球球趣玩)获取业务码并且不要在微信以外的地方打开"})
-        #
+        try:
+            code = request.GET.get("code")  # 获取随机字符串
+            if code:
+                url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx96f147a2125ebb3a&secret=a063a2cfbdbe0a948b2af3cbaa62e45d&code={code}&grant_type=authorization_code".format(
+                    code=code)
+                res = requests.get(url)
+                if res.status_code == 200:
+                    json_data = res.json()
+                    if json_data:
+                        openid = json_data.get("openid", "")
+                        if openid:
+                            m1 = hashlib.md5()
+                            m1.update(openid.encode("utf-8"))
+                            openid_md5 = m1.hexdigest()
+                            select_sql = "SELECT totalmoney,withdrawable,alread,surplus from wechat_money where openid='{oid}'".format(
+                                oid=openid_md5)
+                            info = self.select_openid(select_sql)
+                            totalmoney = 0
+                            withdrawable = 0
+                            alread = 0
+                            surplus = 0
+                            if info:
+                                try:
+                                    info = list(info)
+                                    totalmoney = info[0]
+                                    withdrawable=info[1]
+                                    alread=info[2]
+                                    surplus = info[3]
+                                except Exception as e:
+                                    print(e)
+
+                            return render(request, "money.html", {
+                                "totalmoney": totalmoney,
+                                "withdrawable": withdrawable,
+                                "alread": alread,
+                                "surplus": surplus,
+                                "openid":openid_md5
+                            })
+                        else:
+                            return JsonResponse({"msg": "网站维护中！请耐心等待"})
+                else:
+                    return JsonResponse({"msg": "当前网络不佳，请稍后再试"})
+            else:
+                return JsonResponse({"msg": "请先在公众号中获取业务码并且不要在微信以外的地方打开"})
+        except Exception as e:
+            print(e)
+            return JsonResponse({"msg": "请先在关注公众号(球球趣玩)获取业务码并且不要在微信以外的地方打开"})
+
+        return render(request, 'money.html')
+
+    def select_openid(self, sql):
+        try:
+            cursor = connection.cursor()
+            cursor.execute(sql)
+            info = cursor.fetchone()
+            cursor.close()
+            return info
+        except Exception as e:
+            print(e)
+            print("查询openid有误")
+            return 0
+
+    def insert_openid(self, sql, param):
+        try:
+            cursor = connection.cursor()
+            cursor.execute(sql, param)
+            cursor.close()
+        except Exception as e:
+            print(e)
+            print("插入openid有误")
+
+
+class Launch(View):
+    def get(self):
+        return HttpResponse({"msg":"错误的请求"})
+
+    def post(self,request):
+        user = request.POST.get("user", "")
+        account = request.POST.get("account", "")
+        money = request.POST.get("money", "")
+        remark = request.POST.get("remark", "")
+        openid = request.POST.get("openid", "")
+        print(user)
+        print(account)
+        print(money)
+        print(remark)
+        print(openid)
+        return HttpResponse({"msg":"success"})
+
+
 
 class BeginMakeMoney(View):
     # 用于提取业务码，并保存到数据库
@@ -280,6 +338,8 @@ class BeginMakeMoney(View):
                             })
                         else:
                             return JsonResponse({"msg": "网站维护中！请耐心等待"})
+                else:
+                    return JsonResponse({"msg": "当前网络不佳，请稍后再试"})
             else:
                 return JsonResponse({"msg": "请先在公众号中获取业务码并且不要在微信以外的地方打开"})
         except Exception as e:

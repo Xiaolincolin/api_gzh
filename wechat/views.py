@@ -119,14 +119,20 @@ class Wechat(View):
                     if msg_event == "subscribe":
                         # 用户关注公众号, 回复感谢信息
                         eventkey = msg_xml_dict["EventKey"]
-                        from_user_name = msg_xml_dict["FromUserName"]
-
-                        print(from_user_name)
+                        apprentice = msg_xml_dict["FromUserName"]
                         if eventkey:
-                            print(eventkey)
-                        else:
-                            print(str(eventkey))
-
+                            scen, master = str(eventkey).split()
+                            print(master)
+                            print(apprentice)
+                            if master != apprentice:
+                                master_md5 = self.get_md5(master)
+                                apprentice_md5 = self.get_md5(apprentice)
+                                select_sql = "SELECT `master` from wechat_apprentice where `master`='{m}' and Apprentice='{a}'".format(
+                                    m=master_md5, a=apprentice_md5)
+                                info = self.select_openid(select_sql)
+                                if not info:
+                                    insert_sql = "insert into wechat_apprentice(Apprentice,`master`,add_time) VALUES(%s,%s,NOW())"
+                                    self.insert_openid(insert_sql,[apprentice_md5,master_md5])
 
                         response_dict["xml"]["Content"] = "感谢您的关注!"
                         response_xml_str = xmltodict.unparse(response_dict)
@@ -150,6 +156,32 @@ class Wechat(View):
         except Exception as e:
             print(e)
             return HttpResponse("success")
+
+    def select_openid(self, sql):
+        try:
+            cursor = connection.cursor()
+            info = cursor.execute(sql)
+            cursor.close()
+            return info
+        except Exception as e:
+            print(e)
+            print("查询openid有误")
+            return 0
+
+    def insert_openid(self, sql, param):
+        try:
+            cursor = connection.cursor()
+            cursor.execute(sql, param)
+            cursor.close()
+        except Exception as e:
+            print(e)
+            print("插入openid有误")
+
+    def get_md5(self, strs):
+        m1 = hashlib.md5()
+        m1.update(strs.encode("utf-8"))
+        strs_md5 = m1.hexdigest()
+        return strs_md5
 
 
 class Tutorial(View):
@@ -285,7 +317,8 @@ class Weteam(View):
                                         select_result = list(select_result)
                                         relate_code = select_result[1]
                                         if str(relate_code) == str(0):
-                                            insert_sql = 'UPDATE wechat_related set wx_id="{wx_id}",update_time=NOW(),flag=1 where openid="{openid}"'.format(wx_id=fromUser,openid=content)
+                                            insert_sql = 'UPDATE wechat_related set wx_id="{wx_id}",update_time=NOW(),flag=1 where openid="{openid}"'.format(
+                                                wx_id=fromUser, openid=content)
                                             self.update_wxid(insert_sql)
                                             content = "绑定客服成功！接下来开始刷广告之旅吧！详情关注公众号（球球趣玩)"
                                             info = self.sendMsg(fromUser, content)

@@ -102,7 +102,6 @@ class Wechat(View):
                 msg_xml_dict = msg_xml_dict_all["xml"]
                 # 获取消息类型, 消息内容等信息
                 msg_type = msg_xml_dict["MsgType"]
-                user_open_id = msg_xml_dict["FromUserName"]
                 # 需要回复的信息
                 response_dict = {
                     "xml": {
@@ -117,13 +116,11 @@ class Wechat(View):
                     # 事件推送消息
                     msg_event = msg_xml_dict["Event"]
                     if msg_event == "subscribe":
-                        # 用户关注公众号, 回复感谢信息
+                        # 用户关注公众号, 绑定师徒关系
                         eventkey = msg_xml_dict["EventKey"]
                         apprentice = msg_xml_dict["FromUserName"]
                         if eventkey:
-                            master = str(eventkey).replace("qrscene_","")
-                            print(master)
-                            print(apprentice)
+                            master = str(eventkey).replace("qrscene_", "")
                             if master != apprentice:
                                 master_md5 = self.get_md5(master)
                                 apprentice_md5 = self.get_md5(apprentice)
@@ -132,17 +129,17 @@ class Wechat(View):
                                 info = self.select_openid(select_sql)
                                 if not info:
                                     insert_sql = "insert into wechat_apprentice(Apprentice,`master`,add_time) VALUES(%s,%s,NOW())"
-                                    self.insert_openid(insert_sql,[apprentice_md5,master_md5])
+                                    self.insert_openid(insert_sql, [apprentice_md5, master_md5])
 
-                        response_dict["xml"]["Content"] = "感谢您的关注!"
+                        response_dict["xml"]["Content"] = "感谢您关注球球趣玩！!详情请点击教程学习"
                         response_xml_str = xmltodict.unparse(response_dict)
                         return HttpResponse(response_xml_str)
                     elif msg_event == "VIEW":
                         menuid = msg_xml_dict["MenuId"]
-                        print(menuid)
                         return render(request, "index.html")
+                    else:
+                        return HttpResponse("success")
 
-                        pass
                 elif msg_type == "text":
                     # 文本消息, 获取消息内容, 用户发送 哈哈, 回复 呵呵
                     msg_body = msg_xml_dict["Content"]
@@ -153,6 +150,8 @@ class Wechat(View):
                 # 其他一律回复 success
                 else:
                     return HttpResponse("success")
+            else:
+                return HttpResponse("success")
         except Exception as e:
             print(e)
             return HttpResponse("success")
@@ -216,6 +215,42 @@ class Index(View):
     def get(self, request):
         return render(request, "index.html")
 
+
+class CashWithdrawal(View):
+    # 发起提现
+    def get(self, request):
+        return render(request,'money.html')
+        # try:
+        #     code = request.GET.get("code")  # 获取随机字符串
+        #     if code:
+        #         url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx96f147a2125ebb3a&secret=a063a2cfbdbe0a948b2af3cbaa62e45d&code={code}&grant_type=authorization_code".format(
+        #             code=code)
+        #         res = requests.get(url)
+        #         if res.status_code == 200:
+        #             json_data = res.json()
+        #             if json_data:
+        #                 openid = json_data.get("openid", "")
+        #                 if openid:
+        #                     m1 = hashlib.md5()
+        #                     m1.update(openid.encode("utf-8"))
+        #                     openid_md5 = m1.hexdigest()
+        #                     select_sql = "SELECT * from wechat_related where openid='{oid}'".format(oid=openid_md5)
+        #                     info = self.select_openid(select_sql)
+        #                     if not info:
+        #                         insert_sql = "insert into wechat_related(openid,add_time) VALUES(%s,NOW())"
+        #                         self.insert_openid(insert_sql, openid_md5)
+        #
+        #                     return render(request, "tutorial.html", {
+        #                         "openid": openid_md5
+        #                     })
+        #                 else:
+        #                     return JsonResponse({"msg": "网站维护中！请耐心等待"})
+        #     else:
+        #         return JsonResponse({"msg": "请先在公众号中获取业务码并且不要在微信以外的地方打开"})
+        # except Exception as e:
+        #     print(e)
+        #     return JsonResponse({"msg": "请先在关注公众号(球球趣玩)获取业务码并且不要在微信以外的地方打开"})
+        #
 
 class BeginMakeMoney(View):
     # 用于提取业务码，并保存到数据库

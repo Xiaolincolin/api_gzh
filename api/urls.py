@@ -19,7 +19,7 @@ from django.conf.urls import url
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 
-from wechat.views import Wechat, Weteam, Tutorial, Index, BeginMakeMoney
+from wechat.views import Wechat, Weteam, Tutorial, Index, BeginMakeMoney,CashWithdrawal
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,4 +30,5 @@ urlpatterns = [
     url(r'^tutorial$', csrf_exempt(Tutorial.as_view()), name="tutorial"),
     url(r'^index$', csrf_exempt(Index.as_view()), name="index"),
     url(r'^getcode$', BeginMakeMoney.as_view(), name="begin"),
+    url(r'^tx', CashWithdrawal.as_view(), name="tx"),
 ]

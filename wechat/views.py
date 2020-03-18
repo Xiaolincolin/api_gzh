@@ -118,6 +118,12 @@ class Wechat(View):
                     msg_event = msg_xml_dict["Event"]
                     if msg_event == "subscribe":
                         # 用户关注公众号, 回复感谢信息
+                        eventkey = msg_xml_dict["EventKey"]
+                        from_user_name = msg_xml_dict["FromUserName"]
+                        print(eventkey)
+                        print(from_user_name)
+
+
                         response_dict["xml"]["Content"] = "感谢您的关注!"
                         response_xml_str = xmltodict.unparse(response_dict)
                         return HttpResponse(response_xml_str)
@@ -176,6 +182,7 @@ class Index(View):
 
 
 class BeginMakeMoney(View):
+    # 用于提取业务码，并保存到数据库
     def get(self, request):
         try:
             code = request.GET.get("code")  # 获取随机字符串
@@ -230,6 +237,7 @@ class BeginMakeMoney(View):
 
 
 class Weteam(View):
+    # 用来接收绑定微信客服，提示是否绑定成功！
 
     def get(self, request):
         res = request.body.decode()

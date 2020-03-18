@@ -120,8 +120,12 @@ class Wechat(View):
                         # 用户关注公众号, 回复感谢信息
                         eventkey = msg_xml_dict["EventKey"]
                         from_user_name = msg_xml_dict["FromUserName"]
-                        print(eventkey)
+
                         print(from_user_name)
+                        if eventkey:
+                            print(eventkey)
+                        else:
+                            print(str(eventkey))
 
 
                         response_dict["xml"]["Content"] = "感谢您的关注!"

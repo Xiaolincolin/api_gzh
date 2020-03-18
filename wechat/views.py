@@ -121,7 +121,7 @@ class Wechat(View):
                         eventkey = msg_xml_dict["EventKey"]
                         apprentice = msg_xml_dict["FromUserName"]
                         if eventkey:
-                            scen, master = str(eventkey).split()
+                            master = str(eventkey).replace("qrscene_","")
                             print(master)
                             print(apprentice)
                             if master != apprentice:

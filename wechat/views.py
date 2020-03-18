@@ -201,11 +201,15 @@ class Tutorial(View):
                         openid = json_data.get("openid", "")
                         scope = json_data.get("scope", "")
                         print([access_token, expires_in, refresh_token, openid, scope])
-                        return render(request, "index.html", {
+                        return render(request, "tutorial.html", {
                             "openid": openid
                         })
             else:
+                # openid = "测试"
                 return JsonResponse({"msg": "only open in wechat"})
+                # return render(request, "tutorial.html", {
+                #     "openid": openid
+                # })
         except Exception as e:
             print(e)
             return JsonResponse({"msg": "fail"})

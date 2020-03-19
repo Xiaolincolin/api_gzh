@@ -323,6 +323,7 @@ class Launch(View):
 
 class UploadImage(View):
     def get(self, request):
+        print("其实已经跳转过来了")
         try:
             code = request.GET.get("code")  # 获取随机字符串
             if code:

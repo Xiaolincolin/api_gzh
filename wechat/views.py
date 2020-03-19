@@ -332,7 +332,7 @@ class UploadImage(View):
         file_obj = request.FILES.get("file")
         openid = request.POST.get("openid", "")
         wechat_id = request.POST.get("wechat_id", "")
-        file_name = str(MEDIA_ROOT) + "paycode\\" + str(openid) + ".jpg"
+        file_name = str(MEDIA_ROOT) + "/paycode/" + str(openid) + ".jpg"
         print("dir:",file_name)
         img_type = file_obj.name.split('.')[-1]
         if img_type not in ['jpeg', 'jpg', 'png']:

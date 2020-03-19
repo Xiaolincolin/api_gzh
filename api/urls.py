@@ -34,7 +34,7 @@ urlpatterns = [
     url(r'^getcode$', BeginMakeMoney.as_view(), name="begin"),
     url(r'^tx', CashWithdrawal.as_view(), name="tx"),
     url(r'^launch', Launch.as_view(), name="launch"),
-    url(r'^upimg/(.*)$', csrf_exempt(UploadImage.as_view()), name="upimg"),
+    url(r'^upimg$', csrf_exempt(UploadImage.as_view()), name="upimg"),
     url(r'^media/(?P<path>.*)$',  serve, {"document_root":MEDIA_ROOT}),
     url(r'^test', Test.as_view(), name="test"),
 ]

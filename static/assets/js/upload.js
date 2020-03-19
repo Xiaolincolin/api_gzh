@@ -39,7 +39,8 @@
 			data: {"openid":openid,"wechat_id":wechat_id}, //可选项 额外的参数，如：{id: 123, abc: 'xxx'}
 			size: 1024*3,//为0为不限制大小
 			//监听xhr进度，并返回给进度条
-			auto:false
+			auto:false,
+			accept:'file'
 			,bindAction:'#upimg',
 
 			progress : function(value) { //上传进度回调 value进度值   

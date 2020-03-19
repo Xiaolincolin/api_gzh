@@ -241,7 +241,7 @@ class CashWithdrawal(View):
                             openid_md5 = m1.hexdigest()
                             select_pay = "SELECT openid from wechat_pay where openid='{oid}'".format(
                                 oid=openid_md5)
-                            pay_info = True
+                            pay_info = select_pay
                             if pay_info:
                                 select_sql = "SELECT totalmoney,withdrawable,alread,surplus from wechat_money where openid='{oid}'".format(
                                     oid=openid_md5)
@@ -268,8 +268,9 @@ class CashWithdrawal(View):
                                     "openid": openid_md5
                                 })
                             else:
-                                urls = "http://wxapi.adinsights.cn/upimg/"+openid_md5
-                                return redirect(reverse(urls))
+                                return render(request,'uploadimage.html',{
+                                    "openid":openid_md5
+                                })
                         else:
                             return JsonResponse({"msg": "网站维护中！请耐心等待"})
                 else:

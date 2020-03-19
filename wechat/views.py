@@ -241,7 +241,7 @@ class CashWithdrawal(View):
                             openid_md5 = m1.hexdigest()
                             select_pay = "SELECT openid from wechat_pay where openid='{oid}'".format(
                                 oid=openid_md5)
-                            pay_info = select_pay
+                            pay_info = self.select_openid(select_pay)
                             if pay_info:
                                 select_sql = "SELECT totalmoney,withdrawable,alread,surplus from wechat_money where openid='{oid}'".format(
                                     oid=openid_md5)

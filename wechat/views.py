@@ -325,12 +325,7 @@ class Launch(View):
 
 class UploadImage(View):
     def get(self, request, code):
-        openid = code
-        print(code)
-        if openid:
-            return render(request, 'uploadimage.html', {
-                "openid": openid
-            })
+        return HttpResponse("请求错误")
 
     def post(self, request):
         result = {}

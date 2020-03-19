@@ -684,7 +684,4 @@ class Weteam(View):
 
 class Test(View):
     def get(self, request):
-        openid_md5 = "sda"
-        return render(request, "uploadimage.html", {
-            "openid": openid_md5
-        })
+        return HttpResponse("功能开发中")

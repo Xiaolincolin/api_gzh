@@ -21,7 +21,7 @@ from django.views.generic import TemplateView
 from api.settings import MEDIA_ROOT
 from django.views.static import serve
 from wechat.views import Wechat, Weteam, Tutorial,\
-    Index, BeginMakeMoney, CashWithdrawal, Launch, UploadImage
+    Index, BeginMakeMoney, CashWithdrawal, Launch, UploadImage,Test
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -36,4 +36,5 @@ urlpatterns = [
     url(r'^launch', Launch.as_view(), name="launch"),
     url(r'^upimg/(.*)$', csrf_exempt(UploadImage.as_view()), name="upimg"),
     url(r'^media/(?P<path>.*)$',  serve, {"document_root":MEDIA_ROOT}),
+    url(r'^test', Test.as_view(), name="test"),
 ]

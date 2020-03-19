@@ -268,7 +268,7 @@ class CashWithdrawal(View):
                                     "openid": openid_md5
                                 })
                             else:
-                                return render(request, 'uploadimage.html', {
+                                return render(request, "uploadimage.html", {
                                     "openid": openid_md5
                                 })
                         else:

@@ -114,6 +114,7 @@
 <script type="text/javascript" src="{% static 'assets/js/jquery.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'assets/js/slider.js' %}"></script>
 <script type="text/javascript" src="{% static 'assets/js/layer.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/money.js' %}"></script>
 <script type="text/javascript">
 	function b() {
 		t = parseInt(x.css('top'));
@@ -144,16 +145,23 @@
     if(!surplus){
         surplus = 0
     }
-    if (surplus < 10){
-        let obj = document.getElementById("sublogin");
-        obj.disabled=ture;
-        obj.style.background = "#cccccc"
+	if (surplus < 10){
+        $('#sublogin').attr('disabled',"true");
+		$('#sublogin').css({'background-color':'gray'});
     }
-    let input=document.getElementById("money");
-    input.onblur=function(){
-        if(parseFloat(input.value) > surplus ||  parseFloat(input.value) <10){
-            document.getElementById("sublogin").disabled=ture;
-        }
-    }
+	$("#money").blur(function(){
+		var result = $(this).val();
+        var r=/^\d+$/;
+		var bool = r.test(result)
+		if(bool){
+			if (result > surplus){
+				$('#money').val(0);
+			}
+		}else
+		{
+			$('#money').val(0);
+		}
+
+	});
 </script>
 </html>

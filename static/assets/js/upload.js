@@ -5,7 +5,11 @@
 			form = layui.form,
 			upload = layui.upload;
 		//创建监听函数
-		layer.msg("hello");
+		layer.open({
+			content: '发起提现前请上传微信收款码和微信号，微信号用来审核收款码是否一致，一经上传暂不支持修改！'
+			,btn: '我知道了'
+		  });
+
 
 		var xhrOnProgress = function(fun) {
 			xhrOnProgress.onprogress = fun; //绑定监听

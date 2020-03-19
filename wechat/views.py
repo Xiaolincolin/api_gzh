@@ -15,6 +15,7 @@ rdp_local = redis.ConnectionPool(host='47.95.217.37', port=6379, db=1)  # 默认
 rdc_local = redis.StrictRedis(connection_pool=rdp_local)
 redis_conn = redis.Redis(connection_pool=redis.ConnectionPool(host='47.95.217.37', port=6379, db=2))
 from django.db import connection
+from api.settings import MEDIA_ROOT
 
 
 class Wechat(View):
@@ -237,30 +238,37 @@ class CashWithdrawal(View):
                             m1 = hashlib.md5()
                             m1.update(openid.encode("utf-8"))
                             openid_md5 = m1.hexdigest()
-                            select_sql = "SELECT totalmoney,withdrawable,alread,surplus from wechat_money where openid='{oid}'".format(
+                            select_pay = "SELECT openid from wechat_pay where openid='{oid}'".format(
                                 oid=openid_md5)
-                            info = self.select_openid(select_sql)
-                            totalmoney = 0
-                            withdrawable = 0
-                            alread = 0
-                            surplus = 0
-                            if info:
-                                try:
-                                    info = list(info)
-                                    totalmoney = info[0]
-                                    withdrawable=info[1]
-                                    alread=info[2]
-                                    surplus = info[3]
-                                except Exception as e:
-                                    print(e)
+                            pay_info = self.select_openid(select_pay)
+                            if pay_info:
+                                select_sql = "SELECT totalmoney,withdrawable,alread,surplus from wechat_money where openid='{oid}'".format(
+                                    oid=openid_md5)
+                                info = self.select_openid(select_sql)
+                                totalmoney = 0
+                                withdrawable = 0
+                                alread = 0
+                                surplus = 0
+                                if info:
+                                    try:
+                                        info = list(info)
+                                        totalmoney = info[0]
+                                        withdrawable = info[1]
+                                        alread = info[2]
+                                        surplus = info[3]
+                                    except Exception as e:
+                                        print(e)
 
-                            return render(request, "money.html", {
-                                "totalmoney": totalmoney,
-                                "withdrawable": withdrawable,
-                                "alread": alread,
-                                "surplus": surplus,
-                                "openid":openid_md5
-                            })
+                                return render(request, "money.html", {
+                                    "totalmoney": totalmoney,
+                                    "withdrawable": withdrawable,
+                                    "alread": alread,
+                                    "surplus": surplus,
+                                    "openid": openid_md5
+                                })
+                            else:
+                                urls = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx96f147a2125ebb3a&redirect_uri=http%3A//wxapi.adinsights.cn/upimg&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect'
+                                return reversed(urls)
                         else:
                             return JsonResponse({"msg": "网站维护中！请耐心等待"})
                 else:
@@ -297,9 +305,9 @@ class CashWithdrawal(View):
 
 class Launch(View):
     def get(self):
-        return HttpResponse({"msg":"错误的请求"})
+        return HttpResponse({"msg": "错误的请求"})
 
-    def post(self,request):
+    def post(self, request):
         user = request.POST.get("user", "")
         account = request.POST.get("account", "")
         money = request.POST.get("money", "")
@@ -310,8 +318,99 @@ class Launch(View):
         print(money)
         print(remark)
         print(openid)
-        return HttpResponse({"msg":"success"})
+        return HttpResponse({"msg": "success"})
 
+
+class UploadImage(View):
+    def get(self, request):
+        try:
+            code = request.GET.get("code")  # 获取随机字符串
+            if code:
+                url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx96f147a2125ebb3a&secret=a063a2cfbdbe0a948b2af3cbaa62e45d&code={code}&grant_type=authorization_code".format(
+                    code=code)
+                res = requests.get(url)
+                if res.status_code == 200:
+                    json_data = res.json()
+                    if json_data:
+                        openid = json_data.get("openid", "")
+                        if openid:
+                            m1 = hashlib.md5()
+                            m1.update(openid.encode("utf-8"))
+                            openid_md5 = m1.hexdigest()
+                            return render(request,'uploadimage.html',{
+                                "openid":openid_md5
+                            })
+        except Exception as e:
+            return render(request, "uploadimage.html")
+
+    def post(self, request):
+        result = {}
+        file_obj = request.FILES.get("file")
+        openid = request.POST.get("openid", "")
+        wechat_id = request.POST.get("wechat_id", "")
+        file_name = str(MEDIA_ROOT) + "\paycode\\" + str(openid) + ".jpg"
+        img_type = file_obj.name.split('.')[-1]
+        if img_type not in ['jpeg', 'jpg', 'png']:
+            result["code"] = 0
+            result["msg"] = "图片仅支持'.jpeg', '.jpg', '.png'结尾的格式"
+            return JsonResponse(result)
+        else:
+            if openid:
+                m1 = hashlib.md5()
+                m1.update(openid.encode("utf-8"))
+                openid_md5 = m1.hexdigest()
+                try:
+                    with open(file_name, 'wb+') as f:
+                        f.write(file_obj.read())
+                except Exception as e:
+                    return
+                else:
+                    select_sql = "SELECT openid from wechat_pay where openid='{oid}'".format(
+                        oid=openid_md5)
+                    select_info = self.select_openid(select_sql)
+                    if not select_info:
+                        insert_sql = "insert into wechat_pay(wx_code,image_id,openid,add_time) VALUES(%s,%s,%s,NOW())"
+                        info = self.insert_openid(insert_sql, [wechat_id, openid_md5, openid_md5])
+                        if info:
+                            result["code"] = 1
+                            result["src"] = "http://127.0.0.1:8000/media/paycode/" + str(openid) + "." + str(img_type)
+                            result["msg"] = "上传成功"
+                            return JsonResponse(result)
+                        else:
+                            result["code"] = 0
+                            result["msg"] = "上传失败"
+                            return JsonResponse(result)
+                    else:
+                        result["code"] = 3
+                        result["msg"] = "上传失败"
+                        return JsonResponse(result)
+            else:
+                result["code"] = 0
+                result["msg"] = "上传失败"
+                return JsonResponse(result)
+
+    def insert_openid(self, sql, param):
+        try:
+            cursor = connection.cursor()
+            cursor.execute(sql, param)
+            cursor.close()
+            return 1
+        except Exception as e:
+            print(e)
+            print("插入openid有误")
+            return 0
+
+    def select_openid(self, sql):
+        try:
+            cursor = connection.cursor()
+            cursor.execute(sql)
+            info = cursor.fetchone()
+            cursor.close()
+            return info
+        except Exception as e:
+            print(e)
+            print("查询openid有误")
+            return 0
 
 
 class BeginMakeMoney(View):

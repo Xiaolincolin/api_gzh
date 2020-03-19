@@ -242,8 +242,6 @@ class CashWithdrawal(View):
                             select_pay = "SELECT openid from wechat_pay where openid='{oid}'".format(
                                 oid=openid_md5)
                             pay_info = self.select_openid(select_pay)
-                            print(select_pay)
-                            print("是否上传过:",pay_info)
                             if pay_info:
                                 select_sql = "SELECT totalmoney,withdrawable,alread,surplus from wechat_money where openid='{oid}'".format(
                                     oid=openid_md5)
@@ -342,9 +340,6 @@ class UploadImage(View):
             return JsonResponse(result)
         else:
             if openid:
-                m1 = hashlib.md5()
-                m1.update(openid.encode("utf-8"))
-                openid_md5 = m1.hexdigest()
                 try:
                     with open(file_name, 'wb+') as f:
                         f.write(file_obj.read())
@@ -352,11 +347,11 @@ class UploadImage(View):
                     return
                 else:
                     select_sql = "SELECT openid from wechat_pay where openid='{oid}'".format(
-                        oid=openid_md5)
+                        oid=openid)
                     select_info = self.select_openid(select_sql)
                     if not select_info:
                         insert_sql = "insert into wechat_pay(wx_code,image_id,openid,add_time) VALUES(%s,%s,%s,NOW())"
-                        info = self.insert_openid(insert_sql, [wechat_id, openid_md5, openid_md5])
+                        info = self.insert_openid(insert_sql, [wechat_id, openid, openid])
                         if info:
                             result["code"] = 1
                             result["src"] = " http://wxapi.adinsights.cn/media/paycode/" + str(openid) + "." + str(

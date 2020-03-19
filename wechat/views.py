@@ -245,7 +245,7 @@ class CashWithdrawal(View):
                             if pay_info:
                                 select_sql = "SELECT totalmoney,withdrawable,alread,surplus from wechat_money where openid='{oid}'".format(
                                     oid=openid_md5)
-                                info = self.select_openid(select_sql)
+                                info = self.select_money(select_sql)
                                 totalmoney = 0
                                 withdrawable = 0
                                 alread = 0
@@ -282,6 +282,18 @@ class CashWithdrawal(View):
             return JsonResponse({"msg": "请先在关注公众号(球球趣玩)获取业务码并且不要在微信以外的地方打开"})
 
         return render(request, 'money.html')
+
+    def select_money(self, sql):
+        try:
+            cursor = connection.cursor()
+            cursor.execute(sql)
+            info = cursor.fetchone()
+            cursor.close()
+            return info
+        except Exception as e:
+            print(e)
+            print("查询openid有误")
+            return 0
 
     def select_openid(self, sql):
         try:

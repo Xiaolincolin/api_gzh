@@ -5,7 +5,8 @@ import time
 import requests
 import xmltodict
 from django.http import JsonResponse, HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.views.generic import View
 # Create your views here.
 import redis
@@ -267,8 +268,8 @@ class CashWithdrawal(View):
                                     "openid": openid_md5
                                 })
                             else:
-                                urls = " http://wxapi.adinsights.cn/upimg/"+openid_md5
-                                return reversed(urls)
+                                urls = "http://wxapi.adinsights.cn/upimg/"+openid_md5
+                                return redirect(reverse(urls))
                         else:
                             return JsonResponse({"msg": "网站维护中！请耐心等待"})
                 else:

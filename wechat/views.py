@@ -286,8 +286,7 @@ class CashWithdrawal(View):
     def select_openid(self, sql):
         try:
             cursor = connection.cursor()
-            cursor.execute(sql)
-            info = cursor.fetchone()
+            info =cursor.execute(sql)
             cursor.close()
             return info
         except Exception as e:

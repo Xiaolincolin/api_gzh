@@ -242,6 +242,7 @@ class CashWithdrawal(View):
                             select_pay = "SELECT openid from wechat_pay where openid='{oid}'".format(
                                 oid=openid_md5)
                             pay_info = self.select_openid(select_pay)
+                            print(select_pay)
                             print("是否上传过:",pay_info)
                             if pay_info:
                                 select_sql = "SELECT totalmoney,withdrawable,alread,surplus from wechat_money where openid='{oid}'".format(

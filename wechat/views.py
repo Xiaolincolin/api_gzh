@@ -268,8 +268,8 @@ class CashWithdrawal(View):
                                     "openid": openid_md5
                                 })
                             else:
-                                return render(request,'uploadimage.html',{
-                                    "openid":openid_md5
+                                return render(request, 'uploadimage.html', {
+                                    "openid": openid_md5
                                 })
                         else:
                             return JsonResponse({"msg": "网站维护中！请耐心等待"})
@@ -324,12 +324,12 @@ class Launch(View):
 
 
 class UploadImage(View):
-    def get(self, request,code):
+    def get(self, request, code):
         openid = code
         print(code)
         if openid:
-            return render(request,'uploadimage.html',{
-                "openid":openid
+            return render(request, 'uploadimage.html', {
+                "openid": openid
             })
 
     def post(self, request):
@@ -362,7 +362,8 @@ class UploadImage(View):
                         info = self.insert_openid(insert_sql, [wechat_id, openid_md5, openid_md5])
                         if info:
                             result["code"] = 1
-                            result["src"] = " http://wxapi.adinsights.cn/media/paycode/" + str(openid) + "." + str(img_type)
+                            result["src"] = " http://wxapi.adinsights.cn/media/paycode/" + str(openid) + "." + str(
+                                img_type)
                             result["msg"] = "上传成功"
                             return JsonResponse(result)
                         else:
@@ -592,3 +593,11 @@ class Weteam(View):
             print(e)
             print("查询openid有误")
             return 0
+
+
+class Test(View):
+    def get(self, request):
+        openid_md5 = "sda"
+        return render(request, "uploadimage.html", {
+            "openid": openid_md5
+        })

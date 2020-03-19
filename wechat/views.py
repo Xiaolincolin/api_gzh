@@ -232,28 +232,32 @@ class Index(View):
                         openid = json_data.get("openid", "")
                         if openid:
                             openid = self.get_md5(openid)
+                            # 今天数据
                             time_now = str(datetime.datetime.now().strftime('%Y-%m-%d'))
                             today_sql = "SELECT n.`name`,l.product,l.creative,l.type_id FROM wechat_related as r,wechat_distinct as d,wechat_name as n,wechat_log as l where r.wx_id=d.wx_id and d.statextstr=l.statextstr and r.wx_id=n.wx_id and l.`day`='{days}' and openid='{openid}'".format(
                                 openid=openid, days=time_now)
                             today_data = self.select_data(today_sql)
+                            # 所有数据
+                            month = str(datetime.datetime.now().strftime('%m'))
 
-                            month = str(datetime.datetime.now().strftime('%Y-%m'))
-                            begin = month + "-01"
-                            month_sql = "SELECT a.amount,a.amount_app,a.days FROM wechat_related as r,wechat_account_api as a,wechat_name as n where r.wx_id=a.wx_id and a.wx_id=n.wx_id and openid='{openid}'".format(
+                            all_sql = "SELECT a.amount,a.amount_app,a.days FROM wechat_related as r,wechat_account_api as a,wechat_name as n where r.wx_id=a.wx_id and a.wx_id=n.wx_id and  openid='{openid}' ORDER BY days desc".format(
                                 openid=openid)
+                            all_data = self.select_data(all_sql)
+                            # 本月数据
+                            month_data = []
+                            for per in all_data:
+                                per_month = str(per[2])
+                                if month == per_month:
+                                    month_data.append(per)
+                            print(month_data)
 
-                            month_data = self.select_data(month_sql)
                             if today_data:
                                 today_data = list(today_data)
                                 print(today_data)
                             else:
                                 today_data = []
-
-                            if month_data:
-                                month_data = list(month_data)
-                                print(month_data)
-                            else:
-                                month_data=[]
+                            print(month_data)
+                            print(all_data)
 
                             return render(request, "index.html", {
                                 "openid": openid

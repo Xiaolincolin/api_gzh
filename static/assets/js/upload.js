@@ -5,6 +5,7 @@
 			form = layui.form,
 			upload = layui.upload;
 		//创建监听函数
+		layer.msg("hello");
 
 		var xhrOnProgress = function(fun) {
 			xhrOnProgress.onprogress = fun; //绑定监听

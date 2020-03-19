@@ -246,7 +246,7 @@ class Index(View):
                             # 本月数据
                             month_data = []
                             for per in all_data:
-                                per_month = str(per[2])
+                                per_month = str(per[2]).split("-")[1]
                                 if month == per_month:
                                     month_data.append(per)
                             print(month_data)
@@ -256,7 +256,6 @@ class Index(View):
                                 print(today_data)
                             else:
                                 today_data = []
-                            print(month_data)
                             print(all_data)
 
                             return render(request, "index.html", {

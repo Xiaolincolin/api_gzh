@@ -1,3 +1,4 @@
+import datetime
 import hashlib
 import json
 import time
@@ -219,7 +220,72 @@ class Tutorial(View):
 
 class Index(View):
     def get(self, request):
-        return render(request, "index.html")
+        try:
+            code = request.GET.get("code")  # 获取随机字符串
+            if code:
+                url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx96f147a2125ebb3a&secret=a063a2cfbdbe0a948b2af3cbaa62e45d&code={code}&grant_type=authorization_code".format(
+                    code=code)
+                res = requests.get(url)
+                if res.status_code == 200:
+                    json_data = res.json()
+                    if json_data:
+                        openid = json_data.get("openid", "")
+                        if openid:
+                            openid = self.get_md5(openid)
+                            time_now = str(datetime.datetime.now().strftime('%Y-%m-%d'))
+                            today_sql = "SELECT n.`name`,l.product,l.creative,l.type_id FROM wechat_related as r,wechat_distinct as d,wechat_name as n,wechat_log as l where r.wx_id=d.wx_id and d.statextstr=l.statextstr and r.wx_id=n.wx_id and l.`day`='{days}' and openid='{openid}'".format(
+                                openid=openid, days=time_now)
+                            today_data = self.select_data(today_sql)
+
+                            month = str(datetime.datetime.now().strftime('%Y-%m'))
+                            begin = month + "-01"
+                            month_sql = "SELECT a.amount,a.amount_app,a.days FROM wechat_related as r,wechat_account_api as a,wechat_name as n where r.wx_id=a.wx_id and a.wx_id=n.wx_id and openid='{openid}'".format(
+                                openid=openid)
+
+                            month_data = self.select_data(month_sql)
+                            if today_data:
+                                today_data = list(today_data)
+                                print(today_data)
+                            else:
+                                today_data = []
+
+                            if month_data:
+                                month_data = list(month_data)
+                                print(month_data)
+                            else:
+                                month_data=[]
+
+                            return render(request, "index.html", {
+                                "openid": openid
+                            })
+                        return JsonResponse({"msg": "request err"})
+            else:
+                # openid = "测试"
+                return JsonResponse({"msg": "only open in wechat"})
+                # return render(request, "tutorial.html", {
+                #     "openid": openid
+                # })
+        except Exception as e:
+            print(e)
+            return JsonResponse({"msg": "fail"})
+
+    def get_md5(self, strs):
+        m1 = hashlib.md5()
+        m1.update(strs.encode("utf-8"))
+        strs_md5 = m1.hexdigest()
+        return strs_md5
+
+    def select_data(self, sql):
+        try:
+            cursor = connection.cursor()
+            cursor.execute(sql)
+            info = cursor.fetchall()
+            cursor.close()
+            return info
+        except Exception as e:
+            print(e)
+            print("查询openid有误")
+            return 0
 
 
 class CashWithdrawal(View):
@@ -298,7 +364,7 @@ class CashWithdrawal(View):
     def select_openid(self, sql):
         try:
             cursor = connection.cursor()
-            info =cursor.execute(sql)
+            info = cursor.execute(sql)
             cursor.close()
             return info
         except Exception as e:
@@ -335,6 +401,7 @@ class Launch(View):
 
 
 class UploadImage(View):
+    # 上传图片
     def get(self, request, code):
         return HttpResponse("请求错误")
 
@@ -344,7 +411,7 @@ class UploadImage(View):
         openid = request.POST.get("openid", "")
         wechat_id = request.POST.get("wechat_id", "")
         file_name = str(MEDIA_ROOT) + "/paycode/" + str(openid) + ".jpg"
-        print("dir:",file_name)
+        print("dir:", file_name)
         img_type = file_obj.name.split('.')[-1]
         if img_type not in ['jpeg', 'jpg', 'png']:
             result["code"] = 0

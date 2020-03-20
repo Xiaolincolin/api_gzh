@@ -110,12 +110,12 @@
                 <span class="aui-flex-box">{{ order.0 }}</span>
                 <span class="aui-flex-box">{{ order.1 }}</span>
                 <span class="aui-flex-box">{{ order.3 }}</span>
-                <span class="aui-flex-Price">
-                    {% if order.2 == 0  %}
-                        审核中
+
+                    {% if order.2 == '0'  %}
+                        <span class="aui-flex-Price" style="color:red">>审核中</span>
                     {% else %}
-                        完成
-                {% endif %}</span>
+                       <span class="aui-flex-Price">完成</span>
+                {% endif %}
             </li>
             {% endfor %}
 

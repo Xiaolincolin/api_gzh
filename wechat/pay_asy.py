@@ -63,9 +63,9 @@ class PayAsy:
                     key_game_yesterday = openid + ":" + str(yesterday) + ":game"
                     redis_game_data = rdc_local.get(key_game)
                     if not redis_game_data:
-                        yesterday_data = rdc_local.get(key_game_yesterday)
-                        if yesterday_data:
-                            rdc_local.delete(key_game_yesterday)
+                        # yesterday_data = rdc_local.get(key_game_yesterday)
+                        # if yesterday_data:
+                        #     rdc_local.delete(key_game_yesterday)
 
                         rdc_local.set(key_game, sum_today_game)
                         update_game = 0
@@ -85,9 +85,9 @@ class PayAsy:
                     key_app_yesterday = openid + ":" + str(yesterday) + ":app"
                     redis_app_data = rdc_local.get(key_app)
                     if not redis_app_data:
-                        yesterday_data_app = rdc_local.get(key_app_yesterday)
-                        if yesterday_data_app:
-                            rdc_local.delete(key_app_yesterday)
+                        # yesterday_data_app = rdc_local.get(key_app_yesterday)
+                        # if yesterday_data_app:
+                        #     rdc_local.delete(key_app_yesterday)
                         rdc_local.set(key_app, sum_today_app)
                         update_app = 0
                         app_flag = 1
@@ -200,8 +200,7 @@ if __name__ == '__main__':
     p = PayAsy()
     # for i in range(0, 20):
     #     t = (datetime.date.today() + datetime.timedelta(days=-i)).strftime("%Y-%m-%d")
-    #     y = (datetime.date.today() + datetime.timedelta(days=-(i + 1))).strftime("%Y-%m-%d")
-    #     print(y)
-    #     p.get_data(y, t, 1)
+    #     print(t)
+    #     p.get_data(t, "", 1)
     p.get_data("", "", 0)
 

@@ -443,9 +443,9 @@ class Launch(View):
                             update_result = self.update_money(update_sql)
                             if update_result:
                                 # 账户金额修改成功
-                                insert_sql = "insert into wechat_order(openid, orderid, amount, add_time) VALUES(%s, %s, %f, NOW())"
+                                insert_sql = "insert into wechat_order(openid, orderid, amount, add_time) VALUES(%s, %s, %s, NOW())"
                                 orderid= self.get_order_code(openid)
-                                insert_result = self.insert_order(insert_sql,[openid,orderid,money])
+                                insert_result = self.insert_order(insert_sql,[openid,orderid,str(money)])
                                 if insert_result:
                                     # 订单生成成功
                                     data["code"] = 1

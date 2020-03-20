@@ -424,16 +424,20 @@ class Launch(View):
                 result = self.select_openid(select_sql)
                 if result:
                     result = list(result)
+                    print("查询结果：",result)
                     totalmoney = result[0]
                     withdrawable = result[1]
                     alread = result[2]
                     status = result[3]
+
                     msg = openid + " " + "发起提现 " +str(money)
+                    logger_money.info(msg)
                     if withdrawable:
                         withdrawable = float(withdrawable)
-                    logger_money.info(msg)
+
                     if status:
                         if withdrawable and money <= withdrawable:
+                            print("满足提现要求")
                             update_sql = "UPDATE wechat_money set withdrawable=withdrawable-'{money}',alread=alread+'{money}',update_time=NOW() where openid='{oid}'".format(
                                 money=money, oid=openid)
                             update_result = self.update_money(update_sql)
@@ -510,7 +514,7 @@ class Launch(View):
             return info
         except Exception as e:
             print(e)
-            print("查询openid有误")
+            print("还原金额失败")
             return 0
 
     def insert_order(self, sql, param):
@@ -521,7 +525,7 @@ class Launch(View):
             return info
         except Exception as e:
             print(e)
-            print("查询openid有误")
+            print("插入订单失败")
             return 0
 
     def get_order_code(self, openid):
@@ -541,7 +545,7 @@ class Launch(View):
             return info
         except Exception as e:
             print(e)
-            print("查询openid有误")
+            print("查询金额失败")
             return 0
 
 

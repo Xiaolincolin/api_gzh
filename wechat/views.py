@@ -250,12 +250,18 @@ class Index(View):
                             month_data = []
                             history_data = []
                             name = ""
+                            month_len = 0
+                            history = 0
                             for per in all_data:
                                 per = list(per)
+                                history += int(per[0])
+                                history += int(per[1])
                                 history_data.append(per)
                                 per_month = str(per[2]).split("-")[1]
                                 if month == per_month:
                                     month_data.append(per)
+                                    month_len += int(per[0])
+                                    month_len += int(per[1])
 
                             if day_data:
                                 day_data = list(day_data)
@@ -264,9 +270,9 @@ class Index(View):
                                     if len(d) == 4 and not name:
                                         name = d[0]
                                     today_data.append(d)
-                            history = len(history_data)
+
                             day = len(today_data)
-                            month_len = len(month_data)
+
                             return render(request, "index.html", {
                                 "openid": openid,
                                 "name": name,
@@ -361,7 +367,7 @@ class CashWithdrawal(View):
                                 "alread": alread,
                                 "status": int(status),
                                 "openid": openid_md5,
-                                "order_result":order_result
+                                "order_result": order_result
                             })
                             # else:
                             #     return render(request, "uploadimage.html", {

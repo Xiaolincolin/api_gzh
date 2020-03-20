@@ -168,8 +168,10 @@
             $('#sublogin').css({'background-color': 'gray'});
         }
         if (bool) {
-            $('#sublogin').removeAttr("disabled");
-            $('#sublogin').css({'background-color': 'green'});
+            if (result!=0){
+                $('#sublogin').removeAttr("disabled");
+                $('#sublogin').removeAttr("style")
+            }
 
             if (result > withdrawable) {
                 $('#money').val(withdrawable);

@@ -146,9 +146,9 @@
 </script>
 <script>
     let withdrawable = parseFloat({{ withdrawable }});
-    let status_code = parseInt({{ status }});
+    let status_code = {{ status }};
     if (!withdrawable) {
-        surplus = 0
+        withdrawable = 0
     }
     if (withdrawable < 10) {
         $('#sublogin').attr('disabled', "true");

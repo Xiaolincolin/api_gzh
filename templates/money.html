@@ -146,7 +146,7 @@
 </script>
 <script>
     let withdrawable = parseFloat({{ withdrawable }});
-    let status_code = {{ status }};
+    let status_code = parseInt({{ status }});
     alert(status_code);
     if (!withdrawable) {
         withdrawable = 0

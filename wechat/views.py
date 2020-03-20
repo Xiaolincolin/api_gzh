@@ -504,7 +504,7 @@ class Launch(View):
             msg = openid + " " + str(money) + " " + "公众号外部链接渗透"
             logger_money.info(msg)
 
-        return JsonResponse(data)
+        return JsonResponse(data,json_dumps_params={'ensure_ascii':False})
 
     def update_money(self, sql):
         try:

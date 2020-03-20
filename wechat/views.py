@@ -321,38 +321,38 @@ class CashWithdrawal(View):
                             m1 = hashlib.md5()
                             m1.update(openid.encode("utf-8"))
                             openid_md5 = m1.hexdigest()
-                            select_pay = "SELECT openid from wechat_pay where openid='{oid}'".format(
+                            # select_pay = "SELECT openid from wechat_pay where openid='{oid}'".format(
+                            #     oid=openid_md5)
+                            # pay_info = self.select_openid(select_pay)
+                            # if pay_info:
+                            select_sql = "SELECT totalmoney,withdrawable,alread,surplus from wechat_money where openid='{oid}'".format(
                                 oid=openid_md5)
-                            pay_info = self.select_openid(select_pay)
-                            if pay_info:
-                                select_sql = "SELECT totalmoney,withdrawable,alread,surplus from wechat_money where openid='{oid}'".format(
-                                    oid=openid_md5)
-                                info = self.select_money(select_sql)
-                                totalmoney = 0
-                                withdrawable = 0
-                                alread = 0
-                                surplus = 0
-                                if info:
-                                    try:
-                                        info = list(info)
-                                        totalmoney = info[0]
-                                        withdrawable = info[1]
-                                        alread = info[2]
-                                        surplus = info[3]
-                                    except Exception as e:
-                                        print(e)
+                            info = self.select_money(select_sql)
+                            totalmoney = 0
+                            withdrawable = 0
+                            alread = 0
+                            surplus = 0
+                            if info:
+                                try:
+                                    info = list(info)
+                                    totalmoney = info[0]
+                                    withdrawable = info[1]
+                                    alread = info[2]
+                                    surplus = info[3]
+                                except Exception as e:
+                                    print(e)
 
-                                return render(request, "money.html", {
-                                    "totalmoney": totalmoney,
-                                    "withdrawable": withdrawable,
-                                    "alread": alread,
-                                    "surplus": surplus,
-                                    "openid": openid_md5
-                                })
-                            else:
-                                return render(request, "uploadimage.html", {
-                                    "openid": openid_md5
-                                })
+                            return render(request, "money.html", {
+                                "totalmoney": totalmoney,
+                                "withdrawable": withdrawable,
+                                "alread": alread,
+                                "surplus": surplus,
+                                "openid": openid_md5
+                            })
+                            # else:
+                            #     return render(request, "uploadimage.html", {
+                            #         "openid": openid_md5
+                            #     })
                         else:
                             return JsonResponse({"msg": "网站维护中！请耐心等待"})
                 else:

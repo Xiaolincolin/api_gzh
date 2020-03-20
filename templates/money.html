@@ -168,7 +168,7 @@
             $('#sublogin').css({'background-color': 'gray'});
         }
         if (bool) {
-            if (result!=0 && withdrawable < 10){
+            if (result!=0 && withdrawable > 10){
                 $('#sublogin').removeAttr("disabled");
                 $('#sublogin').removeAttr("style")
             }

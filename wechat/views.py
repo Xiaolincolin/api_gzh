@@ -328,9 +328,19 @@ class CashWithdrawal(View):
                             #     oid=openid_md5)
                             # pay_info = self.select_openid(select_pay)
                             # if pay_info:
+                            order_result = []
                             select_sql = "SELECT totalmoney,withdrawable,alread,`status` from wechat_money where openid='{oid}'".format(
                                 oid=openid_md5)
                             info = self.select_money(select_sql)
+                            order_sql = "SELECT `name`,amount,`status`,add_time from wechat_order where openid='{oid}'".format(
+                                oid=openid_md5)
+                            order_data = self.select_order(order_sql)
+                            if order_data:
+                                order_data = list(order_data)
+                                for order in order_data:
+                                    if order:
+                                        order_result.append(list(order))
+
                             totalmoney = 0
                             withdrawable = 0
                             alread = 0
@@ -350,7 +360,8 @@ class CashWithdrawal(View):
                                 "withdrawable": withdrawable,
                                 "alread": alread,
                                 "status": int(status),
-                                "openid": openid_md5
+                                "openid": openid_md5,
+                                "order_result":order_result
                             })
                             # else:
                             #     return render(request, "uploadimage.html", {
@@ -389,6 +400,18 @@ class CashWithdrawal(View):
         except Exception as e:
             print(e)
             print("查询openid有误")
+            return 0
+
+    def select_order(self, sql):
+        try:
+            cursor = connection.cursor()
+            cursor.execute(sql)
+            info = cursor.fetchall()
+            cursor.close()
+            return info
+        except Exception as e:
+            print(e)
+            print("查询订单有误")
             return 0
 
     def insert_openid(self, sql, param):
@@ -482,7 +505,7 @@ class Launch(View):
                                         up_result = self.update_money(exc_sql)
                                         if up_result:
                                             # 账户锁定成功，用户不能发起提现
-                                            msg = openid + " " + str(orderid) + " "+ str(money) + " 提现失败，金额还原失败,账号锁定成功"
+                                            msg = openid + " " + str(orderid) + " " + str(money) + " 提现失败，金额还原失败,账号锁定成功"
                                             logger_money.info(msg)
                                         else:
                                             # 账户锁定失败，用户金额还原失败，紧急处理

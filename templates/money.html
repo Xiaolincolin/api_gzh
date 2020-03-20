@@ -90,23 +90,27 @@
         </div>
         <div class="aui-flex b-line">
             <div class="aui-back-top">
-                <h2>排名</h2>
+                <h2>#</h2>
             </div>
             <div class="aui-flex-box">
                 <h4>用户</h4>
             </div>
             <div class="aui-flex-box">
-                <h4>时间</h4>
+                <h4>金额</h4>
             </div>
-            <div class="aui-bonus">金额</div>
+            <div class="aui-bonus">状态</div>
         </div>
         <ul class="aui-money-ul">
-            <li class="aui-flex">
-                <span class="aui-flex-change">1</span>
-                <span class="aui-flex-box">1144****20@qq.com</span>
-                <span class="aui-flex-box">2020-03-18 15:46:03</span>
-                <span class="aui-flex-Price">￥50.00</span>
+            {% for order in order_result %}
+                <li class="aui-flex">
+                <span class="aui-flex-change">{{ forloop.counter }}</span>
+                <span class="aui-flex-box">{{ order.0 }}</span>
+                <span class="aui-flex-box">{{ order.1 }}</span>
+                <span class="aui-flex-box">{{ order.2 }}</span>
+                <span class="aui-flex-Price">{{ order.3 }}</span>
             </li>
+            {% endfor %}
+
 
         </ul>
 

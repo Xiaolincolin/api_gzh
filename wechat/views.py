@@ -13,12 +13,15 @@ from django.views.generic import View
 import redis
 import hashlib
 import logging
+
 rdp_local = redis.ConnectionPool(host='47.95.217.37', port=6379, db=1)  # 默认db=0，测试使用db=1
 rdc_local = redis.StrictRedis(connection_pool=rdp_local)
 redis_conn = redis.Redis(connection_pool=redis.ConnectionPool(host='47.95.217.37', port=6379, db=2))
 from django.db import connection
 from api.settings import MEDIA_ROOT
+
 logger = logging.getLogger('')
+
 
 class Wechat(View):
     def get(self, request):
@@ -411,41 +414,51 @@ class Launch(View):
         if money:
             money = float(money)
         else:
-            money=0
-        print(user)
-        print(money)
-        print(remark)
-        print(openid)
+            money = 0
+        if not user:
+            user = "匿名"
         data = {}
-        if openid :
+        if openid:
             if money:
                 select_sql = "SELECT totalmoney,withdrawable,alread,`status` FROM wechat_money where openid='{oid}'".format(
                     oid=openid)
                 result = self.select_openid(select_sql)
                 if result:
                     result = list(result)
-                    print("查询结果：",result)
-                    totalmoney = result[0]
-                    withdrawable = result[1]
-                    alread = result[2]
-                    status = result[3]
+                    try:
+                        totalmoney = result[0]
+                        withdrawable = result[1]
+                        alread = result[2]
+                        status = result[3]
+                    except Exception as e:
+                        msg = openid + "查询金额结果下标取值报错"
+                        logger_money.info(msg)
+                        totalmoney = 0
+                        withdrawable = 0
+                        alread = 0
+                        status = 0
 
-                    msg = openid + " " + "发起提现 " +str(money)
+                    msg = openid + " 发起提现 " + str(money)
                     logger_money.info(msg)
                     if withdrawable:
                         withdrawable = float(withdrawable)
-
+                        before_amount = withdrawable
+                        after_amount = withdrawable - money
+                    else:
+                        before_amount = 0
+                        after_amount = 0
                     if status:
                         if withdrawable and money <= withdrawable:
-                            print("满足提现要求")
                             update_sql = "UPDATE wechat_money set withdrawable=withdrawable-'{money}',alread=alread+'{money}',update_time=NOW() where openid='{oid}'".format(
                                 money=money, oid=openid)
                             update_result = self.update_money(update_sql)
                             if update_result:
                                 # 账户金额修改成功
-                                insert_sql = "insert into wechat_order(openid, orderid, amount, add_time) VALUES(%s, %s, %s, NOW())"
-                                orderid= self.get_order_code(openid)
-                                insert_result = self.insert_order(insert_sql,[openid,orderid,str(money)])
+                                insert_sql = "insert into wechat_order(openid,`name`,orderid, amount,totalmoney,before_amount,after_amount,remark, add_time) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, NOW())"
+                                orderid = self.get_order_code(openid)
+                                insert_result = self.insert_order(insert_sql, [openid, str(user), orderid, str(money),
+                                                                               str(totalmoney), str(before_amount),
+                                                                               str(after_amount), remark])
                                 if insert_result:
                                     # 订单生成成功
                                     data["code"] = 1
@@ -459,7 +472,7 @@ class Launch(View):
                                     exc_result = self.update_money(exc_update_sql)
                                     if exc_result:
                                         # 订单生成失败，金额还原成功
-                                        msg = openid+ " "+str(money)+" 提现失败 "+"金额还原成功"
+                                        msg = openid + " " + str(money) + " 提现失败 " + "金额还原成功"
                                         logger_money.info(msg)
                                     else:
                                         # 订单生成失败，金额还原失败，进行账户锁定
@@ -504,7 +517,7 @@ class Launch(View):
             msg = openid + " " + str(money) + " " + "公众号外部链接渗透"
             logger_money.info(msg)
 
-        return JsonResponse(data,json_dumps_params={'ensure_ascii':False})
+        return JsonResponse(data, json_dumps_params={'ensure_ascii': False})
 
     def update_money(self, sql):
         try:
@@ -520,7 +533,7 @@ class Launch(View):
     def insert_order(self, sql, param):
         try:
             cursor = connection.cursor()
-            info = cursor.execute(sql,param)
+            info = cursor.execute(sql, param)
             cursor.close()
             return info
         except Exception as e:

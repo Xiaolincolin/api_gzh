@@ -98,6 +98,9 @@
             <div class="aui-flex-box">
                 <h4>金额</h4>
             </div>
+            <div class="aui-flex-box">
+                <h4>时间</h4>
+            </div>
             <div class="aui-bonus">状态</div>
         </div>
         <ul class="aui-money-ul">
@@ -107,7 +110,12 @@
                 <span class="aui-flex-box">{{ order.0 }}</span>
                 <span class="aui-flex-box">{{ order.1 }}</span>
                 <span class="aui-flex-box">{{ order.2 }}</span>
-                <span class="aui-flex-Price">{{ order.3 }}</span>
+                <span class="aui-flex-Price">
+                    {% if order.3 == 0  %}
+                        审核中
+                    {% else %}
+                        完成
+                {% endif %}</span>
             </li>
             {% endfor %}
 

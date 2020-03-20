@@ -163,7 +163,14 @@
         var result = $(this).val();
         var r = /^\d+$/;
         var bool = r.test(result);
+        if (result==0){
+            $('#sublogin').attr('disabled', "true");
+            $('#sublogin').css({'background-color': 'gray'});
+        }
         if (bool) {
+            $('#sublogin').attr('disabled', "false");
+            $('#sublogin').css({'background-color': 'green'});
+
             if (result > withdrawable) {
                 $('#money').val(withdrawable);
             }

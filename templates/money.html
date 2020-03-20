@@ -1,113 +1,116 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     {% load static %}
-	<meta charset="UTF-8">
-	<title>球球趣玩</title>
-	<meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport" />
-	<meta content="yes" name="apple-mobile-web-app-capable" />
-	<meta content="black" name="apple-mobile-web-app-status-bar-style" />
-	<meta content="telephone=no" name="format-detection" />
-	<link href="{% static 'assets/css/stylemoney.css' %}" rel="stylesheet" type="text/css" />
+    <meta charset="UTF-8">
+    <title>球球趣玩</title>
+    <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport"/>
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <meta content="black" name="apple-mobile-web-app-status-bar-style"/>
+    <meta content="telephone=no" name="format-detection"/>
+    <link href="{% static 'assets/css/stylemoney.css' %}" rel="stylesheet" type="text/css"/>
 
 </head>
 <body>
 
 <section class="aui-flexView">
-	<section class="aui-scrollView">
-		<div class="aui-money-head" style="background-image: url('{% static 'assets/img/head.png' %}')">
-			
-			<div class="aui-palace aui-palace-one">
-				<a href="javascript:" class="aui-palace-grid">
-					<div class="aui-palace-grid-text">
-						<h1>{{ totalmoney }}</h1>
-						<p>总金额(元)</p>
-					</div>
-				</a>
-				<a href="javascript:" class="aui-palace-grid">
-					<div class="aui-palace-grid-text">
-						<h1>{{ withdrawable }}</h1>
-						<p>可提现金额(元)</p>
-					</div>
-				</a>
-				<a href="javascript:" class="aui-palace-grid">
-					<div class="aui-palace-grid-text">
-						<h1>{{ alread }}</h1>
-						<p>已提现(元)</p>
-					</div>
-				</a>
-				<a href="javascript:" class="aui-palace-grid">
-					<div class="aui-palace-grid-text">
-						<h1>{{ surplus }}</h1>
-						<p>剩余金额(元)</p>
-					</div>
-				</a>
-			</div>
+    <section class="aui-scrollView">
+        <div class="aui-money-head" style="background-image: url('{% static 'assets/img/head.png' %}')">
 
-		</div>
+            <div class="aui-palace aui-palace-one">
+                <a href="javascript:" class="aui-palace-grid">
+                    <div class="aui-palace-grid-text">
+                        <h1>{{ totalmoney }}</h1>
+                        <p>总金额(元)</p>
+                    </div>
+                </a>
+                <a href="javascript:" class="aui-palace-grid">
+                    <div class="aui-palace-grid-text">
+                        <h1>{{ withdrawable }}</h1>
+                        <p>可提现金额(元)</p>
+                    </div>
+                </a>
+                <a href="javascript:" class="aui-palace-grid">
+                    <div class="aui-palace-grid-text">
+                        <h1>{{ alread }}</h1>
+                        <p>已提现(元)</p>
+                    </div>
+                </a>
+                <a href="javascript:" class="aui-palace-grid">
+                    <div class="aui-palace-grid-text">
+                        {% if status == 0 %}
+                            <h1 style="color:red;font-size:50px">异常</h1>
+                        {% else %}
+                            <h1 style="color:green;font-size:50px">正常</h1>
+                        {% endif %}
+                        <p>用户状态</p>
+                    </div>
+                </a>
+            </div>
 
-		<div class="divHeight"></div>
+        </div>
 
-	
-		<div class="aui-flex aui-flex-title b-line">
-			<div class="aui-flex-box">
-				<h2><em>发起提现</em></h2>
-			</div>
-		</div>
-		<div class="aui-palace aui-palace-three">
-			<form method="post" action="{% url 'launch' %}">
-				<div class="input-group">
-					<label for="khname" style="padding-left:34px;">姓名</label>
-					<input type="text" id="name" name="user" placeholder="请输入您的姓名">
-				</div>
-{#				<div class="input-group">#}
-{#					<label for="khname" style="padding-left:34px;">账号</label>#}
-{#					<input type="text" id="account" name="account" placeholder="请输入您的手机号码">#}
-{#				</div>#}
-				<div class="input-group">
-					<label for="khname" style="padding-left:34px;">金额</label>
-					<input type="text" id="money" name="money" placeholder="请输入您的提现金额">
-				</div>
-				
-				<div class="input-group" >
-					<label for="khname" style="padding-left:34px;">备注</label>
-					<input type="text" id="remarks" name="remark" placeholder="备注">
-				</div>
-                <input type='hidden' name='openid' value='{{ openid }}' />
-				<button type="submit" id="sublogin">确定</button>
+        <div class="divHeight"></div>
+
+
+        <div class="aui-flex aui-flex-title b-line">
+            <div class="aui-flex-box">
+                <h2><em>发起提现</em></h2>
+            </div>
+        </div>
+        <div class="aui-palace aui-palace-three">
+            <form method="post" action="{% url 'launch' %}">
+                <div class="input-group">
+                    <label for="khname" style="padding-left:34px;">姓名</label>
+                    <input type="text" id="name" name="user" placeholder="请输入您的姓名">
+                </div>
+                {#				<div class="input-group">#}
+                {#					<label for="khname" style="padding-left:34px;">账号</label>#}
+                {#					<input type="text" id="account" name="account" placeholder="请输入您的手机号码">#}
+                {#				</div>#}
+                <div class="input-group">
+                    <label for="khname" style="padding-left:34px;">金额</label>
+                    <input type="text" id="money" name="money" placeholder="请输入您的提现金额">
+                </div>
+
+                <div class="input-group">
+                    <label for="khname" style="padding-left:34px;">备注</label>
+                    <input type="text" id="remarks" name="remark" placeholder="备注">
+                </div>
+                <input type='hidden' name='openid' value='{{ openid }}'/>
+                <button type="submit" id="sublogin">确定</button>
                 {% csrf_token %}
-			</form>
-		</div>
-		<div class="divHeight"></div>
-		<div class="aui-flex b-line">
-			<div class="aui-flex-box">
-				<h2>提现记录</h2>
-			</div>
-		</div>
-		<div class="aui-flex b-line">
-			<div class="aui-back-top">
-				<h2>排名</h2>
-			</div>
-			<div class="aui-flex-box">
-				<h4>用户</h4>
-			</div>
-			<div class="aui-flex-box">
-				<h4>时间</h4>
-			</div>
-			<div class="aui-bonus">金额</div>
-		</div>
-		<ul class="aui-money-ul">
-			<li class="aui-flex">
-				<span class="aui-flex-change">1</span>
-				<span class="aui-flex-box">1144****20@qq.com</span>
-				<span class="aui-flex-box">2020-03-18 15:46:03</span>
-				<span class="aui-flex-Price">￥50.00</span>
-			</li>
-			
-		</ul>
+            </form>
+        </div>
+        <div class="divHeight"></div>
+        <div class="aui-flex b-line">
+            <div class="aui-flex-box">
+                <h2>提现记录</h2>
+            </div>
+        </div>
+        <div class="aui-flex b-line">
+            <div class="aui-back-top">
+                <h2>排名</h2>
+            </div>
+            <div class="aui-flex-box">
+                <h4>用户</h4>
+            </div>
+            <div class="aui-flex-box">
+                <h4>时间</h4>
+            </div>
+            <div class="aui-bonus">金额</div>
+        </div>
+        <ul class="aui-money-ul">
+            <li class="aui-flex">
+                <span class="aui-flex-change">1</span>
+                <span class="aui-flex-box">1144****20@qq.com</span>
+                <span class="aui-flex-box">2020-03-18 15:46:03</span>
+                <span class="aui-flex-Price">￥50.00</span>
+            </li>
 
-	</section>
+        </ul>
+
+    </section>
 </section>
 </body>
 
@@ -116,52 +119,57 @@
 <script type="text/javascript" src="{% static 'assets/js/layer.js' %}"></script>
 <script type="text/javascript" src="{% static 'assets/js/money.js' %}"></script>
 <script type="text/javascript">
-	function b() {
-		t = parseInt(x.css('top'));
-		y.css('top', '20px');
-		x.animate({
-			top: t - 20 + 'px'
-		}, 'slow');
-		if (Math.abs(t) == h - 20) {
-			y.animate({
-				top: '0px'
-			}, 'slow');
-			z = x;
-			x = y;
-			y = z;
-		}
-		setTimeout(b, 3000);
-	}
-	$(document).ready(function() {
-		$('.swap').html($('.news_li').html());
-		x = $('.news_li');
-		y = $('.swap');
-		h = $('.news_li li').length * 20;
-		setTimeout(b, 3000);
-	})
+    function b() {
+        t = parseInt(x.css('top'));
+        y.css('top', '20px');
+        x.animate({
+            top: t - 20 + 'px'
+        }, 'slow');
+        if (Math.abs(t) == h - 20) {
+            y.animate({
+                top: '0px'
+            }, 'slow');
+            z = x;
+            x = y;
+            y = z;
+        }
+        setTimeout(b, 3000);
+    }
+
+    $(document).ready(function () {
+        $('.swap').html($('.news_li').html());
+        x = $('.news_li');
+        y = $('.swap');
+        h = $('.news_li li').length * 20;
+        setTimeout(b, 3000);
+    })
 </script>
 <script>
     let surplus = {{ surplus }};
-    if(!surplus){
+    let status_code ={{ status }};
+    if (!surplus) {
         surplus = 0
     }
-	if (surplus < 10){
-        $('#sublogin').attr('disabled',"true");
-		$('#sublogin').css({'background-color':'gray'});
+    if (surplus < 10) {
+        $('#sublogin').attr('disabled', "true");
+        $('#sublogin').css({'background-color': 'gray'});
     }
-	$("#money").blur(function(){
-		var result = $(this).val();
-        var r=/^\d+$/;
-		var bool = r.test(result)
-		if(bool){
-			if (result > surplus){
-				$('#money').val(0);
-			}
-		}else
-		{
-			$('#money').val(0);
-		}
+    if (status_code = 0) {
+        $('#sublogin').attr('disabled', "true");
+        $('#sublogin').css({'background-color': 'gray'});
+    }
+    $("#money").blur(function () {
+        var result = $(this).val();
+        var r = /^\d+$/;
+        var bool = r.test(result)
+        if (bool) {
+            if (result > surplus) {
+                $('#money').val(0);
+            }
+        } else {
+            $('#money').val(0);
+        }
 
-	});
+    });
 </script>
 </html>

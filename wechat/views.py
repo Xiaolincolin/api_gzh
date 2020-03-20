@@ -12,13 +12,13 @@ from django.views.generic import View
 # Create your views here.
 import redis
 import hashlib
-
+import logging
 rdp_local = redis.ConnectionPool(host='47.95.217.37', port=6379, db=1)  # 默认db=0，测试使用db=1
 rdc_local = redis.StrictRedis(connection_pool=rdp_local)
 redis_conn = redis.Redis(connection_pool=redis.ConnectionPool(host='47.95.217.37', port=6379, db=2))
 from django.db import connection
 from api.settings import MEDIA_ROOT
-
+logger = logging.getLogger('')
 
 class Wechat(View):
     def get(self, request):
@@ -266,13 +266,13 @@ class Index(View):
                             month_len = len(month_data)
                             return render(request, "index.html", {
                                 "openid": openid,
-                                "name":name,
-                                "today_data":today_data,
-                                "month_data":month_data,
-                                "history_data":history_data,
-                                "day":day,
-                                "history":history,
-                                "month":month_len
+                                "name": name,
+                                "today_data": today_data,
+                                "month_data": month_data,
+                                "history_data": history_data,
+                                "day": day,
+                                "history": history,
+                                "month": month_len
                             })
                         return JsonResponse({"msg": "request err"})
             else:
@@ -325,20 +325,20 @@ class CashWithdrawal(View):
                             #     oid=openid_md5)
                             # pay_info = self.select_openid(select_pay)
                             # if pay_info:
-                            select_sql = "SELECT totalmoney,withdrawable,alread,surplus from wechat_money where openid='{oid}'".format(
+                            select_sql = "SELECT totalmoney,withdrawable,alread,`status` from wechat_money where openid='{oid}'".format(
                                 oid=openid_md5)
                             info = self.select_money(select_sql)
                             totalmoney = 0
                             withdrawable = 0
                             alread = 0
-                            surplus = 0
+                            status = 1
                             if info:
                                 try:
                                     info = list(info)
                                     totalmoney = info[0]
                                     withdrawable = info[1]
                                     alread = info[2]
-                                    surplus = info[3]
+                                    status = info[3]
                                 except Exception as e:
                                     print(e)
 
@@ -346,7 +346,7 @@ class CashWithdrawal(View):
                                 "totalmoney": totalmoney,
                                 "withdrawable": withdrawable,
                                 "alread": alread,
-                                "surplus": surplus,
+                                "status": status,
                                 "openid": openid_md5
                             })
                             # else:
@@ -403,17 +403,134 @@ class Launch(View):
         return HttpResponse({"msg": "错误的请求"})
 
     def post(self, request):
+        logger_money = logging.getLogger('collect')
         user = request.POST.get("user", "")
-        account = request.POST.get("account", "")
         money = request.POST.get("money", "")
         remark = request.POST.get("remark", "")
         openid = request.POST.get("openid", "")
         print(user)
-        print(account)
         print(money)
         print(remark)
         print(openid)
-        return HttpResponse({"msg": "success"})
+        data = {}
+        if openid:
+            select_sql = "SELECT totalmoney,withdrawable,alread,`status` FROM wechat_money where openid='{oid}'".format(
+                oid=openid)
+            result = self.select_openid(select_sql)
+            if result:
+                result = list(result)
+                totalmoney = result[0]
+                withdrawable = result[1]
+                alread = result[2]
+                status = result[3]
+                msg = openid + " " + "发起提现" +str(money)
+                logger_money.info(msg)
+                if status:
+                    if money <= withdrawable:
+                        update_sql = "UPDATE wechat_money set withdrawable=withdrawable-'{money}',alread=alread+'{money}',update_time=NOW() where openid='{oid}'".format(
+                            money=money, oid=openid)
+                        update_result = self.update_money(update_sql)
+                        if update_result:
+                            # 账户金额修改成功
+                            insert_sql = "insert into wechat_order(openid, orderid, amount, add_time) VALUES(%s, %s, %f, NOW())"
+                            orderid= self.get_order_code(openid)
+                            insert_result = self.insert_order(insert_sql,[openid,orderid,money])
+                            if insert_result:
+                                # 订单生成成功
+                                data["code"] = 1
+                                data["msg"] = "提现成功"
+                                msg = openid + " " + str(money) + " " + "提现发起成功"
+                                logger_money.info(msg)
+                            else:
+                                # 订单生成失败
+                                exc_update_sql = "UPDATE wechat_money set withdrawable=withdrawable+'{money}',alread=alread-'{money}',update_time=NOW() where openid='{oid}'".format(
+                                    money=money, oid=openid)
+                                exc_result = self.update_money(exc_update_sql)
+                                if exc_result:
+                                    # 订单生成失败，金额还原成功
+                                    msg = openid+ " "+str(money)+" "+"提现失败"+" "+"金额还原成功"
+                                    logger_money.info(msg)
+                                else:
+                                    # 订单生成失败，金额还原失败，进行账户锁定
+                                    exc_sql = "UPDATE wechat_money set `status`=0,update_time=NOW() where openid='{oid}'".format(
+                                        oid=openid)
+                                    up_result = self.update_money(exc_sql)
+                                    if up_result:
+                                        # 账户锁定成功，用户不能发起提现
+                                        msg = openid + " " + str(money) + " " + "提现失败，金额还原失败,账号锁定成功"
+                                        logger_money.info(msg)
+                                    else:
+                                        # 账户锁定失败，用户金额还原失败，紧急处理
+                                        msg = openid + " " + str(money) + " " + "提现失败，金额还原失败,账号锁定失败"
+                                        logger_money.info(msg)
+                                data["code"] = 0
+                                data["msg"] = "提现失败"
+                        else:
+                            data["code"] = 0
+                            data["msg"] = "提现失败"
+                            msg = openid + " " + str(money) + " " + "提现失败，金额不变"
+                            logger_money.info(msg)
+                    else:
+                        data["code"] = 0
+                        data["msg"] = "提现失败,剩余金额异常,账号冻结，请联系管理解除冻结"
+                        exc_sql = "UPDATE wechat_money set `status`=0,update_time=NOW() where openid='{oid}'".format(
+                            oid=openid)
+                        up_result = self.update_money(exc_sql)
+                        if up_result:
+                            msg = openid + " " + str(money) + " " + "提现失败，金额还原失败,账号锁定成功"
+                            logger_money.info(msg)
+                        else:
+                            msg = openid + " " + str(money) + " " + "提现失败，金额还原失败,账号锁定失败"
+                            logger_money.info(msg)
+        else:
+            data["code"] = 0
+            data["msg"] = "请务将链接分享到外部使用，仅能从公众号中发起提现"
+            msg = openid + " " + str(money) + " " + "公众号外部链接渗透"
+            logger_money.info(msg)
+
+        return JsonResponse(data)
+
+    def update_money(self, sql):
+        try:
+            cursor = connection.cursor()
+            info = cursor.execute(sql)
+            cursor.close()
+            return info
+        except Exception as e:
+            print(e)
+            print("查询openid有误")
+            return 0
+
+    def insert_order(self, sql, param):
+        try:
+            cursor = connection.cursor()
+            info = cursor.execute(sql,param)
+            cursor.close()
+            return info
+        except Exception as e:
+            print(e)
+            print("查询openid有误")
+            return 0
+
+    def get_order_code(self, openid):
+        ts = str(int(time.time() * 1000))
+        code = str(openid) + ts
+        m1 = hashlib.md5()
+        m1.update(code.encode("utf-8"))
+        order_code = m1.hexdigest()
+        return order_code
+
+    def select_openid(self, sql):
+        try:
+            cursor = connection.cursor()
+            cursor.execute(sql)
+            info = cursor.fetchone()
+            cursor.close()
+            return info
+        except Exception as e:
+            print(e)
+            print("查询openid有误")
+            return 0
 
 
 class UploadImage(View):
@@ -684,4 +801,6 @@ class Weteam(View):
 
 class Test(View):
     def get(self, request):
+        logger_c = logging.getLogger('collect')
+        logger_c.info("徐小林")  # 打印data
         return HttpResponse("功能开发中")

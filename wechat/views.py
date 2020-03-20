@@ -332,7 +332,7 @@ class CashWithdrawal(View):
                             select_sql = "SELECT totalmoney,withdrawable,alread,`status` from wechat_money where openid='{oid}'".format(
                                 oid=openid_md5)
                             info = self.select_money(select_sql)
-                            order_sql = "SELECT `name`,amount,`status`,add_time from wechat_order where openid='{oid}'".format(
+                            order_sql = "SELECT `name`,amount,`status`,add_time from wechat_order where openid='{oid}' ORDER BY add_time desc".format(
                                 oid=openid_md5)
                             order_data = self.select_order(order_sql)
                             if order_data:

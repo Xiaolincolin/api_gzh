@@ -145,12 +145,12 @@
     })
 </script>
 <script>
-    let surplus = {{ surplus }};
-    let status_code ={{ status }};
-    if (!surplus) {
+    let withdrawable = parseFloat({{ withdrawable }});
+    let status_code = parseInt({{ status }});
+    if (!withdrawable) {
         surplus = 0
     }
-    if (surplus < 10) {
+    if (withdrawable < 10) {
         $('#sublogin').attr('disabled', "true");
         $('#sublogin').css({'background-color': 'gray'});
     }
@@ -161,13 +161,15 @@
     $("#money").blur(function () {
         var result = $(this).val();
         var r = /^\d+$/;
-        var bool = r.test(result)
+        var bool = r.test(result);
         if (bool) {
-            if (result > surplus) {
-                $('#money').val(0);
+            if (result > withdrawable) {
+                $('#money').val(withdrawable);
             }
         } else {
             $('#money').val(0);
+            $('#sublogin').attr('disabled', "true");
+            $('#sublogin').css({'background-color': 'gray'});
         }
 
     });

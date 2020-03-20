@@ -349,7 +349,7 @@ class CashWithdrawal(View):
                                 "totalmoney": totalmoney,
                                 "withdrawable": withdrawable,
                                 "alread": alread,
-                                "status": status,
+                                "status": int(status),
                                 "openid": openid_md5
                             })
                             # else:
@@ -424,6 +424,8 @@ class Launch(View):
                     oid=openid)
                 result = self.select_openid(select_sql)
                 if result:
+                    # 生成订单号
+                    orderid = self.get_order_code(openid)
                     result = list(result)
                     try:
                         totalmoney = result[0]
@@ -455,7 +457,6 @@ class Launch(View):
                             if update_result:
                                 # 账户金额修改成功
                                 insert_sql = "insert into wechat_order(openid,`name`,orderid, amount,totalmoney,before_amount,after_amount,remark, add_time) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, NOW())"
-                                orderid = self.get_order_code(openid)
                                 insert_result = self.insert_order(insert_sql, [openid, str(user), orderid, str(money),
                                                                                str(totalmoney), str(before_amount),
                                                                                str(after_amount), remark])
@@ -463,7 +464,7 @@ class Launch(View):
                                     # 订单生成成功
                                     data["code"] = 1
                                     data["msg"] = "提现成功"
-                                    msg = openid + " " + str(money) + " 提现发起成功"
+                                    msg = openid + " " + str(orderid) + " " + str(money) + " 提现发起成功"
                                     logger_money.info(msg)
                                 else:
                                     # 订单生成失败
@@ -472,7 +473,7 @@ class Launch(View):
                                     exc_result = self.update_money(exc_update_sql)
                                     if exc_result:
                                         # 订单生成失败，金额还原成功
-                                        msg = openid + " " + str(money) + " 提现失败 " + "金额还原成功"
+                                        msg = openid + " " + str(orderid) + " " + str(money) + " 提现失败 " + "金额还原成功"
                                         logger_money.info(msg)
                                     else:
                                         # 订单生成失败，金额还原失败，进行账户锁定
@@ -481,11 +482,11 @@ class Launch(View):
                                         up_result = self.update_money(exc_sql)
                                         if up_result:
                                             # 账户锁定成功，用户不能发起提现
-                                            msg = openid + " " + str(money) + " 提现失败，金额还原失败,账号锁定成功"
+                                            msg = openid + " " + str(orderid) + " "+ str(money) + " 提现失败，金额还原失败,账号锁定成功"
                                             logger_money.info(msg)
                                         else:
                                             # 账户锁定失败，用户金额还原失败，紧急处理
-                                            msg = openid + " " + str(money) + " 提现失败，金额还原失败,账号锁定失败"
+                                            msg = openid + " " + str(orderid) + " " + str(money) + " 提现失败，金额还原失败,账号锁定失败"
                                             logger_money.info(msg)
                                     data["code"] = 0
                                     data["msg"] = "提现失败"
@@ -501,10 +502,10 @@ class Launch(View):
                                 oid=openid)
                             up_result = self.update_money(exc_sql)
                             if up_result:
-                                msg = openid + " " + str(money) + " 提现失败，金额还原失败,账号锁定成功"
+                                msg = openid + " " + str(money) + " 提现失败，错误操作,账号锁定成功"
                                 logger_money.info(msg)
                             else:
-                                msg = openid + " " + str(money) + " 提现失败，金额还原失败,账号锁定失败"
+                                msg = openid + " " + str(money) + " 提现失败，错误操作,账号锁定失败"
                                 logger_money.info(msg)
             else:
                 data["code"] = 0

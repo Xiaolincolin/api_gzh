@@ -524,115 +524,127 @@ class Launch(View):
             user = "匿名"
         data = {}
         if openid:
+            # openid不存在
             qr_sql = "select openid from wechat_pay_img where openid='{openid}'".format(
                 openid=openid)
             ql_code = self.select_qrcode(qr_sql)
             if ql_code:
-                if money and money >= 10:
-                    select_sql = "SELECT totalmoney,withdrawable,alread,`status` FROM wechat_money where openid='{oid}'".format(
-                        oid=openid)
-                    result = self.select_openid(select_sql)
-                    if result:
-                        # 生成订单号
-                        orderid = self.get_order_code(openid)
-                        result = list(result)
-                        try:
-                            totalmoney = result[0]
-                            withdrawable = result[1]
-                            alread = result[2]
-                            status = result[3]
-                        except Exception as e:
-                            msg = openid + "查询金额结果下标取值报错"
-                            logger_money.info(msg)
-                            totalmoney = 0
-                            withdrawable = 0
-                            alread = 0
-                            status = 0
+                # 判断是否上传收款码
+                order_sql = "SELECT openid from wechat_order where openid='{oid}'  and `status`=0 ORDER BY add_time desc".format(
+                    oid=openid)
+                order_result = self.select_qrcode(order_sql)
+                if order_result:
+                    # 判断是否有订单未审核，防止代码发起post请求
+                    data["code"] = 0
+                    data["msg"] = "抱歉，您有未审核的订单暂不能提现，请耐心等待！"
+                    msg = openid + " " + str(money) + " " + "有未审核的订单（前端规则被越过）"
+                    logger_money.info(msg)
+                else:
+                    if money and money >= 10:
+                        select_sql = "SELECT totalmoney,withdrawable,alread,`status` FROM wechat_money where openid='{oid}'".format(
+                            oid=openid)
+                        result = self.select_openid(select_sql)
+                        if result:
+                            # 生成订单号
+                            orderid = self.get_order_code(openid)
+                            result = list(result)
+                            try:
+                                totalmoney = result[0]
+                                withdrawable = result[1]
+                                alread = result[2]
+                                status = result[3]
+                            except Exception as e:
+                                msg = openid + "查询金额结果下标取值报错"
+                                logger_money.info(msg)
+                                totalmoney = 0
+                                withdrawable = 0
+                                alread = 0
+                                status = 0
 
-                        msg = openid + " 发起提现 " + str(money)
-                        logger_money.info(msg)
-                        if withdrawable:
-                            withdrawable = float(withdrawable)
-                            before_amount = withdrawable
-                            after_amount = withdrawable - money
-                        else:
-                            before_amount = 0
-                            after_amount = 0
-                        if withdrawable < 10 or withdrawable < money:
-                            data["code"] = 0
-                            data["msg"] = "可提现余额不足10元"
-                            msg = openid + " " + str(money) + " " + "可提现余额不足10元(理论上越过规则,及时处理)"
+                            msg = openid + " 发起提现 " + str(money)
                             logger_money.info(msg)
-                        else:
-                            if status:
-                                if withdrawable and money <= withdrawable:
-                                    update_sql = "UPDATE wechat_money set withdrawable=withdrawable-'{money}',alread=alread+'{money}',update_time=NOW() where openid='{oid}'".format(
-                                        money=money, oid=openid)
-                                    update_result = self.update_money(update_sql)
-                                    if update_result:
-                                        # 账户金额修改成功
-                                        insert_sql = "insert into wechat_order(openid,`name`,orderid, amount,totalmoney,before_amount,after_amount,remark, add_time) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, NOW())"
-                                        insert_result = self.insert_order(insert_sql,
-                                                                          [openid, str(user), orderid, str(money),
-                                                                           str(totalmoney), str(before_amount),
-                                                                           str(after_amount), remark])
-                                        if insert_result:
-                                            # 订单生成成功
-                                            data["code"] = "1"
-                                            data["msg"] = "提现成功"
-                                            data["withdrawable"] = str(withdrawable - money)
-                                            data["alread"] = str(alread + money)
-                                            msg = openid + " " + str(orderid) + " " + str(money) + " 提现发起成功"
-                                            logger_money.info(msg)
-                                        else:
-                                            # 订单生成失败
-                                            exc_update_sql = "UPDATE wechat_money set withdrawable=withdrawable+'{money}',alread=alread-'{money}',update_time=NOW() where openid='{oid}'".format(
-                                                money=money, oid=openid)
-                                            exc_result = self.update_money(exc_update_sql)
-                                            if exc_result:
-                                                # 订单生成失败，金额还原成功
-                                                msg = openid + " " + str(orderid) + " " + str(
-                                                    money) + " 提现失败 " + "金额还原成功"
+                            if withdrawable:
+                                withdrawable = float(withdrawable)
+                                before_amount = withdrawable
+                                after_amount = withdrawable - money
+                            else:
+                                before_amount = 0
+                                after_amount = 0
+                            if withdrawable < 10 or withdrawable < money:
+                                data["code"] = 0
+                                data["msg"] = "可提现余额不足10元"
+                                msg = openid + " " + str(money) + " " + "可提现余额不足10元(理论上越过规则,及时处理)"
+                                logger_money.info(msg)
+                            else:
+                                if status:
+                                    if withdrawable and money <= withdrawable:
+                                        update_sql = "UPDATE wechat_money set withdrawable=withdrawable-'{money}',alread=alread+'{money}',update_time=NOW() where openid='{oid}'".format(
+                                            money=money, oid=openid)
+                                        update_result = self.update_money(update_sql)
+                                        if update_result:
+                                            # 账户金额修改成功
+                                            insert_sql = "insert into wechat_order(openid,`name`,orderid, amount,totalmoney,before_amount,after_amount,remark, add_time) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, NOW())"
+                                            insert_result = self.insert_order(insert_sql,
+                                                                              [openid, str(user), orderid, str(money),
+                                                                               str(totalmoney), str(before_amount),
+                                                                               str(after_amount), remark])
+                                            if insert_result:
+                                                # 订单生成成功
+                                                data["code"] = "1"
+                                                data["msg"] = "提现成功"
+                                                data["withdrawable"] = str(withdrawable - money)
+                                                data["alread"] = str(alread + money)
+                                                msg = openid + " " + str(orderid) + " " + str(money) + " 提现发起成功"
                                                 logger_money.info(msg)
                                             else:
-                                                # 订单生成失败，金额还原失败，进行账户锁定
-                                                exc_sql = "UPDATE wechat_money set `status`=0,update_time=NOW() where openid='{oid}'".format(
-                                                    oid=openid)
-                                                up_result = self.update_money(exc_sql)
-                                                if up_result:
-                                                    # 账户锁定成功，用户不能发起提现
+                                                # 订单生成失败
+                                                exc_update_sql = "UPDATE wechat_money set withdrawable=withdrawable+'{money}',alread=alread-'{money}',update_time=NOW() where openid='{oid}'".format(
+                                                    money=money, oid=openid)
+                                                exc_result = self.update_money(exc_update_sql)
+                                                if exc_result:
+                                                    # 订单生成失败，金额还原成功
                                                     msg = openid + " " + str(orderid) + " " + str(
-                                                        money) + " 提现失败，金额还原失败,账号锁定成功"
+                                                        money) + " 提现失败 " + "金额还原成功"
                                                     logger_money.info(msg)
                                                 else:
-                                                    # 账户锁定失败，用户金额还原失败，紧急处理
-                                                    msg = openid + " " + str(orderid) + " " + str(
-                                                        money) + " 提现失败，金额还原失败,账号锁定失败"
-                                                    logger_money.info(msg)
+                                                    # 订单生成失败，金额还原失败，进行账户锁定
+                                                    exc_sql = "UPDATE wechat_money set `status`=0,update_time=NOW() where openid='{oid}'".format(
+                                                        oid=openid)
+                                                    up_result = self.update_money(exc_sql)
+                                                    if up_result:
+                                                        # 账户锁定成功，用户不能发起提现
+                                                        msg = openid + " " + str(orderid) + " " + str(
+                                                            money) + " 提现失败，金额还原失败,账号锁定成功"
+                                                        logger_money.info(msg)
+                                                    else:
+                                                        # 账户锁定失败，用户金额还原失败，紧急处理
+                                                        msg = openid + " " + str(orderid) + " " + str(
+                                                            money) + " 提现失败，金额还原失败,账号锁定失败"
+                                                        logger_money.info(msg)
+                                                data["code"] = 0
+                                                data["msg"] = "提现失败"
+                                        else:
                                             data["code"] = 0
                                             data["msg"] = "提现失败"
+                                            msg = openid + " " + str(money) + " 提现失败，金额不变"
+                                            logger_money.info(msg)
                                     else:
                                         data["code"] = 0
-                                        data["msg"] = "提现失败"
-                                        msg = openid + " " + str(money) + " 提现失败，金额不变"
-                                        logger_money.info(msg)
-                                else:
-                                    data["code"] = 0
-                                    data["msg"] = "提现失败,剩余金额异常,账号冻结，请联系管理解除冻结"
-                                    exc_sql = "UPDATE wechat_money set `status`=0,update_time=NOW() where openid='{oid}'".format(
-                                        oid=openid)
-                                    up_result = self.update_money(exc_sql)
-                                    if up_result:
-                                        msg = openid + " " + str(money) + " 提现失败，错误操作,账号锁定成功"
-                                        logger_money.info(msg)
-                                    else:
-                                        msg = openid + " " + str(money) + " 提现失败，错误操作,账号锁定失败"
-                                        logger_money.info(msg)
-                else:
-                    data["code"] = 0
-                    data["msg"] = "金额不能为空或者小于10元"
-                    msg = openid + " " + str(money) + " " + "金额为空"
-                    logger_money.info(msg)
+                                        data["msg"] = "提现失败,剩余金额异常,账号冻结，请联系管理解除冻结"
+                                        exc_sql = "UPDATE wechat_money set `status`=0,update_time=NOW() where openid='{oid}'".format(
+                                            oid=openid)
+                                        up_result = self.update_money(exc_sql)
+                                        if up_result:
+                                            msg = openid + " " + str(money) + " 提现失败，错误操作,账号锁定成功"
+                                            logger_money.info(msg)
+                                        else:
+                                            msg = openid + " " + str(money) + " 提现失败，错误操作,账号锁定失败"
+                                            logger_money.info(msg)
+                    else:
+                        data["code"] = 0
+                        data["msg"] = "金额不能为空或者小于10元"
+                        msg = openid + " " + str(money) + " " + "金额为空"
+                        logger_money.info(msg)
             else:
                 data["code"] = 0
                 data["msg"] = "抱歉，您未绑定收款码！暂不能提现！详情查看教程"

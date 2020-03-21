@@ -186,8 +186,10 @@
     $("#sublogin").on("click", function () {
         let tx_je = parseFloat($('#money').val());
         let withdrawable = parseFloat({{ withdrawable }});
+        if (tx_je < 10) {
+            alert("金额不能小于10元");
 
-        if (tx_je > withdrawable) {
+        } else if (tx_je > withdrawable) {
             let result = tx_je - withdrawable;
             alert("您的可提现金额只有" + withdrawable + "元，距离您的小目标还差" + result + "元");
         } else {

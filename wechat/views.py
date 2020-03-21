@@ -235,7 +235,7 @@ class Wechat(View):
                 else:
                     return False
         except Exception as e:
-            print(e)
+            print("判断收款码报错",e)
             return False
 
     def qrcode_recongnize(self, filename):

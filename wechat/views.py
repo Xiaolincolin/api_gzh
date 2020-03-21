@@ -1,7 +1,7 @@
 import datetime
 import json
 import time
-from io import StringIO
+from io import StringIO, BytesIO
 
 import requests
 import xmltodict
@@ -225,7 +225,7 @@ class Wechat(View):
             res = requests.get(url)
             if res.status_code == 200:
                 img = res.content
-                imgs = StringIO(img)
+                imgs = BytesIO(img)
                 flag = self.qrcode_recongnize(imgs)
                 if flag:
                     file_name = str(MEDIA_ROOT) + "/paycode/" + str(openid) + ".png"

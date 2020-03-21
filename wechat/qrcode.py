@@ -11,7 +11,7 @@ import requests
 from PIL import Image, ImageEnhance
 from pyzbar.pyzbar import decode
 import cv2
-from io import StringIO
+from io import StringIO, BytesIO
 
 """
 图片包含二维码检测
@@ -36,7 +36,7 @@ def get_image():
     res = requests.get("http://mmbiz.qpic.cn/mmbiz_jpg/7UibrgjXLfNeiaJJcQDjHkuQzjk56IDP4lR5JRBvEL4FciaLFSZIia4CMcfJ0oiaV9xqz6iaac2w4gDThPx5w9rszFCg/0")
     if res.status_code==200:
         img = res.content
-        imgs = StringIO(img)
+        imgs = BytesIO(img)
         flag = qrcode_recongnize(imgs)
         print(flag)
         # with open("c.png",'wb+') as f:
@@ -52,6 +52,6 @@ if __name__ == '__main__':
     #     kk=qrcode_recongnize(filepath,filename)
     #     print(filename,kk)
 
-    # get_image()
-    flag = qrcode_recongnize("./c.png")
-    print(flag)
+    get_image()
+    # flag = qrcode_recongnize("./c.png")
+    # print(flag)

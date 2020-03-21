@@ -39,7 +39,7 @@
                 <a href="javascript:" class="aui-palace-grid">
                     <div class="aui-palace-grid-text">
                         {% if status == 0 %}
-                            <h1 style="color:darkred">异常</h1>
+                            <h1 style="color:darkred">审核中</h1>
                         {% else %}
                             <h1 style="color:green">正常</h1>
                         {% endif %}
@@ -171,8 +171,11 @@
         }
     }
 
-    {#$('#sublogin').attr('disabled', "true");#}
-    {#$('#sublogin').css({'background-color': 'gray'});#}
+    let user_status = {{ user_status }};
+    if (parseInt(user_status) == 0) {
+        $('#sublogin').attr('disabled', "true");
+        $('#sublogin').css({'background-color': 'gray'});
+    }
 
 </script>
 
@@ -187,7 +190,7 @@
             alert("您的可提现金额只有" + withdrawable + "元，距离您的小目标还差" + result + "元");
         } else {
             if (confirm("你确定现在就要提现" + tx_je + "元，不再多攒点？再次提现需本次审核通过才能发起")) {
-                username = $("[name='name']").val();
+                username = $("[name='user']").val();
                 money = $("[name='money']").val();
                 remark = $("[name='remark']").val();
                 openid = $("[name='openid']").val();
@@ -210,6 +213,8 @@
                         if (data["code"] == "1") {
                             $('#withdrawable').html(data["withdrawable"]);
                             $('#alread').html(data["alread"]);
+                            $('#sublogin').attr('disabled', "true");
+                            $('#sublogin').css({'background-color': 'gray'});
                         }
                     },
                     error: function () {

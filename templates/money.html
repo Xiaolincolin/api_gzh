@@ -164,6 +164,7 @@
             if (obj.value < 10) {
                 obj.value = "";
             } else if (!(/(^[1-9]\d*$)/.test(obj.value))) {
+                alert("s");
                 obj.setAttribute("placeholder", "仅限于大于10的正整数");
             }
         }

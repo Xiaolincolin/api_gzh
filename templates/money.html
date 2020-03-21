@@ -70,7 +70,8 @@
                 {#				</div>#}
                 <div class="input-group">
                     <label for="khname" style="padding-left:34px;">金额</label>
-                    <input type="text" id="money" name="money" placeholder="金额不能小于10元" onclick="clearDefaultText(this,'金额不能小于10元')">
+                    <input type="text" id="money" name="money" placeholder="金额不能小于10元"
+                           onclick="clearDefaultText(this,'金额不能小于10元')">
                 </div>
 
                 <div class="input-group">
@@ -163,11 +164,12 @@
             if (obj.value < 10) {
                 obj.value = "";
             }
-            if (!isNumber(obj.value)){
-                 obj.value = "只能为大于10的数字";
+            let re = /^[0-9]+.?[0-9]*/;//判断字符串是否为数字//判断正整数/[1−9]+[0−9]∗]∗/
+            if (!re.test(obj.value)) {
+                obj.value = "大于的纯数字";
+            }
             }
         }
-    }
 
     {#$('#sublogin').attr('disabled', "true");#}
     {#$('#sublogin').css({'background-color': 'gray'});#}

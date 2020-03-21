@@ -207,12 +207,12 @@ $("#sublogin").on("click",function () {
             url:"{% url 'launch' %}",
             data:{"user":username,"money":money,"remark":remark,"openid":openid,'csrfmiddlewaretoken':$('[name="csrfmiddlewaretoken"]').val()},
             cache:"false",
-            async:"true",
+            async:"false",
             dataType:"json",
             type:"post",
             success:function(data){
                 //data是json类型
-                alert(data)
+                alert(data["msg"])
             },
             error:function() {
                 alert("服务器端异常!请稍后再试");

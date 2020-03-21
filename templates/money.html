@@ -164,12 +164,12 @@
             if (obj.value < 10) {
                 obj.value = "";
             }
-            let re = /^[0-9]+.?[0-9]*/;//判断字符串是否为数字//判断正整数/[1−9]+[0−9]∗]∗/
+            let re = /[1−9]+[0−9]∗]∗/;//判断字符串是否为数字//判断正整数/[1−9]+[0−9]∗]∗/
             if (!re.test(obj.value)) {
-                obj.value = "大于的纯数字";
-            }
+                obj.value = "仅限于大于10的纯数字";
             }
         }
+    }
 
     {#$('#sublogin').attr('disabled', "true");#}
     {#$('#sublogin').css({'background-color': 'gray'});#}

@@ -39,9 +39,9 @@
                 <a href="javascript:" class="aui-palace-grid">
                     <div class="aui-palace-grid-text">
                         {% if status == 0 %}
-                            <h1 style="color:darkred">审核中</h1>
+                            <h1 class="user_code" style="color:darkred">审核中</h1>
                         {% else %}
-                            <h1 style="color:green">正常</h1>
+                            <h1 class="user_code" style="color:green">正常</h1>
                         {% endif %}
                         <p>状态</p>
                     </div>
@@ -217,6 +217,7 @@
                         if (data["code"] == "1") {
                             $('#withdrawable').html(data["withdrawable"]);
                             $('#alread').html(data["alread"]);
+                            $('.user_code').html("审核中");
                             $('#sublogin').attr('disabled', "true");
                             $('#sublogin').css({'background-color': 'gray'});
                         }

@@ -568,7 +568,7 @@ class Launch(View):
                                         data["code"] = "1"
                                         data["msg"] = "提现成功"
                                         data["withdrawable"] = str(withdrawable - money)
-                                        data["alread"] = str(withdrawable + money)
+                                        data["alread"] = str(alread + money)
                                         msg = openid + " " + str(orderid) + " " + str(money) + " 提现发起成功"
                                         logger_money.info(msg)
                                     else:

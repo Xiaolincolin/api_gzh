@@ -137,7 +137,7 @@ class Wechat(View):
                                     insert_sql = "insert into wechat_apprentice(Apprentice,`master`,add_time) VALUES(%s,%s,NOW())"
                                     self.insert_openid(insert_sql, [apprentice_md5, master_md5])
 
-                        response_dict["xml"]["Content"] = "感谢您关注球球趣玩！开始刷广告请点击教程，上传收付款方法请发送收付款到公众号"
+                        response_dict["xml"]["Content"] = "感谢您关注球球趣玩！1.开始刷广告请点击教程\n2.查看收益，提现请点击赚钱\n 3.上传收付款方法请发送收付款到公众号"
                         response_xml_str = xmltodict.unparse(response_dict)
                         return HttpResponse(response_xml_str)
                     elif msg_event == "VIEW":
@@ -150,11 +150,11 @@ class Wechat(View):
                     # 文本消息, 获取消息内容, 用户发送 哈哈, 回复 呵呵
                     msg_body = msg_xml_dict["Content"]
                     if "收付款" in str(msg_body):
-                        response_dict["xml"]["Content"] = "请点击微信的收付款->二维码收款->长按二维码->保存到手机->将收款码发送到公众号"
+                        response_dict["xml"]["Content"] = "1.请点击微信右上角的加号\n 2.点击微信的收付款 3.二维码收款\n 4.长按二维码保存到手机\n 5.将收款码发送到公众号"
                         response_xml_str = xmltodict.unparse(response_dict)
                         return HttpResponse(response_xml_str)
                     else:
-                        response_dict["xml"]["Content"] = "欢迎来到球球趣玩！如果您在使用过程中遇到问题可以联系客服处理！"
+                        response_dict["xml"]["Content"] = "感谢您关注球球趣玩！1.开始刷广告请点击教程\n2.查看收益，提现请点击赚钱\n 3.上传收付款方法请发送收付款到公众号"
                         response_xml_str = xmltodict.unparse(response_dict)
                         return HttpResponse(response_xml_str)
                 elif msg_type == "image":
@@ -183,7 +183,7 @@ class Wechat(View):
                                 response_xml_str = xmltodict.unparse(response_dict)
                                 return HttpResponse(response_xml_str)
                         else:
-                            response_dict["xml"]["Content"] = "感谢您关注球球趣玩！开始刷广告请点击教程，上传收付款方法请发送收付款到公众号！"
+                            response_dict["xml"]["Content"] = "您已经上传过收付款了,1.开始刷广告请点击教程\n2.查看收益，提现请点击赚钱\n"
                             response_xml_str = xmltodict.unparse(response_dict)
                             return HttpResponse(response_xml_str)
                 # 其他一律回复 success

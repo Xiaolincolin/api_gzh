@@ -452,75 +452,7 @@ class CashWithdrawal(View):
         return render(request, 'money.html')
 
     def post(self, request):
-        try:
-            code = request.GET.get("code")  # 获取随机字符串
-            if code:
-                url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx96f147a2125ebb3a&secret=a063a2cfbdbe0a948b2af3cbaa62e45d&code={code}&grant_type=authorization_code".format(
-                    code=code)
-                res = requests.get(url)
-                if res.status_code == 200:
-                    json_data = res.json()
-                    print(json_data)
-                    if json_data:
-                        openid = json_data.get("openid", "")
-                        if openid:
-                            m1 = hashlib.md5()
-                            m1.update(openid.encode("utf-8"))
-                            openid_md5 = m1.hexdigest()
-                            # select_pay = "SELECT openid from wechat_pay where openid='{oid}'".format(
-                            #     oid=openid_md5)
-                            # pay_info = self.select_openid(select_pay)
-                            # if pay_info:
-                            order_result = []
-                            select_sql = "SELECT totalmoney,withdrawable,alread,`status` from wechat_money where openid='{oid}'".format(
-                                oid=openid_md5)
-                            info = self.select_money(select_sql)
-                            order_sql = "SELECT `name`,amount,`status`,add_time from wechat_order where openid='{oid}' ORDER BY add_time desc".format(
-                                oid=openid_md5)
-                            order_data = self.select_order(order_sql)
-                            if order_data:
-                                order_data = list(order_data)
-                                for order in order_data:
-                                    if order:
-                                        order_result.append(list(order))
-
-                            totalmoney = 0
-                            withdrawable = 0
-                            alread = 0
-                            status = 1
-                            if info:
-                                try:
-                                    info = list(info)
-                                    totalmoney = info[0]
-                                    withdrawable = info[1]
-                                    alread = info[2]
-                                    status = info[3]
-                                except Exception as e:
-                                    print(e)
-
-                            return render(request, "money.html", {
-                                "totalmoney": totalmoney,
-                                "withdrawable": withdrawable,
-                                "alread": alread,
-                                "status": int(status),
-                                "openid": openid_md5,
-                                "order_result": order_result
-                            })
-                            # else:
-                            #     return render(request, "uploadimage.html", {
-                            #         "openid": openid_md5
-                            #     })
-                        else:
-                            return JsonResponse({"msg": "网站维护中！请耐心等待"})
-                else:
-                    return JsonResponse({"msg": "当前网络不佳，请稍后再试"})
-            else:
-                return JsonResponse({"msg": "请先在公众号中获取业务码并且不要在微信以外的地方打开"})
-        except Exception as e:
-            print(e)
-            return JsonResponse({"msg": "请先在关注公众号(球球趣玩)获取业务码并且不要在微信以外的地方打开"})
-
-        return render(request, 'money.html')
+        return HttpResponse("错误的请求！")
 
     def select_money(self, sql):
         try:
@@ -586,7 +518,7 @@ class Launch(View):
             user = "匿名"
         data = {}
         if openid:
-            if money:
+            if money and money >= 10:
                 select_sql = "SELECT totalmoney,withdrawable,alread,`status` FROM wechat_money where openid='{oid}'".format(
                     oid=openid)
                 result = self.select_openid(select_sql)
@@ -629,8 +561,10 @@ class Launch(View):
                                                                                str(after_amount), remark])
                                 if insert_result:
                                     # 订单生成成功
-                                    data["code"] = 1
+                                    data["code"] = "1"
                                     data["msg"] = "提现成功"
+                                    data["withdrawable"] = str(withdrawable - money)
+                                    data["alread"] = str(withdrawable + money)
                                     msg = openid + " " + str(orderid) + " " + str(money) + " 提现发起成功"
                                     logger_money.info(msg)
                                 else:
@@ -676,7 +610,7 @@ class Launch(View):
                                 logger_money.info(msg)
             else:
                 data["code"] = 0
-                data["msg"] = "金额不能为空"
+                data["msg"] = "金额不能为空或者小于10元"
                 msg = openid + " " + str(money) + " " + "金额为空"
                 logger_money.info(msg)
         else:

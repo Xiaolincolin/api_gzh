@@ -26,13 +26,13 @@
                 </a>
                 <a href="javascript:" class="aui-palace-grid">
                     <div class="aui-palace-grid-text">
-                        <h1>{{ withdrawable }}</h1>
+                        <h1 id="withdrawable">{{ withdrawable }}</h1>
                         <p>可提现金额(元)</p>
                     </div>
                 </a>
                 <a href="javascript:" class="aui-palace-grid">
                     <div class="aui-palace-grid-text">
-                        <h1>{{ alread }}</h1>
+                        <h1 id="alread">{{ alread }}</h1>
                         <p>已提现(元)</p>
                     </div>
                 </a>
@@ -212,7 +212,11 @@ $("#sublogin").on("click",function () {
             type:"post",
             success:function(data){
                 //data是json类型
-                alert(data["msg"])
+                alert(data["msg"]);
+                if(data["code"]=="1") {
+                    $('#withdrawable').html(data["withdrawable"]);
+                    $('#alread').html(data["alread"])
+                }
             },
             error:function() {
                 alert("服务器端异常!请稍后再试");

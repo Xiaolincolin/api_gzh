@@ -496,6 +496,10 @@ class CashWithdrawal(View):
             print("插入openid有误")
 
 
+    def post(self,request):
+        return JsonResponse({"msg":"test"})
+
+
 class Launch(View):
     # 发起提现，生成订单
     def get(self):

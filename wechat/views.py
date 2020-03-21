@@ -460,6 +460,7 @@ class CashWithdrawal(View):
                 res = requests.get(url)
                 if res.status_code == 200:
                     json_data = res.json()
+                    print(json_data)
                     if json_data:
                         openid = json_data.get("openid", "")
                         if openid:

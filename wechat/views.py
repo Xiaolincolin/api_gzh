@@ -137,7 +137,7 @@ class Wechat(View):
                                     insert_sql = "insert into wechat_apprentice(Apprentice,`master`,add_time) VALUES(%s,%s,NOW())"
                                     self.insert_openid(insert_sql, [apprentice_md5, master_md5])
 
-                        response_dict["xml"]["Content"] = "感谢您关注球球趣玩！!详情请点击教程学习"
+                        response_dict["xml"]["Content"] = "感谢您关注球球趣玩！开始刷广告请点击教程，上传收付款方法请发送收付款到公众号"
                         response_xml_str = xmltodict.unparse(response_dict)
                         return HttpResponse(response_xml_str)
                     elif msg_event == "VIEW":
@@ -149,7 +149,11 @@ class Wechat(View):
                 elif msg_type == "text":
                     # 文本消息, 获取消息内容, 用户发送 哈哈, 回复 呵呵
                     msg_body = msg_xml_dict["Content"]
-                    if msg_body:
+                    if "收付款" in str(msg_body):
+                        response_dict["xml"]["Content"] = "请点击微信的收付款->二维码收款->长按二维码->保存到手机->将收款码发送到公众号"
+                        response_xml_str = xmltodict.unparse(response_dict)
+                        return HttpResponse(response_xml_str)
+                    else:
                         response_dict["xml"]["Content"] = "欢迎来到球球趣玩！如果您在使用过程中遇到问题可以联系客服处理！"
                         response_xml_str = xmltodict.unparse(response_dict)
                         return HttpResponse(response_xml_str)
@@ -175,7 +179,7 @@ class Wechat(View):
                                     response_xml_str = xmltodict.unparse(response_dict)
                                     return HttpResponse(response_xml_str)
                             else:
-                                response_dict["xml"]["Content"] = "欢迎来到球球趣玩！如果您在使用过程中遇到问题可以联系客服处理"
+                                response_dict["xml"]["Content"] = "请问您是想上传收款码吗？请点击微信的收付款->二维码收款->长按二维码->保存到手机->将收款码发送到公众号"
                                 response_xml_str = xmltodict.unparse(response_dict)
                                 return HttpResponse(response_xml_str)
                         else:

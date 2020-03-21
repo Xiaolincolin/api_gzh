@@ -1,18 +1,18 @@
 import datetime
-import hashlib
 import json
 import time
+from io import StringIO
 
 import requests
 import xmltodict
+from PIL import Image, ImageEnhance
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
-from django.urls import reverse
 from django.views.generic import View
-# Create your views here.
 import redis
 import hashlib
 import logging
+from pyzbar.pyzbar import decode
 
 rdp_local = redis.ConnectionPool(host='47.95.217.37', port=6379, db=1)  # 默认db=0，测试使用db=1
 rdc_local = redis.StrictRedis(connection_pool=rdp_local)
@@ -149,10 +149,39 @@ class Wechat(View):
                 elif msg_type == "text":
                     # 文本消息, 获取消息内容, 用户发送 哈哈, 回复 呵呵
                     msg_body = msg_xml_dict["Content"]
-                    if msg_body == "哈哈":
-                        response_dict["xml"]["Content"] = "呵呵"
+                    if msg_body:
+                        response_dict["xml"]["Content"] = "欢迎来到球球趣玩！如果您在使用过程中遇到问题可以联系客服处理！"
                         response_xml_str = xmltodict.unparse(response_dict)
                         return HttpResponse(response_xml_str)
+                elif msg_type == "image":
+                    PicUrl = msg_xml_dict["PicUrl"]
+                    FromUserName = msg_xml_dict["FromUserName"]
+                    if PicUrl and FromUserName:
+                        openid_md5 = self.get_md5(FromUserName)
+                        has_exist_sql = "select openid from wechat_pay_img where openid='{openid}'".format(
+                            openid=openid_md5)
+                        has_exist = self.select_openid(has_exist_sql)
+                        if not has_exist:
+                            boolean = self.get_img(PicUrl, openid_md5)
+                            if boolean:
+                                insert_qr_sql = "insert into wechat_pay_img(openid,image_id,add_time) values (%s,%s,NOW())"
+                                insert_qr_result = self.insert_openid(insert_qr_sql, [openid_md5, openid_md5])
+                                if insert_qr_result:
+                                    response_dict["xml"]["Content"] = "上传收款码成功，我们将在1-3个工作日进行审核！"
+                                    response_xml_str = xmltodict.unparse(response_dict)
+                                    return HttpResponse(response_xml_str)
+                                else:
+                                    response_dict["xml"]["Content"] = "非常抱歉！上传收款码失败，请确保上传的是本人的微信收款码，详情请联系客服处理！"
+                                    response_xml_str = xmltodict.unparse(response_dict)
+                                    return HttpResponse(response_xml_str)
+                            else:
+                                response_dict["xml"]["Content"] = "欢迎来到球球趣玩！如果您在使用过程中遇到问题可以联系客服处理"
+                                response_xml_str = xmltodict.unparse(response_dict)
+                                return HttpResponse(response_xml_str)
+                        else:
+                            response_dict["xml"]["Content"] = "欢迎来到球球趣玩！如果您在使用过程中遇到问题可以联系客服处理！"
+                            response_xml_str = xmltodict.unparse(response_dict)
+                            return HttpResponse(response_xml_str)
                 # 其他一律回复 success
                 else:
                     return HttpResponse("success")
@@ -176,17 +205,54 @@ class Wechat(View):
     def insert_openid(self, sql, param):
         try:
             cursor = connection.cursor()
-            cursor.execute(sql, param)
+            info = cursor.execute(sql, param)
             cursor.close()
+            return info
         except Exception as e:
             print(e)
-            print("插入openid有误")
+            print("插入数据有误")
+            return 0
 
     def get_md5(self, strs):
         m1 = hashlib.md5()
         m1.update(strs.encode("utf-8"))
         strs_md5 = m1.hexdigest()
         return strs_md5
+
+    def get_img(self, url, openid):
+        # 保存收款码并且判断是不是收款码
+        try:
+            res = requests.get(url)
+            if res.status_code == 200:
+                img = res.content
+                imgs = StringIO(img)
+                flag = self.qrcode_recongnize(imgs)
+                if flag:
+                    file_name = str(MEDIA_ROOT) + "/paycode/" + str(openid) + ".png"
+                    with open(file_name, 'wb+') as f:
+                        f.write(img.read())
+                    return True
+                else:
+                    return False
+        except Exception as e:
+            print(e)
+            return False
+
+    def qrcode_recongnize(self, filename):
+        # 判断是不是二维码
+        try:
+            img = Image.open(filename).convert('RGB')
+            img = ImageEnhance.Brightness(img).enhance(1.0)
+            img = ImageEnhance.Sharpness(img).enhance(1.5)
+            img = ImageEnhance.Contrast(img).enhance(2.0)
+            img = img.convert('L')
+            result = decode(img)
+            if len(result) > 0:
+                return True
+            else:
+                return False
+        except:
+            return False
 
 
 class Tutorial(View):
@@ -431,6 +497,7 @@ class CashWithdrawal(View):
 
 
 class Launch(View):
+    # 发起提现，生成订单
     def get(self):
         return HttpResponse({"msg": "错误的请求"})
 

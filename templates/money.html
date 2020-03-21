@@ -179,35 +179,45 @@
 <script>
 
     $("#sublogin").on("click", function () {
-        username = $("[name='name']").val();
-        money = $("[name='money']").val();
-        remark = $("[name='remark']").val();
-        openid = $("[name='openid']").val();
-        $.ajax({
-            url: "{% url 'launch' %}",
-            data: {
-                "user": username,
-                "money": money,
-                "remark": remark,
-                "openid": openid,
-                'csrfmiddlewaretoken': $('[name="csrfmiddlewaretoken"]').val()
-            },
-            cache: "false",
-            async: "true",
-            dataType: "json",
-            type: "post",
-            success: function (data) {
-                //data是json类型
-                alert(data["msg"]);
-                if (data["code"] == "1") {
-                    $('#withdrawable').html(data["withdrawable"]);
-                    $('#alread').html(data["alread"]);
-                }
-            },
-            error: function () {
-                alert("服务器端异常!请稍后再试");
-            },
-        });
+        let tx_je = parseFloat($('#money').val());
+        let withdrawable = parseFloat({{ withdrawable }});
+
+        if (tx_je <= withdrawable) {
+            let result = withdrawable - tx_je;
+            alert("您的可提现金额只有" + withdrawable + "元，距离您的小目标还差" + result + "元");
+        } else {
+            if (confirm("你确定现在就要提现"+tx_je+"元，不再多攒点？再次提现需本次审核通过才能发起")) {
+                username = $("[name='name']").val();
+                money = $("[name='money']").val();
+                remark = $("[name='remark']").val();
+                openid = $("[name='openid']").val();
+                $.ajax({
+                    url: "{% url 'launch' %}",
+                    data: {
+                        "user": username,
+                        "money": money,
+                        "remark": remark,
+                        "openid": openid,
+                        'csrfmiddlewaretoken': $('[name="csrfmiddlewaretoken"]').val()
+                    },
+                    cache: "false",
+                    async: "true",
+                    dataType: "json",
+                    type: "post",
+                    success: function (data) {
+                        //data是json类型
+                        alert(data["msg"]);
+                        if (data["code"] == "1") {
+                            $('#withdrawable').html(data["withdrawable"]);
+                            $('#alread').html(data["alread"]);
+                        }
+                    },
+                    error: function () {
+                        alert("服务器端异常!请稍后再试");
+                    },
+                });
+            }
+        }
     });
 </script>
 </html>

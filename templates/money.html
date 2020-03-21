@@ -62,7 +62,7 @@
             <form method="post" action="#">
                 <div class="input-group" >
                     <label for="khname" style="padding-left:34px;">姓名</label>
-                    <input type="text" id="name" name="user" placeholder="请输入您的姓名">
+                    <input type="text" id="name" name="user" placeholder="请输入收款码上的名字">
                 </div>
                 {#				<div class="input-group">#}
                 {#					<label for="khname" style="padding-left:34px;">账号</label>#}
@@ -70,7 +70,7 @@
                 {#				</div>#}
                 <div class="input-group">
                     <label for="khname" style="padding-left:34px;">金额</label>
-                    <input type="text" id="money" name="money" placeholder="请输入您的提现金额">
+                    <input type="text" id="money" name="money" placeholder="金额不能小于10元或为空">
                 </div>
 
                 <div class="input-group">
@@ -157,42 +157,13 @@
     })
 </script>
 <script>
-    let withdrawable = parseFloat({{ withdrawable }});
-    let status_code = parseInt({{ status }});
-    if (!withdrawable) {
-        withdrawable = 0
-    }
-    if (withdrawable < 10) {
-        $('#sublogin').attr('disabled', "true");
-        $('#sublogin').css({'background-color': 'gray'});
-    }
-    if (status_code == 0) {
-        $('#sublogin').attr('disabled', "true");
-        $('#sublogin').css({'background-color': 'gray'});
-    }
     $("#money").blur(function () {
         var result = $(this).val();
         var r = /^\d+$/;
         var bool = r.test(result);
-        if (result==0){
-            $('#sublogin').attr('disabled', "true");
-            $('#sublogin').css({'background-color': 'gray'});
+        if (!bool || result<10){
+            $('#sublogin').value("金额不能小于10元或为空");
         }
-        if (bool) {
-            if (result!=0 && withdrawable > 10 && status_code!=0){
-                $('#sublogin').removeAttr("disabled");
-                $('#sublogin').removeAttr("style")
-            }
-
-            if (result > withdrawable) {
-                $('#money').val(withdrawable);
-            }
-        } else {
-            $('#money').val(0);
-            $('#sublogin').attr('disabled', "true");
-            $('#sublogin').css({'background-color': 'gray'});
-        }
-
     });
 </script>
 

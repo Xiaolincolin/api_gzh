@@ -334,7 +334,7 @@ class Index(View):
                                     month_len += int(per[1])
 
                             if day_data:
-                                day_data = list(day_data)
+                                day_data = list(set(day_data))
                                 for d in day_data:
                                     d = list(d)
                                     if len(d) == 4 and not name:

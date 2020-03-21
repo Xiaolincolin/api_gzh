@@ -59,7 +59,7 @@
             </div>
         </div>
         <div class="aui-palace aui-palace-three">
-            <form method="post" action="{% url 'launch' %}">
+            <form method="post">
                 <div class="input-group">
                     <label for="khname" style="padding-left:34px;">姓名</label>
                     <input type="text" id="name" name="user" placeholder="请输入您的姓名">
@@ -194,5 +194,30 @@
         }
 
     });
+</script>
+
+<script>
+
+$("#sublogin").on("click",function () {
+        username = $("[name='name']").val();
+        money = $("[name='money']").val();
+        remark = $("[name='remark']").val();
+        openid = $("[name='openid']").val();
+        $.ajax({
+            url:"{% url 'launch' %}",
+            data:{"user":username,"money":money,"remark":remark,"openid":openid,'csrfmiddlewaretoken':$('[name="csrfmiddlewaretoken"]').val()},
+            cache:"false",
+            async:"true",
+            dataType:"json",
+            type:"post",
+            success:function(data){
+                //data是json类型
+                alert(data)
+            },
+            error:function() {
+                alert("服务器端异常!请稍后再试");
+            },
+              });
+});
 </script>
 </html>

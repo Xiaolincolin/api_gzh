@@ -183,7 +183,7 @@ class Wechat(View):
                                 response_xml_str = xmltodict.unparse(response_dict)
                                 return HttpResponse(response_xml_str)
                         else:
-                            response_dict["xml"]["Content"] = "欢迎来到球球趣玩！如果您在使用过程中遇到问题可以联系客服处理！"
+                            response_dict["xml"]["Content"] = "感谢您关注球球趣玩！开始刷广告请点击教程，上传收付款方法请发送收付款到公众号！"
                             response_xml_str = xmltodict.unparse(response_dict)
                             return HttpResponse(response_xml_str)
                 # 其他一律回复 success

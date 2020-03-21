@@ -59,8 +59,8 @@
             </div>
         </div>
         <div class="aui-palace aui-palace-three">
-            <form method="post">
-                <div class="input-group">
+            <form method="post" action="#">
+                <div class="input-group" >
                     <label for="khname" style="padding-left:34px;">姓名</label>
                     <input type="text" id="name" name="user" placeholder="请输入您的姓名">
                 </div>
@@ -78,8 +78,7 @@
                     <input type="text" id="remarks" name="remark" placeholder="备注">
                 </div>
                 <input type='hidden' name='openid' value='{{ openid }}'/>
-{#                <button type="submit" id="sublogin">确定</button>#}
-                <input type="button" id="sublogin" value="确定">
+                <button type="submit" id="sublogin">确定</button>
                 {% csrf_token %}
             </form>
         </div>

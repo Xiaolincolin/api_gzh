@@ -165,7 +165,7 @@
                 obj.value = "";
             }
             let re = /[1−9]+[0−9]∗]∗/;//判断字符串是否为数字//判断正整数/[1−9]+[0−9]∗]∗/
-            if (!re.test(obj.value)) {
+            if (re.test(obj.value)) {
                 obj.value = "仅限于大于10的纯数字";
             }
         }

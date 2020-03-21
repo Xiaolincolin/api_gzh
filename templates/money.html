@@ -186,7 +186,9 @@
     $("#sublogin").on("click", function () {
         let tx_je = parseFloat($('#money').val());
         let withdrawable = parseFloat({{ withdrawable }});
-
+        alert(tx_je);
+        alert(typeof tx_je);
+        alert(tx_je < 10);
         if (parseInt(tx_je) < 10) {
             alert("金额不能小于10元");
 

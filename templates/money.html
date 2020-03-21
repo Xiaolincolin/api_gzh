@@ -71,7 +71,7 @@
                 <div class="input-group">
                     <label for="khname" style="padding-left:34px;">金额</label>
                     <input type="text" id="money" name="money" placeholder="金额不能小于10元"
-                           onclick="clearDefaultText(this,'金额不能小于10元')">
+                           onclick="clearDefaultText(this,'仅限于大于10的正整数')">
                 </div>
 
                 <div class="input-group">
@@ -164,7 +164,7 @@
             if (obj.value < 10) {
                 obj.value = "";
             } else if (!(/(^[1-9]\d*$)/.test(obj.value))) {
-                obj.value = "仅限于大于10的正整数";
+                obj.setAttribute("placeholder", "仅限于大于10的正整数");
             }
         }
     }

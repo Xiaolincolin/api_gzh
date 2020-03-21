@@ -60,7 +60,7 @@
         </div>
         <div class="aui-palace aui-palace-three">
             <form method="post" action="#">
-                <div class="input-group" >
+                <div class="input-group">
                     <label for="khname" style="padding-left:34px;">姓名</label>
                     <input type="text" id="name" name="user" placeholder="收款码上的名字">
                 </div>
@@ -70,7 +70,7 @@
                 {#				</div>#}
                 <div class="input-group">
                     <label for="khname" style="padding-left:34px;">金额</label>
-                    <input type="text" id="money" name="money" placeholder="金额不能小于10元">
+                    <input type="text" id="money" name="money" placeholder="金额不能小于10元" onclick="clearDefaultText(this,'金额不能小于10元')">
                 </div>
 
                 <div class="input-group">
@@ -106,17 +106,17 @@
         <ul class="aui-money-ul">
             {% for order in order_result %}
                 <li class="aui-flex">
-                <span class="aui-flex-change">{{ forloop.counter }}</span>
-                <span class="aui-flex-box">{{ order.0 }}</span>
-                <span class="aui-flex-box">{{ order.1 }}</span>
-                <span class="aui-flex-box">{{ order.3 }}</span>
+                    <span class="aui-flex-change">{{ forloop.counter }}</span>
+                    <span class="aui-flex-box">{{ order.0 }}</span>
+                    <span class="aui-flex-box">{{ order.1 }}</span>
+                    <span class="aui-flex-box">{{ order.3 }}</span>
 
-                    {% if order.2 == '0'  %}
+                    {% if order.2 == '0' %}
                         <span class="aui-flex-Price" style="color:red">审核中</span>
                     {% else %}
-                       <span class="aui-flex-Price">完成</span>
-                {% endif %}
-            </li>
+                        <span class="aui-flex-Price">完成</span>
+                    {% endif %}
+                </li>
             {% endfor %}
 
 
@@ -157,54 +157,56 @@
     })
 </script>
 <script>
-    $("#money").blur(function () {
-        var result = $(this).val();
-        var r = /^\d+$/;
-        var bool = r.test(result);
-        if (result<10){
-            $('#money').value("");
+    function clearDefaultText(el, message) {
+        let obj = el;
+        obj.onblur = function () {
+            if (obj.value < 10) {
+                obj.value = message;
+            }
+            let bool = r.test(obj.value);
+            if (!bool){
+                obj.value ="只能大于10的数字"
+            }
         }
-        if(!bool){
-            $('#money').value("");
-            {#$('#sublogin').attr('disabled', "true");#}
-            {#$('#sublogin').css({'background-color': 'gray'});#}
-        }
+    }
 
-    });
+    {#$('#sublogin').attr('disabled', "true");#}
+    {#$('#sublogin').css({'background-color': 'gray'});#}
+
 </script>
 
 <script>
 
-$("#sublogin").on("click",function () {
+    $("#sublogin").on("click", function () {
         username = $("[name='name']").val();
         money = $("[name='money']").val();
         remark = $("[name='remark']").val();
         openid = $("[name='openid']").val();
         $.ajax({
-            url:"{% url 'launch' %}",
-            data:{"user":username,"money":money,"remark":remark,"openid":openid,'csrfmiddlewaretoken':$('[name="csrfmiddlewaretoken"]').val()},
-            cache:"false",
-            async:"true",
-            dataType:"json",
-            type:"post",
-            success:function(data){
+            url: "{% url 'launch' %}",
+            data: {
+                "user": username,
+                "money": money,
+                "remark": remark,
+                "openid": openid,
+                'csrfmiddlewaretoken': $('[name="csrfmiddlewaretoken"]').val()
+            },
+            cache: "false",
+            async: "true",
+            dataType: "json",
+            type: "post",
+            success: function (data) {
                 //data是json类型
                 alert(data["msg"]);
-                if(data["code"]=="1") {
+                if (data["code"] == "1") {
                     $('#withdrawable').html(data["withdrawable"]);
                     $('#alread').html(data["alread"]);
-                    let wd = "";
-                    wd = parseInt(data["withdrawable"]);
-                    if (wd && wd < 10) {
-                        $('#sublogin').attr('disabled', "true");
-                        $('#sublogin').css({'background-color': 'gray'});
-                    }
                 }
             },
-            error:function() {
+            error: function () {
                 alert("服务器端异常!请稍后再试");
             },
-              });
-});
+        });
+    });
 </script>
 </html>

@@ -163,10 +163,8 @@
             if (obj.value < 10) {
                 obj.value = "";
             }
-            let bool = r.test(obj.value);
-            alert(bool);
-            if (!bool){
-                obj.value ="只能大于10的数字"
+            if (!isNumber(obj.value)){
+                 obj.value = "只能为大于10的数字";
             }
         }
     }

@@ -163,8 +163,7 @@
         obj.onblur = function () {
             if (obj.value < 10) {
                 obj.value = "";
-            }
-            if (!(/(^[1-9]\d*$)/.test(obj.value))) {
+            } else if (!(/(^[1-9]\d*$)/.test(obj.value))) {
                 obj.value = "仅限于大于10的正整数";
             }
         }

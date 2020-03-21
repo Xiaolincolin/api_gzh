@@ -215,7 +215,13 @@ $("#sublogin").on("click",function () {
                 alert(data["msg"]);
                 if(data["code"]=="1") {
                     $('#withdrawable').html(data["withdrawable"]);
-                    $('#alread').html(data["alread"])
+                    $('#alread').html(data["alread"]);
+                    let wd = "";
+                    wd = parseInt(data["withdrawable"]);
+                    if (wd && wd < 10) {
+                        $('#sublogin').attr('disabled', "true");
+                        $('#sublogin').css({'background-color': 'gray'});
+                    }
                 }
             },
             error:function() {

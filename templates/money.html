@@ -182,7 +182,7 @@
         let tx_je = parseFloat($('#money').val());
         let withdrawable = parseFloat({{ withdrawable }});
 
-        if (tx_je <= withdrawable) {
+        if (tx_je > withdrawable) {
             let result = withdrawable - tx_je;
             alert("您的可提现金额只有" + withdrawable + "元，距离您的小目标还差" + result + "元");
         } else {

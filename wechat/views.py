@@ -230,7 +230,7 @@ class Wechat(View):
                 if flag:
                     file_name = str(MEDIA_ROOT) + "/paycode/" + str(openid) + ".png"
                     with open(file_name, 'wb+') as f:
-                        f.write(img.read())
+                        f.write(img)
                     return True
                 else:
                     return False

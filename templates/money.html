@@ -161,7 +161,7 @@
         let obj = el;
         obj.onblur = function () {
             if (obj.value < 10) {
-                obj.value = message;
+                obj.value = "";
             }
             let bool = r.test(obj.value);
             alert(bool);

@@ -172,7 +172,7 @@
     }
 
     let user_status = {{ user_status }};
-    if (parseInt(user_status) == 0) {
+    if (user_status == '0') {
         $('#sublogin').attr('disabled', "true");
         $('#sublogin').css({'background-color': 'gray'});
     }

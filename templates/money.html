@@ -62,7 +62,7 @@
             <form method="post" action="#">
                 <div class="input-group" >
                     <label for="khname" style="padding-left:34px;">姓名</label>
-                    <input type="text" id="name" name="user" placeholder="请输入收款码上的名字">
+                    <input type="text" id="name" name="user" placeholder="收款码上的名字">
                 </div>
                 {#				<div class="input-group">#}
                 {#					<label for="khname" style="padding-left:34px;">账号</label>#}
@@ -70,12 +70,12 @@
                 {#				</div>#}
                 <div class="input-group">
                     <label for="khname" style="padding-left:34px;">金额</label>
-                    <input type="text" id="money" name="money" placeholder="金额不能小于10元或为空">
+                    <input type="text" id="money" name="money" placeholder="金额不能小于10元">
                 </div>
 
                 <div class="input-group">
                     <label for="khname" style="padding-left:34px;">备注</label>
-                    <input type="text" id="remarks" name="remark" placeholder="备注">
+                    <input type="text" id="remarks" name="remark" placeholder="写点啥呢">
                 </div>
                 <input type='hidden' name='openid' value='{{ openid }}'/>
                 <button type="button" id="sublogin">确定</button>
@@ -161,9 +161,15 @@
         var result = $(this).val();
         var r = /^\d+$/;
         var bool = r.test(result);
-        if (!bool || result<10){
-            $('#money').html("");
+        if (result<10){
+            $('#money').value("");
         }
+        if(!bool){
+            $('#money').value("");
+            {#$('#sublogin').attr('disabled', "true");#}
+            {#$('#sublogin').css({'background-color': 'gray'});#}
+        }
+
     });
 </script>
 

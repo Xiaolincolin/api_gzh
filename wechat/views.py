@@ -174,7 +174,7 @@ class Wechat(View):
                                 insert_qr_sql = "insert into wechat_pay_img(openid,image_id,add_time) values (%s,%s,NOW())"
                                 insert_qr_result = self.insert_openid(insert_qr_sql, [openid_md5, openid_md5])
                                 if insert_qr_result:
-                                    response_dict["xml"]["Content"] = "上传收款码成功，我们将在1-3个工作日进行审核！"
+                                    response_dict["xml"]["Content"] = "上传收款码成功，我们将在1-3个工作日进行审核！现在开始愉快的（发起提现）吧！"
                                     response_xml_str = xmltodict.unparse(response_dict)
                                     return HttpResponse(response_xml_str)
                                 else:

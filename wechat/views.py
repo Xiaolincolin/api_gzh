@@ -118,7 +118,6 @@ class Wechat(View):
                     }
                 }
                 # 当msg_type消息类型的值为event时, 表示该消息类型为推送消息, 例如微信用户 关注公众号(subscribe),取消关注(unsubscribe)
-                print(msg_xml_dict)
                 if msg_type == "event":
                     # 事件推送消息
                     msg_event = msg_xml_dict["Event"]
@@ -900,6 +899,7 @@ class Weteam(View):
         json_data = json.loads(res)
         if json_data:
             message = json_data.get("message", {})
+            print(message)
             if message:
                 if not isinstance(message, dict):
                     message = json.loads(message)

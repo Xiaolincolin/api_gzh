@@ -616,7 +616,7 @@ class Launch(View):
                                                 msg = openid + " " + str(orderid) + " " + str(money) + " 提现发起成功"
                                                 logger_money.info(msg)
                                                 if str(order_status) == "3":
-                                                    delete_sql = "DELETE FROM wechat_order WHERE openid='{oid}' and `status` =3".format(openid)
+                                                    delete_sql = "DELETE FROM wechat_order WHERE openid='{oid}' and `status` =3".format(oid=openid)
                                                     del_status = self.update_money(delete_sql)
                                                     if del_status:
                                                         msg = openid + " 提现失败订单删除成功，已经从新发起提现"

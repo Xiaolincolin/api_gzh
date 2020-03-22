@@ -194,6 +194,7 @@
     $("#history_per").on("click", function () {
         alert("加载历史更多");
         if (len <= 8) {
+            alert("进入小于8");
             for (let i = 0; i < history_data.length; i++) {
                 let per_data = history_data[i];
                 per_tr = get_tr(9 + i, per_data[0], per_data[1], per_data[2]);

@@ -543,10 +543,15 @@ class Launch(View):
             ql_code = self.select_qrcode(qr_sql)
             if ql_code:
                 # 判断是否上传收款码
-                order_sql = "SELECT openid from wechat_order where openid='{oid}'  and `status`=0 ORDER BY add_time desc".format(
+                order_sql = "SELECT openid,`status` from wechat_order where openid='{oid}'  and `status`!=1 ORDER BY add_time desc".format(
                     oid=openid)
-                order_result = self.select_qrcode(order_sql)
+                order_result = self.select_openid(order_sql)
+                order_status = 1
                 if order_result:
+                    order_result = list(order_result)
+                    order_status = order_result[1]
+
+                if order_status == 0:
                     # 判断是否有订单未审核，防止代码发起post请求
                     data["code"] = 0
                     data["msg"] = "抱歉，您有未审核的订单暂不能提现，请耐心等待！"
@@ -609,6 +614,15 @@ class Launch(View):
                                                 data["alread"] = str(alread + money)
                                                 msg = openid + " " + str(orderid) + " " + str(money) + " 提现发起成功"
                                                 logger_money.info(msg)
+                                                if order_status == 3:
+                                                    delete_sql = "DELETE FROM wechat_order WHERE openid='{oid}' and `status` =3".format(openid)
+                                                    del_status = self.update_money(delete_sql)
+                                                    if del_status:
+                                                        msg = openid + " 提现失败订单删除成功，已经从新发起提现"
+                                                        logger_money.info(msg)
+                                                    else:
+                                                        msg = openid + " 提现失败订单删除失败"
+                                                        logger_money.info(msg)
                                             else:
                                                 # 订单生成失败
                                                 exc_update_sql = "UPDATE wechat_money set withdrawable=withdrawable+'{money}',alread=alread-'{money}',update_time=NOW() where openid='{oid}'".format(

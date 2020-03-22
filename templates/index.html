@@ -3,14 +3,14 @@
 
 <head>
     {% load static %}
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>球球趣玩</title>
     <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
     <link rel="stylesheet" href="{% static 'assets/css/header.css' %}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Mobilekit HTML Mobile UI Kit">
-    <meta name="keywords" content="bootstrap, mobile template, cordova, phonegap, mobile, html, responsive" />
+    <meta name="keywords" content="bootstrap, mobile template, cordova, phonegap, mobile, html, responsive"/>
     <link rel="apple-touch-icon" sizes="180x180" href="{% static 'assets/img/apple-touch-icon.png' %}">
     <link rel="icon" type="image/png" href="{% static 'assets/img/favicon.png' %}" sizes="32x32">
     <link rel="shortcut icon" href="{% static 'assets/img/favicon.png' %}">
@@ -18,7 +18,7 @@
 
 <body>
 <section class="aui-flexView">
-    
+
     <section class="aui-scrollView">
         <div class="aui-chang-box"></div>
         <div class="aui-chang-list">
@@ -29,7 +29,7 @@
                 <h1>{{ name }}</h1>
                 <span>今日广告：{{ day }}条</span>
                 <span>历史广告：{{ history }}条</span>
-{#                <button>点击提现</button>#}
+                {#                <button>点击提现</button>#}
             </div>
             <div class="aui-jf">积分0</div>
         </div>
@@ -55,117 +55,138 @@
             </ul>
             <div class="tab-content mt-2">
                 <div class="tab-pane fade show active" id="home" role="tabpanel">
-                   <div class="section full mt-1 mb-2">
-                    <div class="content-header mb-05">
-                        今日收录广告数为： <code>{{ day }}</code>条，有效条数<code>{{ today_valid }}</code>条
-                    </div>
-                    <div class="wide-block p-0">
+                    <div class="section full mt-1 mb-2">
+                        <div class="content-header mb-05">
+                            今日收录广告数为： <code>{{ day }}</code>条，有效条数<code>{{ today_valid }}</code>条
+                        </div>
+                        <div class="wide-block p-0">
 
-                        <div class="table-responsive">
-                            <table class="table">
-                                <thead>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
                                     <tr>
                                         <th scope="col">#</th>
                                         <th scope="col">描述</th>
                                         <th scope="col">名字</th>
                                         <th scope="col">类型</th>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                {% for item in today_data %}
-                                    <tr>
-                                        <th scope="row">{{ forloop.counter }}</th>
-                                        <td>{{ item.1 }}</td>
-                                        <td>{{ item.2 }}</td>
-                                        <td>{% if item.3 == 1 %}游戏{% else %}应用{% endif %}</td>
-                                    </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
+                                    </thead>
+                                    <tbody>
+                                    {% for item in today_data %}
+                                        <tr>
+                                            <th scope="row">{{ forloop.counter }}</th>
+                                            <td>{{ item.1 }}</td>
+                                            <td>{{ item.2 }}</td>
+                                            <td>{% if item.3 == 1 %}游戏{% else %}应用{% endif %}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
 
+                        </div>
                     </div>
-                </div>
                 </div>
                 <div class="tab-pane fade" id="profile" role="tabpanel">
                     <div class="section full mb-2">
-                    <div class="content-header mb-05">
-                        本月有效条数为： <code>{{ month }}</code>条
-                    </div>
-                    <div class="wide-block p-0">
+                        <div class="content-header mb-05">
+                            本月有效条数为： <code>{{ month }}</code>条
+                        </div>
+                        <div class="wide-block p-0">
 
-                        <div class="table-responsive">
-                            <table class="table table-dark">
-                                <thead>
+                            <div class="table-responsive">
+                                <table class="table table-dark">
+                                    <thead>
                                     <tr>
                                         <th scope="col">#</th>
                                         <th scope="col">游戏</th>
                                         <th scope="col">应用</th>
                                         <th scope="col">时间</th>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                {% for item in month_data %}
-                                    <tr>
-                                        <th scope="row">{{ forloop.counter }}</th>
-                                        <td>{{ item.0 }}</td>
-                                        <td>{{ item.1 }}</td>
-                                        <td>{{ item.2 }}</td>
-                                    </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                    {% for item in month_data %}
+                                        <tr>
+                                            <th scope="row">{{ forloop.counter }}</th>
+                                            <td>{{ item.0 }}</td>
+                                            <td>{{ item.1 }}</td>
+                                            <td>{{ item.2 }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div>
+                                <button type="button" class="btn btn-outline-dark  btn-block">加载更多</button>
+                            </div>
                         </div>
-                    <div><button type="button" class="btn btn-outline-dark  btn-block">加载更多</button></div>
                     </div>
-                </div>
                 </div>
                 <div class="tab-pane fade" id="contact" role="tabpanel">
-                   <div class="section full mb-2">
-                    <div class="content-header mb-05">
-                        历史有效条数为： <code>{{ history }}</code>条
-                    </div>
-                    <div class="wide-block p-0">
+                    <div class="section full mb-2">
+                        <div class="content-header mb-05">
+                            历史有效条数为： <code>{{ history }}</code>条
+                        </div>
+                        <div class="wide-block p-0">
 
-                        <div class="table-responsive">
-                            <table class="table table-dark">
-                                <thead>
+                            <div class="table-responsive">
+                                <table class="table table-dark">
+                                    <thead>
                                     <tr>
                                         <th scope="col">#</th>
                                         <th scope="col">游戏</th>
                                         <th scope="col">应用</th>
                                         <th scope="col">时间</th>
                                     </tr>
-                                </thead>
-                                <tbody>
+                                    </thead>
+                                    <tbody>
                                     {% for item in history_data %}
-                                    <tr>
-                                        <th scope="row">{{ forloop.counter }}</th>
-                                        <td>{{ item.0 }}</td>
-                                        <td>{{ item.1 }}</td>
-                                        <td>{{ item.2 }}</td>
-                                    </tr>
-                                {% endfor %}
+                                        <tr>
+                                            <th scope="row">{{ forloop.counter }}</th>
+                                            <td>{{ item.0 }}</td>
+                                            <td>{{ item.1 }}</td>
+                                            <td>{{ item.2 }}</td>
+                                        </tr>
+                                    {% endfor %}
 
-                                </tbody>
-                            </table>
-                        </div></div>
-                    <div><button type="button" class="btn btn-outline-dark btn-block">加载更多</button></div>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div>
+                            <button type="button" class="btn btn-outline-dark btn-block" id="history_per">加载更多</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
     </section>
-    
+
 </section>
 <!-- ///////////// Js Files ////////////////////  -->
-    <!-- Jquery -->
-    <script src="{% static 'assets/js/lib/jquery-3.4.1.min.js' %}"></script>
-    <!-- Bootstrap-->
-    <script src="{% static 'assets/js/lib/popper.min.js' %}"></script>
-    <script src="{% static 'assets/js/lib/bootstrap.min.js' %}"></script>
-    <!-- Owl Carousel -->
-    <script src="{% static 'assets/js/plugins/owl-carousel/owl.carousel.min.js' %}"></script>
-    <!-- Base Js File -->
-    <script src="{% static 'assets/js/base.js' %}"></script>
+<!-- Jquery -->
+<script src="{% static 'assets/js/lib/jquery-3.4.1.min.js' %}"></script>
+<!-- Bootstrap-->
+<script src="{% static 'assets/js/lib/popper.min.js' %}"></script>
+<script src="{% static 'assets/js/lib/bootstrap.min.js' %}"></script>
+<!-- Owl Carousel -->
+<script src="{% static 'assets/js/plugins/owl-carousel/owl.carousel.min.js' %}"></script>
+<!-- Base Js File -->
+<script src="{% static 'assets/js/base.js' %}"></script>
 </body>
 
 </html>
+
+<script>
+
+    let history_data = {{ history }};
+    let current_page = 0;
+    $("#history_per").on("click", function () {
+        current_page = current_page + 1;
+
+
+
+    });
+
+
+</script>

@@ -418,7 +418,7 @@ class CashWithdrawal(View):
                             select_sql = "SELECT totalmoney,withdrawable,alread,`status` from wechat_money where openid='{oid}'".format(
                                 oid=openid_md5)
                             info = self.select_money(select_sql)
-                            order_sql = "SELECT `name`,amount,`status`,add_time from wechat_order where openid='{oid}' and `status`!=1 ORDER BY add_time desc".format(
+                            order_sql = "SELECT `name`,amount,`status`,add_time,auditor_remark from wechat_order where openid='{oid}' and `status`!=1 ORDER BY add_time desc".format(
                                 oid=openid_md5)
                             order_data = self.select_order(order_sql)
                             user_status = 1
@@ -430,6 +430,8 @@ class CashWithdrawal(View):
                                         status = order[2]
                                         if str(status) == "0":
                                             user_status = 0
+                                        elif str(status) == "3":
+                                            user_status = 3
                                         order_result.append(order)
 
                             totalmoney = 0
@@ -441,9 +443,6 @@ class CashWithdrawal(View):
                                     totalmoney = info[0]
                                     withdrawable = info[1]
                                     alread = info[2]
-                                    status = info[3]
-                                    if str(status) == "0":
-                                        user_status = 0
                                 except Exception as e:
                                     print(e)
 

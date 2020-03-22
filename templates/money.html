@@ -114,8 +114,8 @@
 
                     {% if order.2 == '0' %}
                         <span class="aui-flex-Price" style="color:red">审核中</span>
-                    {% else %}
-                        <span class="aui-flex-Price">完成</span>
+                    {% elif order.2 == '3'%}
+                        <span class="aui-flex-Price" style="color:red">失败{{ order.4 }})</span>
                     {% endif %}
                 </li>
             {% endfor %}

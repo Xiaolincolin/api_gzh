@@ -189,6 +189,7 @@
     alert(len_month);
 
     $("#history_per").on("click", function () {
+        alert("加载历史更多");
         if (len <= 8) {
             for (let i = 0; i < history_data.length; i++) {
                 let per_data = history_data[i];
@@ -217,6 +218,7 @@
     });
 
     $("#month_per").on("click",function () {
+        alert("点击本月的加载更多");
         if (len_month <= 8) {
             for (let i = 0; i < month_data.length; i++) {
                 let per_data = month_data[i];

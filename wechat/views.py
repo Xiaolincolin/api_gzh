@@ -1091,4 +1091,4 @@ class Withdraw(View):
 
 class Test(View):
     def get(self, request):
-        return render(request,'video.html')
+        return HttpResponse("功能开发中")

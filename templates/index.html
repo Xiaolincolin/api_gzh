@@ -203,6 +203,7 @@
             for (let i = current_page; i < current_page + 8; i++) {
                 current_page = current_page + 8;
                 let per_data = history_data[i];
+                alert(per_data);
                 per_tr = get_tr(9 + i, per_data[0], per_data[1], per_data[2]);
                 $('#tbd').append(per_tr)
             }

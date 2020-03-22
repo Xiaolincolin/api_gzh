@@ -558,6 +558,7 @@ class Launch(View):
                     msg = openid + " " + str(money) + " " + "有未审核的订单（前端规则被越过）"
                     logger_money.info(msg)
                 else:
+                    print("test:",order_status)
                     if money and money >= 10:
                         select_sql = "SELECT totalmoney,withdrawable,alread,`status` FROM wechat_money where openid='{oid}'".format(
                             oid=openid)

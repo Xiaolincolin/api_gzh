@@ -188,8 +188,6 @@
     let current_page_month = 0;
     let len = history_data.length;
     let len_month = month_data.length;
-    alert(history_data);
-    alert(len);
     if (len == 0) {
         $('#history_per').hide();
     }
@@ -212,9 +210,6 @@
             for (let i = current_page; i < current_page + 8; i++) {
                 current_page = current_page + 8;
                 let per_data = history_data[i].toString().split(",");
-                alert(per_data[0]);
-                alert(per_data[1]);
-                alert(per_data[2]);
                 per_tr = get_tr(9 + i, per_data[0], per_data[1], per_data[2]);
                 $('#tbd').append(per_tr)
             }
@@ -262,12 +257,10 @@
     });
 
     let get_tr = function (id, game, app, ts) {
-        alert("进入tr_st");
         let a ='<tr><th scope="row">'+id+'</th>';
         let b = '<td>'+game+'</td>';
         let c ='<td>'+app+'</td>';
         let d ='<td>'+ts+'</td></tr>';
-        alert(a+b+c+d);
         return a+b+c+d
     }
 

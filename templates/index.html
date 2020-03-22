@@ -181,7 +181,9 @@
 <script>
 
     let history_data = "{{ history_data|safe }}";
+    history_data = eval(history);
     let month_data = "{{ month_data|safe }}";
+    month_data = eval(month_data);
     let current_page = 0;
     let current_page_month = 0;
     let len = history_data.length;
@@ -197,9 +199,9 @@
                 per_tr = get_tr(9 + i, per_data[0], per_data[1], per_data[2]);
                 $('#tbd').append(per_tr)
             }
-        } else if (current_page + 11 < len) {
+        } else if (current_page + 8 < len) {
             for (let i = current_page; i < current_page + 8; i++) {
-                current_page = current_page + 10;
+                current_page = current_page + 8;
                 let per_data = history_data[i];
                 per_tr = get_tr(9 + i, per_data[0], per_data[1], per_data[2]);
                 $('#tbd').append(per_tr)

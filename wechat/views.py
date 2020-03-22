@@ -551,7 +551,7 @@ class Launch(View):
                     order_result = list(order_result)
                     order_status = order_result[1]
 
-                if order_status == 0:
+                if str(order_status) == "0":
                     # 判断是否有订单未审核，防止代码发起post请求
                     data["code"] = 0
                     data["msg"] = "抱歉，您有未审核的订单暂不能提现，请耐心等待！"

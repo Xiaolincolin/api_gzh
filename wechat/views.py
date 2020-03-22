@@ -1091,6 +1091,4 @@ class Withdraw(View):
 
 class Test(View):
     def get(self, request):
-        logger_c = logging.getLogger('collect')
-        logger_c.info("徐小林")  # 打印data
-        return HttpResponse("功能开发中")
+        return render(request,'video.html')

@@ -222,8 +222,7 @@
                             $('.user_code').html("审核中");
                             $('#sublogin').attr('disabled', "true");
                             $('#sublogin').css({'background-color': 'gray'});
-                            alert(get_li(username,money));
-                            $('#tx_jl').appendChild(get_li(username,money))
+                            $('#tx_jl').append(get_li(username,money))
                         }
                     },
                     error: function () {

@@ -181,15 +181,21 @@
 <script>
 
     let history_data = "{{ history_data|safe }}";
-    history_data = eval(history);
+    history_data = eval(history_data);
     let month_data = "{{ month_data|safe }}";
     month_data = eval(month_data);
     let current_page = 0;
     let current_page_month = 0;
     let len = history_data.length;
     let len_month = month_data.length;
-    alert(month_data);
-    alert(len_month);
+    alert(history_data);
+    alert(len);
+    if (len == 0) {
+        $('#history_per').hide();
+    }
+    if (len_month == 0) {
+        $('#month_per').hide();
+    }
 
     $("#history_per").on("click", function () {
         alert("加载历史更多");
@@ -197,6 +203,7 @@
             alert("进入小于8");
             for (let i = 0; i < history_data.length; i++) {
                 let per_data = history_data[i];
+                alert(per_data);
                 per_tr = get_tr(9 + i, per_data[0], per_data[1], per_data[2]);
                 $('#tbd').append(per_tr)
             }

@@ -1021,7 +1021,12 @@ class Withdraw(View):
                                 order_data = list(order_data)
                                 for order in order_data:
                                     if order:
+                                        tmp = []
                                         order = list(order)
+                                        tmp.append(order[0])
+                                        tmp.append(order[1])
+                                        tmp.append(str(order[2]).split(" ")[0])
+                                        tmp.append(str(order[3]).split(" ")[0])
                                         order_result.append(order)
 
                         return render(request, "tx_log.html", {

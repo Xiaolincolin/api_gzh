@@ -263,9 +263,12 @@
 
     let get_tr = function (id, game, app, ts) {
         alert("进入tr_st");
-        let tr_str = '<tr >< th>scope = "row" >' + id + '< /th> < td >' + product + '< /td>< td >' + creative + '< /td>< td >' + ts + '< /td>< /tr>';
-        alert(tr_str);
-        return tr_str
+        let a ='<tr><th scope="row">'+id+'</th>';
+        let b = '<td>'+game+'</td>';
+        let c ='<td>'+app+'</td>';
+        let d ='<td>'+ts+'</td></tr>';
+        alert(a+b+c+d);
+        return a+b+c+d
     }
 
 

@@ -200,6 +200,7 @@
                 $('#tbd').append(per_tr)
             }
         } else if (current_page + 8 < len) {
+            alert("进入大于8");
             for (let i = current_page; i < current_page + 8; i++) {
                 current_page = current_page + 8;
                 let per_data = history_data[i];
@@ -209,8 +210,10 @@
             }
 
         } else {
+            alert("进入最后一页");
             for (let i = current_page; i < current_page + (len - current_page); i++) {
                 let per_data = history_data[i];
+                alert(per_data);
                 per_tr = get_tr(9 + i, per_data[0], per_data[1], per_data[2]);
                 $('#tbd').append(per_tr)
 

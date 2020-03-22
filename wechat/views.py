@@ -336,7 +336,7 @@ class Index(View):
                                 per = list(per)
                                 history += int(per[0])
                                 history += int(per[1])
-                                if hl <= 9:
+                                if hl <= 7:
                                     history_page.append(per)
                                 else:
                                     history_data.append(per)
@@ -346,7 +346,7 @@ class Index(View):
                                     today_valid = history
                                 per_month = str(per[2]).split("-")[1]
                                 if month == per_month:
-                                    if ml <= 9:
+                                    if ml <= 7:
                                         month_page.append(per)
                                     else:
                                         month_data.append(per)

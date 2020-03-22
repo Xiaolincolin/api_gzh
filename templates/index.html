@@ -179,8 +179,8 @@
 
 <script>
 
-    let history_data = eval({{ history_data }});
-    let month_data = eval({{ month_data }});
+    let history_data = eval("{{ history_data }}");
+    let month_data = eval("{{ month_data }})";
     let current_page = 0;
     let current_page_month = 0;
     let len = history_data.length;
@@ -189,24 +189,24 @@
     alert(len_month);
 
     $("#history_per").on("click", function () {
-        if (len <= 10) {
+        if (len <= 8) {
             for (let i = 0; i < history_data.length; i++) {
                 let per_data = history_data[i];
-                per_tr = get_tr(11 + i, per_data[0], per_data[1], per_data[2]);
+                per_tr = get_tr(9 + i, per_data[0], per_data[1], per_data[2]);
                 $('#tbd').append(per_tr)
             }
         } else if (current_page + 11 < len) {
-            for (let i = current_page; i < current_page + 10; i++) {
+            for (let i = current_page; i < current_page + 8; i++) {
                 current_page = current_page + 10;
                 let per_data = history_data[i];
-                per_tr = get_tr(11 + i, per_data[0], per_data[1], per_data[2]);
+                per_tr = get_tr(9 + i, per_data[0], per_data[1], per_data[2]);
                 $('#tbd').append(per_tr)
             }
 
         }else {
             for (let i = current_page; i < current_page+(len-current_page); i++) {
                 let per_data = history_data[i];
-                per_tr = get_tr(11 + i, per_data[0], per_data[1], per_data[2]);
+                per_tr = get_tr(9 + i, per_data[0], per_data[1], per_data[2]);
                 $('#tbd').append(per_tr)
 
             }
@@ -217,24 +217,24 @@
     });
 
     $("#month_per").on("click",function () {
-        if (len_month <= 10) {
+        if (len_month <= 8) {
             for (let i = 0; i < month_data.length; i++) {
                 let per_data = month_data[i];
-                per_tr = get_tr(11 + i, per_data[0], per_data[1], per_data[2]);
+                per_tr = get_tr(9 + i, per_data[0], per_data[1], per_data[2]);
                 $('#tbd').append(per_tr)
             }
         } else if (current_page_month + 8 < len_month) {
             for (let i = current_page_month; i < current_page_month + 8; i++) {
                 current_page_month = current_page_month + 8;
                 let per_data = month_data[i];
-                per_tr = get_tr(11 + i, per_data[0], per_data[1], per_data[2]);
+                per_tr = get_tr(9 + i, per_data[0], per_data[1], per_data[2]);
                 $('#tbd').append(per_tr)
             }
 
         }else {
             for (let i = current_page_month; i < current_page_month+(len_month-current_page_month); i++) {
                 let per_data = history_data[i];
-                per_tr = get_tr(11 + i, per_data[0], per_data[1], per_data[2]);
+                per_tr = get_tr(9 + i, per_data[0], per_data[1], per_data[2]);
                 $('#tbd').append(per_tr)
 
             }

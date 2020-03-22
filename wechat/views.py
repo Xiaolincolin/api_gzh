@@ -1027,7 +1027,7 @@ class Withdraw(View):
                                         tmp.append(order[1])
                                         tmp.append(str(order[2]).split(" ")[0])
                                         tmp.append(str(order[3]).split(" ")[0])
-                                        order_result.append(order)
+                                        order_result.append(tmp)
 
                         return render(request, "tx_log.html", {
                             "order_result": order_result

@@ -192,21 +192,18 @@
     if (len == 0) {
         $('#history_per').hide();
     }
-    if (len_month != 0) {
+    if (len_month == 0) {
         $('#month_per').hide();
     }
 
     $("#history_per").on("click", function () {
-        alert("加载历史更多");
         if (len <= 8) {
-            alert("进入小于8");
             for (let i = 0; i < history_data.length; i++) {
                 let per_data = history_data[i].toString().split(",");
                 per_tr = get_tr(9 + i, per_data[0], per_data[1], per_data[2]);
                 $('#tbd').append(per_tr)
             }
         } else if (current_page + 8 < len) {
-            alert("进入大于8");
             for (let i = current_page; i < current_page + 8; i++) {
                 let per_data = history_data[i].toString().split(",");
                 per_tr = get_tr(9 + i, per_data[0], per_data[1], per_data[2]);
@@ -216,7 +213,6 @@
             current_page = current_page + 8;
 
         } else {
-            alert("进入最后一页");
             for (let i = current_page; i < current_page + (len - current_page); i++) {
                 let per_data = history_data[i];
                 per_tr = get_tr(9 + i, per_data[0], per_data[1], per_data[2]);
@@ -230,7 +226,6 @@
     });
 
     $("#month_per").on("click", function () {
-        alert("点击本月的加载更多");
         if (len_month <= 8) {
             for (let i = 0; i < month_data.length; i++) {
                 let per_data = month_data[i];
@@ -257,11 +252,11 @@
     });
 
     let get_tr = function (id, game, app, ts) {
-        let a ='<tr><th scope="row">'+id+'</th>';
-        let b = '<td>'+game+'</td>';
-        let c ='<td>'+app+'</td>';
-        let d ='<td>'+ts+'</td></tr>';
-        return a+b+c+d
+        let a = '<tr><th scope="row">' + id + '</th>';
+        let b = '<td>' + game + '</td>';
+        let c = '<td>' + app + '</td>';
+        let d = '<td>' + ts + '</td></tr>';
+        return a + b + c + d
     }
 
 

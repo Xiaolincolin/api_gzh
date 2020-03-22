@@ -117,7 +117,8 @@
                                 </table>
                             </div>
                             <div>
-                                <button type="button" class="btn btn-outline-dark  btn-block" id="month_per">加载更多</button>
+                                <button type="button" class="btn btn-outline-dark  btn-block" id="month_per">加载更多
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -179,8 +180,8 @@
 
 <script>
 
-    let history_data = {{ history_data }};
-    let month_data = {{ month_data }};
+    let history_data = "{{ history_data|safe }}";
+    let month_data = "{{ month_data|safe }}";
     let current_page = 0;
     let current_page_month = 0;
     let len = history_data.length;
@@ -204,8 +205,8 @@
                 $('#tbd').append(per_tr)
             }
 
-        }else {
-            for (let i = current_page; i < current_page+(len-current_page); i++) {
+        } else {
+            for (let i = current_page; i < current_page + (len - current_page); i++) {
                 let per_data = history_data[i];
                 per_tr = get_tr(9 + i, per_data[0], per_data[1], per_data[2]);
                 $('#tbd').append(per_tr)
@@ -217,7 +218,7 @@
 
     });
 
-    $("#month_per").on("click",function () {
+    $("#month_per").on("click", function () {
         alert("点击本月的加载更多");
         if (len_month <= 8) {
             for (let i = 0; i < month_data.length; i++) {
@@ -233,8 +234,8 @@
                 $('#tbd').append(per_tr)
             }
 
-        }else {
-            for (let i = current_page_month; i < current_page_month+(len_month-current_page_month); i++) {
+        } else {
+            for (let i = current_page_month; i < current_page_month + (len_month - current_page_month); i++) {
                 let per_data = history_data[i];
                 per_tr = get_tr(9 + i, per_data[0], per_data[1], per_data[2]);
                 $('#tbd').append(per_tr)

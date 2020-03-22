@@ -212,7 +212,9 @@
             for (let i = current_page; i < current_page + 8; i++) {
                 current_page = current_page + 8;
                 let per_data = history_data[i].toString().split(",");
-                alert(per_data);
+                alert(per_data[0]);
+                alert(per_data[1]);
+                alert(per_data[2]);
                 per_tr = get_tr(9 + i, per_data[0], per_data[1], per_data[2]);
                 $('#tbd').append(per_tr)
             }

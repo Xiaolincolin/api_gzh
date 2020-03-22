@@ -323,22 +323,33 @@ class Index(View):
                             today_data = []
                             month_data = []
                             history_data = []
+                            month_page = []
+                            history_page = []
                             name = ""
                             month_len = 0
                             history = 0
                             today_valid = 0
 
                             for per in all_data:
+                                ml = len(month_page)
+                                hl = len(history_page)
                                 per = list(per)
                                 history += int(per[0])
                                 history += int(per[1])
-                                history_data.append(per)
+                                if hl <= 8:
+                                    history_page.append(per)
+                                else:
+                                    history_data.append(per)
+
                                 days = per[2]
                                 if str(days) == time_now:
                                     today_valid = history
                                 per_month = str(per[2]).split("-")[1]
                                 if month == per_month:
-                                    month_data.append(per)
+                                    if ml <= 8:
+                                        month_page.append(per)
+                                    else:
+                                        month_page.append(per)
                                     month_len += int(per[0])
                                     month_len += int(per[1])
 
@@ -356,7 +367,9 @@ class Index(View):
                                 "openid": openid,
                                 "name": name,
                                 "today_data": today_data,
+                                "month_page":month_page,
                                 "month_data": month_data,
+                                "history_page":history_page,
                                 "history_data": history_data,
                                 "day": day,
                                 "history": history,
@@ -558,7 +571,7 @@ class Launch(View):
                     msg = openid + " " + str(money) + " " + "有未审核的订单（前端规则被越过）"
                     logger_money.info(msg)
                 else:
-                    print("test:",order_status)
+                    print("test:", order_status)
                     if money and money >= 10:
                         select_sql = "SELECT totalmoney,withdrawable,alread,`status` FROM wechat_money where openid='{oid}'".format(
                             oid=openid)
@@ -616,7 +629,8 @@ class Launch(View):
                                                 msg = openid + " " + str(orderid) + " " + str(money) + " 提现发起成功"
                                                 logger_money.info(msg)
                                                 if str(order_status) == "3":
-                                                    delete_sql = "DELETE FROM wechat_order WHERE openid='{oid}' and `status` =3".format(oid=openid)
+                                                    delete_sql = "DELETE FROM wechat_order WHERE openid='{oid}' and `status` =3".format(
+                                                        oid=openid)
                                                     del_status = self.update_money(delete_sql)
                                                     if del_status:
                                                         msg = openid + " 提现失败订单删除成功，已经从新发起提现"

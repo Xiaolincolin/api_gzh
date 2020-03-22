@@ -233,7 +233,7 @@
         }
     });
 
-    var get_li=function (user,money) {
+    let get_li=function (user,money) {
         let dt = new Date();
         let str = dt.getFullYear()+"-"+(dt.getMonth()+1)+"-"+dt.getDate();
         let a = '<li class="aui-flex">';
@@ -242,6 +242,7 @@
         let d = '<span class="aui-flex-box">'+money+'</span>';
         let e = '<span class="aui-flex-box">'+str+'</span>';
         let f = '<span class="aui-flex-Price" style="color:red">审核中</span></li>';
+        alert(a+b+c+d+e+f);
         return a+b+c+d+e+f
     }
 </script>

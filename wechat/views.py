@@ -661,7 +661,7 @@ class Launch(View):
                         logger_money.info(msg)
             else:
                 data["code"] = 0
-                data["msg"] = "抱歉，您未绑定收款码！暂不能提现！详情查看教程"
+                data["msg"] = "抱歉，您未绑定收款码！暂不能提现！发送消息（收付款）到公众号，详情查看教程！"
                 msg = openid + " " + str(money) + " " + "金额为空"
                 logger_money.info(msg)
 

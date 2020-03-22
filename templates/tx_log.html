@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        {% load static %}
+        <meta charset="UTF-8">
+        <title>收益明细</title>
+        <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport"/>
+        <meta content="yes" name="apple-mobile-web-app-capable"/>
+        <meta content="black" name="apple-mobile-web-app-status-bar-style"/>
+        <meta content="telephone=no" name="format-detection"/>
+        <link href="{% static 'assets/css/style_txjl.css' %}" rel="stylesheet" type="text/css"/>
+    </head>
+    <body>
+
+
+        <section class="aui-flexView">
+            <header class="aui-navBar aui-navBar-fixed">
+                <a href="javascript:;" class="aui-navBar-item">
+                    <i class="icon icon-return"></i>
+                </a>
+                <div class="aui-center">
+                    <span class="aui-center-title">收益明细</span>
+                </div>
+                
+            </header>
+            <section class="aui-scrollView">
+                <div class="aui-order-title">
+                    <h2>我的收益</h2>
+                    {% for item in order_result %}
+                        <div class="aui-order-box">
+                            <a href="javascript:void(0);" class="aui-well-item">
+                                <div class="aui-well-item-bd">
+                                    <h3>{{ item.0 }}</h3>
+                                </div>
+                                <span class="aui-well-item-fr">+{{ item.1 }}</span>
+                            </a>
+                            <p class="aui-order-fl aui-order-time">发起时间：{{ item.3 }}</p>
+                            <p class="aui-order-fl aui-order-time">审核时间：{{ item.2 }}</p>
+{#                            <p class="aui-order-fl aui-order-door">双榆树东里12号楼3门</p>#}
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+            </section>
+        </section>
+    </body>
+</html>

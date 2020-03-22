@@ -361,7 +361,7 @@ class Index(View):
                                 "day": day,
                                 "history": history,
                                 "month": month_len,
-                                "today_valid":today_valid
+                                "today_valid": today_valid
                             })
                         return JsonResponse({"msg": "request err"})
             else:
@@ -418,7 +418,7 @@ class CashWithdrawal(View):
                             select_sql = "SELECT totalmoney,withdrawable,alread,`status` from wechat_money where openid='{oid}'".format(
                                 oid=openid_md5)
                             info = self.select_money(select_sql)
-                            order_sql = "SELECT `name`,amount,`status`,add_time from wechat_order where openid='{oid}' ORDER BY add_time desc".format(
+                            order_sql = "SELECT `name`,amount,`status`,add_time from wechat_order where openid='{oid}' and `status`=0 ORDER BY add_time desc".format(
                                 oid=openid_md5)
                             order_data = self.select_order(order_sql)
                             user_status = 1
@@ -995,6 +995,63 @@ class Weteam(View):
         except Exception as e:
             print(e)
             print("查询openid有误")
+            return 0
+
+
+class Withdraw(View):
+    def get(self, request):
+        try:
+            code = request.GET.get("code")  # 获取随机字符串
+
+            if code:
+                url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx96f147a2125ebb3a&secret=a063a2cfbdbe0a948b2af3cbaa62e45d&code={code}&grant_type=authorization_code".format(
+                    code=code)
+                res = requests.get(url)
+                if res.status_code == 200:
+                    json_data = res.json()
+                    if json_data:
+                        openid = json_data.get("openid", "")
+                        order_result = []
+                        if openid:
+                            openid_md5 = self.get_md5(openid)
+                            order_sql = "SELECT `name`,amount,audittime,add_time from wechat_order where openid='{oid}' and `status`=1 ORDER BY add_time desc".format(
+                                oid=openid_md5)
+                            order_data = self.select_order(order_sql)
+                            if order_data:
+                                order_data = list(order_data)
+                                for order in order_data:
+                                    if order:
+                                        order = list(order)
+                                        order_result.append(order)
+
+                        return render(request, "tx_log.html", {
+                            "order_result": order_result
+                        })
+            else:
+                return JsonResponse({"msg": "only open in wechat"})
+        except Exception as e:
+            print(e)
+            return JsonResponse({"msg": "fail"})
+
+    def post(self, request):
+        return HttpResponse("错误的请求")
+
+    def get_md5(self, strs):
+        m1 = hashlib.md5()
+        m1.update(strs.encode("utf-8"))
+        strs_md5 = m1.hexdigest()
+        return strs_md5
+
+    def select_order(self, sql):
+        try:
+            cursor = connection.cursor()
+            cursor.execute(sql)
+            info = cursor.fetchall()
+            cursor.close()
+            return info
+        except Exception as e:
+            print(e)
+            print("查询订单有误")
             return 0
 
 

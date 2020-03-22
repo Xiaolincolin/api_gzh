@@ -615,7 +615,7 @@ class Launch(View):
                                                 data["alread"] = str(alread + money)
                                                 msg = openid + " " + str(orderid) + " " + str(money) + " 提现发起成功"
                                                 logger_money.info(msg)
-                                                if order_status == 3:
+                                                if str(order_status) == "3":
                                                     delete_sql = "DELETE FROM wechat_order WHERE openid='{oid}' and `status` =3".format(openid)
                                                     del_status = self.update_money(delete_sql)
                                                     if del_status:

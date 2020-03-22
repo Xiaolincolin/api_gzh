@@ -104,7 +104,7 @@
             </div>
             <div class="aui-bonus">状态</div>
         </div>
-        <ul class="aui-money-ul">
+        <ul class="aui-money-ul" id="tx_jl">
             {% for order in order_result %}
                 <li class="aui-flex">
                     <span class="aui-flex-change">{{ forloop.counter }}</span>
@@ -179,6 +179,8 @@
         $('#sublogin').css({'background-color': 'gray'});
     }
 
+
+
 </script>
 
 <script>
@@ -220,6 +222,7 @@
                             $('.user_code').html("审核中");
                             $('#sublogin').attr('disabled', "true");
                             $('#sublogin').css({'background-color': 'gray'});
+                            $('#tx_jl').appendChild(get_li(username,money))
                         }
                     },
                     error: function () {
@@ -229,5 +232,17 @@
             }
         }
     });
+
+    var get_li=function (user,money) {
+        let dt = new Date();
+        let str = dt.getFullYear()+"-"+(dt.getMonth()+1)+"-"+dt.getDate();
+        let a = '<li class="aui-flex">';
+        let b= '<span class="aui-flex-change">1</span>';
+        let c = '<span class="aui-flex-box">'+user+'</span>';
+        let d = '<span class="aui-flex-box">'+money+'</span>';
+        let e = '<span class="aui-flex-box">'+str+'</span>';
+        let f = '<span class="aui-flex-Price" style="color:red">审核中</span></li>';
+        return a+b+c+d+e+f
+    }
 </script>
 </html>

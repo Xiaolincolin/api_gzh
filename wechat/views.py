@@ -367,9 +367,9 @@ class Index(View):
                                 "openid": openid,
                                 "name": name,
                                 "today_data": today_data,
-                                "month_page":month_page,
+                                "month_page": month_page,
                                 "month_data": month_data,
-                                "history_page":history_page,
+                                "history_page": history_page,
                                 "history_data": history_data,
                                 "day": day,
                                 "history": history,
@@ -1086,6 +1086,11 @@ class Withdraw(View):
             print(e)
             print("查询订单有误")
             return 0
+
+
+class Video(View):
+    def get(self, request):
+        return render(request, "video.html")
 
 
 class Test(View):

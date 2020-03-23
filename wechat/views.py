@@ -50,9 +50,9 @@ class Wechat(View):
                     if echostr:
                         return JsonResponse(int(echostr), safe=False)
                     else:
-                        return JsonResponse({"msg": "fail"})
+                        return JsonResponse({"msg": "fail"},json_dumps_params={'ensure_ascii': False})
                 else:
-                    return JsonResponse({"msg": "fail"})
+                    return JsonResponse({"msg": "fail"},json_dumps_params={'ensure_ascii': False})
             else:
                 url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx96f147a2125ebb3a&secret=a063a2cfbdbe0a948b2af3cbaa62e45d&code={code}&grant_type=authorization_code".format(
                     code=code)
@@ -71,7 +71,7 @@ class Wechat(View):
                         })
         except Exception as e:
             print(e)
-            return JsonResponse({"msg": "fail"})
+            return JsonResponse({"msg": "fail"},json_dumps_params={'ensure_ascii': False})
 
     def post(self, request):
         try:
@@ -286,13 +286,13 @@ class Tutorial(View):
                         })
             else:
                 # openid = "测试"
-                return JsonResponse({"msg": "only open in wechat"})
+                return JsonResponse({"msg": "only open in wechat"},json_dumps_params={'ensure_ascii': False})
                 # return render(request, "tutorial.html", {
                 #     "openid": openid
                 # })
         except Exception as e:
             print(e)
-            return JsonResponse({"msg": "fail"})
+            return JsonResponse({"msg": "fail"},json_dumps_params={'ensure_ascii': False})
 
 
 class Index(View):
@@ -376,16 +376,16 @@ class Index(View):
                                 "month": month_len,
                                 "today_valid": today_valid
                             })
-                        return JsonResponse({"msg": "request err"})
+                        return JsonResponse({"msg": "request err"},json_dumps_params={'ensure_ascii': False})
             else:
                 # openid = "测试"
-                return JsonResponse({"msg": "only open in wechat"})
+                return JsonResponse({"msg": "only open in wechat"},json_dumps_params={'ensure_ascii': False})
                 # return render(request, "tutorial.html", {
                 #     "openid": openid
                 # })
         except Exception as e:
             print(e)
-            return JsonResponse({"msg": "fail"})
+            return JsonResponse({"msg": "fail"},json_dumps_params={'ensure_ascii': False})
 
     def get_md5(self, strs):
         m1 = hashlib.md5()
@@ -472,14 +472,14 @@ class CashWithdrawal(View):
                             #         "openid": openid_md5
                             #     })
                         else:
-                            return JsonResponse({"msg": "网站维护中！请耐心等待"})
+                            return JsonResponse({"msg": "网站维护中！请耐心等待"},json_dumps_params={'ensure_ascii': False})
                 else:
-                    return JsonResponse({"msg": "当前网络不佳，请稍后再试"})
+                    return JsonResponse({"msg": "当前网络不佳，请稍后再试"},json_dumps_params={'ensure_ascii': False})
             else:
-                return JsonResponse({"msg": "请先在公众号中获取业务码并且不要在微信以外的地方打开"})
+                return JsonResponse({"msg": "请先在公众号中获取业务码并且不要在微信以外的地方打开"},json_dumps_params={'ensure_ascii': False})
         except Exception as e:
             print(e)
-            return JsonResponse({"msg": "请先在关注公众号(球球趣玩)获取业务码并且不要在微信以外的地方打开"})
+            return JsonResponse({"msg": "请先在关注公众号(球球趣玩)获取业务码并且不要在微信以外的地方打开"},json_dumps_params={'ensure_ascii': False})
 
         return render(request, 'money.html')
 
@@ -771,7 +771,7 @@ class UploadImage(View):
         if img_type not in ['jpeg', 'jpg', 'png']:
             result["code"] = 0
             result["msg"] = "图片仅支持'.jpeg', '.jpg', '.png'结尾的格式"
-            return JsonResponse(result)
+            return JsonResponse(result,json_dumps_params={'ensure_ascii': False})
         else:
             if openid:
                 try:
@@ -856,14 +856,14 @@ class BeginMakeMoney(View):
                                 "openid": openid_md5
                             })
                         else:
-                            return JsonResponse({"msg": "网站维护中！请耐心等待"})
+                            return JsonResponse({"msg": "网站维护中！请耐心等待"},json_dumps_params={'ensure_ascii': False})
                 else:
                     return JsonResponse({"msg": "当前网络不佳，请稍后再试"})
             else:
-                return JsonResponse({"msg": "请先在公众号中获取业务码并且不要在微信以外的地方打开"})
+                return JsonResponse({"msg": "请先在公众号中获取业务码并且不要在微信以外的地方打开"},json_dumps_params={'ensure_ascii': False})
         except Exception as e:
             print(e)
-            return JsonResponse({"msg": "请先在关注公众号(球球趣玩)获取业务码并且不要在微信以外的地方打开"})
+            return JsonResponse({"msg": "请先在关注公众号(球球趣玩)获取业务码并且不要在微信以外的地方打开"},json_dumps_params={'ensure_ascii': False})
 
     def select_openid(self, sql):
         try:
@@ -892,7 +892,7 @@ class Weteam(View):
     def get(self, request):
         res = request.body.decode()
         print(res)
-        return JsonResponse({"result": "success"})
+        return JsonResponse({"result": "success"},json_dumps_params={'ensure_ascii': False})
 
     def post(self, request):
         res = request.body.decode()
@@ -971,7 +971,7 @@ class Weteam(View):
                 print("获取message有误")
         else:
             print("json_Data有误")
-        return JsonResponse({"result": "success"})
+        return JsonResponse({"result": "success"},json_dumps_params={'ensure_ascii': False})
 
     def sendMsg(self, wcId, content):
         Authorization = rdc_local.get("Authorization")
@@ -1061,10 +1061,10 @@ class Withdraw(View):
                             "order_result": order_result
                         })
             else:
-                return JsonResponse({"msg": "only open in wechat"})
+                return JsonResponse({"msg": "only open in wechat"},json_dumps_params={'ensure_ascii': False})
         except Exception as e:
             print(e)
-            return JsonResponse({"msg": "fail"})
+            return JsonResponse({"msg": "fail"},json_dumps_params={'ensure_ascii': False})
 
     def post(self, request):
         return HttpResponse("错误的请求")
@@ -1095,4 +1095,4 @@ class Video(View):
 
 class Test(View):
     def get(self, request):
-        return render(request,"tx.html")
+        return HttpResponse("功能开发中")

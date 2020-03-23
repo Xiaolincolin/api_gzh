@@ -1,10 +1,22 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html>
+<head>
+<meta charset="utf-8">
+<title>微信视频播放全屏</title>
+</head>
 <body>
-
-<video src="http://wxapi.adinsights.cn/media/video/322.mp4"  width="320" height="240" controls="controls">
-Your browser does not support the video tag.
-</video>
-
+    <div id="video" class="video " style="width: 100%; height: 100%;">
+        <video id="my_video" style="object-fit: fill; width: 100%; height: 100%;"
+            preload="load"
+            playsinline="true"
+            webkit-playsinline="true"
+            x-webkit-airplay="allow"
+            airplay="allow"
+            x5-video-player-type="h5"
+            x5-video-player-fullscreen="true"
+            x5-video-orientation="portrait"
+            src="http://wxapi.adinsights.cn/media/video/322.mp4"
+            controls="controls"></video>
+    </div>
 </body>
 </html>

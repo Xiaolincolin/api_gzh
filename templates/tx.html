@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        {% load static %}
+        <meta charset="UTF-8">
+        <title>我的订单</title>
+        <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport"/>
+        <meta content="yes" name="apple-mobile-web-app-capable"/>
+        <meta content="black" name="apple-mobile-web-app-status-bar-style"/>
+        <meta content="telephone=no" name="format-detection"/>
+        <link href="{% static 'assets/css/style_txjl.css' %}" rel="stylesheet" type="text/css"/>
+    </head>
+    <body>
+
+
+        <section class="aui-flexView">
+            <header class="aui-navBar aui-navBar-fixed">
+               
+                <div class="aui-center">
+                    <span class="aui-center-title">提现记录</span>
+                </div>
+                
+            </header>
+            <section class="aui-scrollView">
+                <div class="aui-order-title">
+                    <h2>已完成订单</h2>
+                    <div class="aui-order-box">
+                        <a href="javascript:void(0);" class="aui-well-item">
+                            <div class="aui-well-item-bd">
+                                <h3>快车</h3>
+                            </div>
+                            <span class="aui-well-item-fr">已完成</span>
+                        </a>
+                        <p class="aui-order-fl aui-order-time">上周日19:53</p>
+                        <p class="aui-order-fl aui-order-address">巴沟地铁-东北口</p>
+                        <p class="aui-order-fl aui-order-door">双榆树东里12号楼3门</p>
+                    </div>
+                </div>
+            </section>
+        </section>
+    </body>
+</html>

@@ -1095,4 +1095,4 @@ class Video(View):
 
 class Test(View):
     def get(self, request):
-        return HttpResponse("功能开发中")
+        return render(request,"tx.html")

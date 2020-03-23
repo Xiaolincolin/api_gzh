@@ -899,7 +899,6 @@ class Weteam(View):
         json_data = json.loads(res)
         if json_data:
             message = json_data.get("message", {})
-            print(message)
             if message:
                 if not isinstance(message, dict):
                     message = json.loads(message)

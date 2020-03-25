@@ -208,7 +208,7 @@
         alert("开始");
         if (len <= 8) {
             for (let i = 0; i < history_data.length; i++) {
-                let per_data = history_data[i].toString().split(",");
+                let per_data = history_data[i];
                 per_tr = get_tr(9 + i, per_data[3], per_data[1], per_data[2], per_data[4]);
                 $('#history_per').hide();
                 $('#tbd').append(per_tr)
@@ -216,7 +216,7 @@
         } else if (current_page + 8 < len) {
             alert("8");
             for (let i = current_page; i < current_page + 8; i++) {
-                let per_data = history_data[i].toString().split(",");
+                let per_data = history_data[i];
                 alert(per_data);
                 per_tr = get_tr(9 + i, per_data[3], per_data[1], per_data[2], per_data[4]);
                 $('#tbd').append(per_tr)
@@ -240,7 +240,7 @@
     $("#month_per").on("click", function () {
         if (len_month <= 8) {
             for (let i = 0; i < month_data.length; i++) {
-                let per_data = month_data[i].toString().split(",");
+                let per_data = month_data[i];
                 per_tr = get_tr(9 + i, per_data[3], per_data[1], per_data[2], per_data[4]);
                 $('#month_per').hide();
                 $('#tbm').append(per_tr);
@@ -248,7 +248,7 @@
             }
         } else if (current_page_month + 8 < len_month) {
             for (let i = current_page_month; i < current_page_month + 8; i++) {
-                let per_data = month_data[i].toString().split(",");
+                let per_data = month_data[i];
                 per_tr = get_tr(9 + i, per_data[3], per_data[1], per_data[2], per_data[4]);
                 $('#tbm').append(per_tr)
             }
@@ -256,7 +256,7 @@
 
         } else {
             for (let i = current_page_month; i < current_page_month + (len_month - current_page_month); i++) {
-                let per_data = month_data[i].toString().split(",");
+                let per_data = month_data[i];
                 per_tr = get_tr(9 + i, per_data[3], per_data[1], per_data[2], per_data[4]);
                 $('#tbm').append(per_tr)
 

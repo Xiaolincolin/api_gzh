@@ -190,6 +190,7 @@
     history_data = eval(history_data);
     let month_data = "{{ month_data|safe }}";
     month_data = eval(month_data);
+    alert(month_data);
     let current_page = 0;
     let current_page_month = 0;
     let len = history_data.length;
@@ -203,6 +204,7 @@
     }
 
     $("#history_per").on("click", function () {
+        alert("开始");
         if (len <= 8) {
             for (let i = 0; i < history_data.length; i++) {
                 let per_data = history_data[i].toString().split(",");
@@ -211,6 +213,7 @@
                 $('#tbd').append(per_tr)
             }
         } else if (current_page + 8 < len) {
+            alert("8");
             for (let i = current_page; i < current_page + 8; i++) {
                 let per_data = history_data[i].toString().split(",");
                 alert(per_data);

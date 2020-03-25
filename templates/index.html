@@ -130,7 +130,7 @@
                 <div class="tab-pane fade" id="contact" role="tabpanel">
                     <div class="section full mb-2">
                         <div class="content-header mb-05">
-                            本月收录游戏广告数为： <code>{{ history_game_count }}</code>条，应用条数<code>{{ history_game_count }}</code>条
+                            历史收录游戏广告数为： <code>{{ history_game_count }}</code>条，应用条数<code>{{ history_app_count }}</code>条
                         </div>
                         <div class="wide-block p-0">
 
@@ -206,14 +206,14 @@
         if (len <= 8) {
             for (let i = 0; i < history_data.length; i++) {
                 let per_data = history_data[i].toString().split(",");
-                per_tr = get_tr(9 + i, per_data[0], per_data[1], per_data[2]);
+                per_tr = get_tr(9 + i, per_data[3], per_data[1], per_data[2], per_data[4]);
                 $('#history_per').hide();
                 $('#tbd').append(per_tr)
             }
         } else if (current_page + 8 < len) {
             for (let i = current_page; i < current_page + 8; i++) {
                 let per_data = history_data[i].toString().split(",");
-                per_tr = get_tr(9 + i, per_data[0], per_data[1], per_data[2]);
+                per_tr = get_tr(9 + i, per_data[3], per_data[1], per_data[2], per_data[4]);
                 $('#tbd').append(per_tr)
 
             }
@@ -222,7 +222,7 @@
         } else {
             for (let i = current_page; i < current_page + (len - current_page); i++) {
                 let per_data = history_data[i];
-                per_tr = get_tr(9 + i, per_data[0], per_data[1], per_data[2]);
+                per_tr = get_tr(9 + i, per_data[3], per_data[1], per_data[2], per_data[4]);
                 $('#tbd').append(per_tr)
 
             }
@@ -236,7 +236,7 @@
         if (len_month <= 8) {
             for (let i = 0; i < month_data.length; i++) {
                 let per_data = month_data[i].toString().split(",");
-                per_tr = get_tr(9 + i, per_data[0], per_data[1], per_data[2]);
+                per_tr = get_tr(9 + i, per_data[3], per_data[1], per_data[2], per_data[4]);
                 $('#month_per').hide();
                 $('#tbm').append(per_tr);
 
@@ -244,7 +244,7 @@
         } else if (current_page_month + 8 < len_month) {
             for (let i = current_page_month; i < current_page_month + 8; i++) {
                 let per_data = month_data[i].toString().split(",");
-                per_tr = get_tr(9 + i, per_data[0], per_data[1], per_data[2]);
+                per_tr = get_tr(9 + i, per_data[3], per_data[1], per_data[2], per_data[4]);
                 $('#tbm').append(per_tr)
             }
             current_page_month = current_page_month + 8;
@@ -252,7 +252,7 @@
         } else {
             for (let i = current_page_month; i < current_page_month + (len_month - current_page_month); i++) {
                 let per_data = month_data[i].toString().split(",");
-                per_tr = get_tr(9 + i, per_data[0], per_data[1], per_data[2]);
+                per_tr = get_tr(9 + i, per_data[3], per_data[1], per_data[2], per_data[4]);
                 $('#tbm').append(per_tr)
 
             }
@@ -260,12 +260,13 @@
         }
     });
 
-    let get_tr = function (id, game, app, ts) {
+    let get_tr = function (id, ad_type, product, create, ts) {
         let a = '<tr><th scope="row">' + id + '</th>';
-        let b = '<td>' + game + '</td>';
-        let c = '<td>' + app + '</td>';
-        let d = '<td>' + ts + '</td></tr>';
-        return a + b + c + d
+        let b = '<td>' + ad_type + '</td>';
+        let c = '<td>' + product + '</td>';
+        let d = '<td>' + create + '</td></tr>';
+        let e = '<td>' + ts + '</td></tr>';
+        return a + b + c + d + e
     }
 
 

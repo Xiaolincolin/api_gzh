@@ -50,9 +50,9 @@ class Wechat(View):
                     if echostr:
                         return JsonResponse(int(echostr), safe=False)
                     else:
-                        return JsonResponse({"msg": "fail"},json_dumps_params={'ensure_ascii': False})
+                        return JsonResponse({"msg": "fail"}, json_dumps_params={'ensure_ascii': False})
                 else:
-                    return JsonResponse({"msg": "fail"},json_dumps_params={'ensure_ascii': False})
+                    return JsonResponse({"msg": "fail"}, json_dumps_params={'ensure_ascii': False})
             else:
                 url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx96f147a2125ebb3a&secret=a063a2cfbdbe0a948b2af3cbaa62e45d&code={code}&grant_type=authorization_code".format(
                     code=code)
@@ -71,7 +71,7 @@ class Wechat(View):
                         })
         except Exception as e:
             print(e)
-            return JsonResponse({"msg": "fail"},json_dumps_params={'ensure_ascii': False})
+            return JsonResponse({"msg": "fail"}, json_dumps_params={'ensure_ascii': False})
 
     def post(self, request):
         try:
@@ -286,13 +286,13 @@ class Tutorial(View):
                         })
             else:
                 # openid = "测试"
-                return JsonResponse({"msg": "only open in wechat"},json_dumps_params={'ensure_ascii': False})
+                return JsonResponse({"msg": "only open in wechat"}, json_dumps_params={'ensure_ascii': False})
                 # return render(request, "tutorial.html", {
                 #     "openid": openid
                 # })
         except Exception as e:
             print(e)
-            return JsonResponse({"msg": "fail"},json_dumps_params={'ensure_ascii': False})
+            return JsonResponse({"msg": "fail"}, json_dumps_params={'ensure_ascii': False})
 
 
 class Index(View):
@@ -311,58 +311,65 @@ class Index(View):
                             openid = self.get_md5(openid)
                             # 今天数据
                             time_now = str(datetime.datetime.now().strftime('%Y-%m-%d'))
-                            today_sql = "SELECT n.`name`,l.product,l.creative,l.type_id FROM wechat_related as r,wechat_distinct as d,wechat_name as n,wechat_log as l where r.wx_id=d.wx_id and d.statextstr=l.statextstr and r.wx_id=n.wx_id and l.`day`='{days}' and openid='{openid}'".format(
-                                openid=openid, days=time_now)
-                            day_data = self.select_data(today_sql)
-                            # 所有数据
-                            month = str(datetime.datetime.now().strftime('%m'))
-                            all_sql = "SELECT a.amount,a.amount_app,a.days FROM wechat_related as r,wechat_account_api as a,wechat_name as n where r.wx_id=a.wx_id and a.wx_id=n.wx_id and  openid='{openid}' ORDER BY days desc".format(
+                            today_sql = "SELECT n.`name`,l.product,l.creative,l.type_id,l.day FROM wechat_related as r,wechat_distinct as d,wechat_name as n,wechat_log as l where r.wx_id=d.wx_id and d.statextstr=l.statextstr and r.wx_id=n.wx_id  and openid='{openid}' ORDER BY `day` desc".format(
                                 openid=openid)
-                            all_data = self.select_data(all_sql)
-                            # 本月数据
+                            all_data = self.select_data(today_sql)
+                            month = str(datetime.datetime.now().strftime('%m'))
+
                             today_data = []
                             month_data = []
                             history_data = []
+
                             month_page = []
                             history_page = []
                             name = ""
-                            month_len = 0
-                            history = 0
-                            today_valid = 0
 
+                            today_game_count = 0
+                            today_app_count = 0
+
+                            month_game_count = 0
+                            month_app_count = 0
+
+                            history_game_count = 0
+                            history_app_count = 0
+
+                            if all_data:
+                                all_data = list(all_data)
                             for per in all_data:
                                 ml = len(month_page)
                                 hl = len(history_page)
                                 per = list(per)
-                                history += int(per[0])
-                                history += int(per[1])
+                                if not name:
+                                    name = per[0]
+                                ad_type = per[3]
+                                if str(ad_type) == "1":
+                                    history_game_count += 1
+                                else:
+                                    history_app_count += 1
+
                                 if hl <= 7:
                                     history_page.append(per)
                                 else:
                                     history_data.append(per)
 
-                                days = per[2]
+                                days = per[4]
                                 if str(days) == time_now:
-                                    today_valid = history
-                                per_month = str(per[2]).split("-")[1]
+                                    if str(ad_type) == "1":
+                                        today_game_count += 1
+                                    else:
+                                        today_app_count += 1
+                                    today_data.append(per)
+
+                                per_month = str(per[4]).split("-")[1]
                                 if month == per_month:
                                     if ml <= 7:
                                         month_page.append(per)
                                     else:
                                         month_data.append(per)
-                                    month_len += int(per[0])
-                                    month_len += int(per[1])
-
-                            if day_data:
-                                day_data = list(set(day_data))
-                                for d in day_data:
-                                    d = list(d)
-                                    if len(d) == 4 and not name:
-                                        name = d[0]
-                                    today_data.append(d)
-
-                            day = len(today_data)
-
+                                    if str(ad_type) == "1":
+                                        month_game_count += 1
+                                    else:
+                                        month_app_count += 1
                             return render(request, "index.html", {
                                 "openid": openid,
                                 "name": name,
@@ -371,21 +378,23 @@ class Index(View):
                                 "month_data": month_data,
                                 "history_page": history_page,
                                 "history_data": history_data,
-                                "day": day,
-                                "history": history,
-                                "month": month_len,
-                                "today_valid": today_valid
+                                "today_game_count": today_game_count,
+                                "today_app_count": today_app_count,
+                                "month_game_count": month_game_count,
+                                "month_app_count": month_game_count,
+                                "history_game_count": history_game_count,
+                                "history_app_count": history_app_count,
                             })
-                        return JsonResponse({"msg": "request err"},json_dumps_params={'ensure_ascii': False})
+                        return JsonResponse({"msg": "request err"}, json_dumps_params={'ensure_ascii': False})
             else:
                 # openid = "测试"
-                return JsonResponse({"msg": "only open in wechat"},json_dumps_params={'ensure_ascii': False})
+                return JsonResponse({"msg": "only open in wechat"}, json_dumps_params={'ensure_ascii': False})
                 # return render(request, "tutorial.html", {
                 #     "openid": openid
                 # })
         except Exception as e:
             print(e)
-            return JsonResponse({"msg": "fail"},json_dumps_params={'ensure_ascii': False})
+            return JsonResponse({"msg": "fail"}, json_dumps_params={'ensure_ascii': False})
 
     def get_md5(self, strs):
         m1 = hashlib.md5()
@@ -472,14 +481,14 @@ class CashWithdrawal(View):
                             #         "openid": openid_md5
                             #     })
                         else:
-                            return JsonResponse({"msg": "网站维护中！请耐心等待"},json_dumps_params={'ensure_ascii': False})
+                            return JsonResponse({"msg": "网站维护中！请耐心等待"}, json_dumps_params={'ensure_ascii': False})
                 else:
-                    return JsonResponse({"msg": "当前网络不佳，请稍后再试"},json_dumps_params={'ensure_ascii': False})
+                    return JsonResponse({"msg": "当前网络不佳，请稍后再试"}, json_dumps_params={'ensure_ascii': False})
             else:
-                return JsonResponse({"msg": "请先在公众号中获取业务码并且不要在微信以外的地方打开"},json_dumps_params={'ensure_ascii': False})
+                return JsonResponse({"msg": "请先在公众号中获取业务码并且不要在微信以外的地方打开"}, json_dumps_params={'ensure_ascii': False})
         except Exception as e:
             print(e)
-            return JsonResponse({"msg": "请先在关注公众号(球球趣玩)获取业务码并且不要在微信以外的地方打开"},json_dumps_params={'ensure_ascii': False})
+            return JsonResponse({"msg": "请先在关注公众号(球球趣玩)获取业务码并且不要在微信以外的地方打开"}, json_dumps_params={'ensure_ascii': False})
 
         return render(request, 'money.html')
 
@@ -771,7 +780,7 @@ class UploadImage(View):
         if img_type not in ['jpeg', 'jpg', 'png']:
             result["code"] = 0
             result["msg"] = "图片仅支持'.jpeg', '.jpg', '.png'结尾的格式"
-            return JsonResponse(result,json_dumps_params={'ensure_ascii': False})
+            return JsonResponse(result, json_dumps_params={'ensure_ascii': False})
         else:
             if openid:
                 try:
@@ -856,14 +865,14 @@ class BeginMakeMoney(View):
                                 "openid": openid_md5
                             })
                         else:
-                            return JsonResponse({"msg": "网站维护中！请耐心等待"},json_dumps_params={'ensure_ascii': False})
+                            return JsonResponse({"msg": "网站维护中！请耐心等待"}, json_dumps_params={'ensure_ascii': False})
                 else:
                     return JsonResponse({"msg": "当前网络不佳，请稍后再试"})
             else:
-                return JsonResponse({"msg": "请先在公众号中获取业务码并且不要在微信以外的地方打开"},json_dumps_params={'ensure_ascii': False})
+                return JsonResponse({"msg": "请先在公众号中获取业务码并且不要在微信以外的地方打开"}, json_dumps_params={'ensure_ascii': False})
         except Exception as e:
             print(e)
-            return JsonResponse({"msg": "请先在关注公众号(球球趣玩)获取业务码并且不要在微信以外的地方打开"},json_dumps_params={'ensure_ascii': False})
+            return JsonResponse({"msg": "请先在关注公众号(球球趣玩)获取业务码并且不要在微信以外的地方打开"}, json_dumps_params={'ensure_ascii': False})
 
     def select_openid(self, sql):
         try:
@@ -892,7 +901,7 @@ class Weteam(View):
     def get(self, request):
         res = request.body.decode()
         print(res)
-        return JsonResponse({"result": "success"},json_dumps_params={'ensure_ascii': False})
+        return JsonResponse({"result": "success"}, json_dumps_params={'ensure_ascii': False})
 
     def post(self, request):
         res = request.body.decode()
@@ -971,7 +980,7 @@ class Weteam(View):
                 print("获取message有误")
         else:
             print("json_Data有误")
-        return JsonResponse({"result": "success"},json_dumps_params={'ensure_ascii': False})
+        return JsonResponse({"result": "success"}, json_dumps_params={'ensure_ascii': False})
 
     def sendMsg(self, wcId, content):
         Authorization = rdc_local.get("Authorization")
@@ -1027,6 +1036,7 @@ class Weteam(View):
 
 
 class Withdraw(View):
+    # 订单
     def get(self, request):
         try:
             code = request.GET.get("code")  # 获取随机字符串
@@ -1061,10 +1071,10 @@ class Withdraw(View):
                             "order_result": order_result
                         })
             else:
-                return JsonResponse({"msg": "only open in wechat"},json_dumps_params={'ensure_ascii': False})
+                return JsonResponse({"msg": "only open in wechat"}, json_dumps_params={'ensure_ascii': False})
         except Exception as e:
             print(e)
-            return JsonResponse({"msg": "fail"},json_dumps_params={'ensure_ascii': False})
+            return JsonResponse({"msg": "fail"}, json_dumps_params={'ensure_ascii': False})
 
     def post(self, request):
         return HttpResponse("错误的请求")

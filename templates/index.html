@@ -57,7 +57,7 @@
                 <div class="tab-pane fade show active" id="home" role="tabpanel">
                     <div class="section full mt-1 mb-2">
                         <div class="content-header mb-05">
-                            今日收录广告数为： <code>{{ day }}</code>条，有效条数<code>{{ today_valid }}</code>条
+                            今日收录游戏广告数为： <code>{{ today_game_count }}</code>条，应用条数<code>{{ today_app_count }}</code>条
                         </div>
                         <div class="wide-block p-0">
 
@@ -66,18 +66,20 @@
                                     <thead>
                                     <tr>
                                         <th scope="col">#</th>
-                                        <th scope="col">描述</th>
-                                        <th scope="col">名字</th>
                                         <th scope="col">类型</th>
+                                        <th scope="col">名字</th>
+                                        <th scope="col">文案</th>
+                                        <th scope="col">日期</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     {% for item in today_data %}
                                         <tr>
                                             <th scope="row">{{ forloop.counter }}</th>
+                                            <td>{% if item.3 == 1 %}游戏{% else %}应用{% endif %}</td>
                                             <td>{{ item.1 }}</td>
                                             <td>{{ item.2 }}</td>
-                                            <td>{% if item.3 == 1 %}游戏{% else %}应用{% endif %}</td>
+                                            <td>{{ item.4 }}</td>
                                         </tr>
                                     {% endfor %}
                                     </tbody>
@@ -90,7 +92,7 @@
                 <div class="tab-pane fade" id="profile" role="tabpanel">
                     <div class="section full mb-2">
                         <div class="content-header mb-05">
-                            本月有效条数为： <code>{{ month }}</code>条
+                            本月收录游戏广告数为： <code>{{ month_game_count }}</code>条，应用条数<code>{{ month_app_count }}</code>条
                         </div>
                         <div class="wide-block p-0">
 
@@ -99,18 +101,20 @@
                                     <thead>
                                     <tr>
                                         <th scope="col">#</th>
-                                        <th scope="col">游戏</th>
-                                        <th scope="col">应用</th>
-                                        <th scope="col">时间</th>
+                                        <th scope="col">类型</th>
+                                        <th scope="col">名字</th>
+                                        <th scope="col">文案</th>
+                                        <th scope="col">日期</th>
                                     </tr>
                                     </thead>
                                     <tbody id="tbm">
                                     {% for item in month_page %}
                                         <tr>
                                             <th scope="row">{{ forloop.counter }}</th>
-                                            <td>{{ item.0 }}</td>
+                                            <td>{% if item.3 == 1 %}游戏{% else %}应用{% endif %}</td>
                                             <td>{{ item.1 }}</td>
                                             <td>{{ item.2 }}</td>
+                                            <td>{{ item.4 }}</td>
                                         </tr>
                                     {% endfor %}
                                     </tbody>
@@ -126,7 +130,7 @@
                 <div class="tab-pane fade" id="contact" role="tabpanel">
                     <div class="section full mb-2">
                         <div class="content-header mb-05">
-                            历史有效条数为： <code>{{ history }}</code>条
+                            本月收录游戏广告数为： <code>{{ history_game_count }}</code>条，应用条数<code>{{ history_game_count }}</code>条
                         </div>
                         <div class="wide-block p-0">
 
@@ -135,18 +139,20 @@
                                     <thead>
                                     <tr>
                                         <th scope="col">#</th>
-                                        <th scope="col">游戏</th>
-                                        <th scope="col">应用</th>
-                                        <th scope="col">时间</th>
+                                        <th scope="col">类型</th>
+                                        <th scope="col">名字</th>
+                                        <th scope="col">文案</th>
+                                        <th scope="col">日期</th>
                                     </tr>
                                     </thead>
                                     <tbody id="tbd">
                                     {% for item in history_page %}
                                         <tr>
                                             <th scope="row">{{ forloop.counter }}</th>
-                                            <td>{{ item.0 }}</td>
+                                            <td>{% if item.3 == 1 %}游戏{% else %}应用{% endif %}</td>
                                             <td>{{ item.1 }}</td>
                                             <td>{{ item.2 }}</td>
+                                            <td>{{ item.4 }}</td>
                                         </tr>
                                     {% endfor %}
 

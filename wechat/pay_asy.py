@@ -13,12 +13,12 @@ from DBUtils.PooledDB import PooledDB
 
 MYSQL_DB_NAME = "adi"
 MYSQL_DB_USER = "root"
-MYSQL_DB_PWD = "Adi_mysql"
-MYSQL_DB_HOST = "106.12.213.233"
+MYSQL_DB_PWD = "timt!m"
+MYSQL_DB_HOST = "127.0.0.1"
 
 pool = PooledDB(pymysql, host=MYSQL_DB_HOST, user=MYSQL_DB_USER, passwd=MYSQL_DB_PWD, db='adi', port=3306,
                 charset="utf8")
-rdp_local = redis.ConnectionPool(host='47.95.217.37', port=6379, db=3)  # 默认db=0，测试使用db=1
+rdp_local = redis.ConnectionPool(host='127.0.0.1', port=6379, db=3)  # 默认db=0，测试使用db=1
 rdc_local = redis.StrictRedis(connection_pool=rdp_local)
 
 
@@ -198,9 +198,9 @@ class PayAsy:
 
 if __name__ == '__main__':
     p = PayAsy()
-    # for i in range(0, 20):
-    #     t = (datetime.date.today() + datetime.timedelta(days=-i)).strftime("%Y-%m-%d")
-    #     print(t)
-    #     p.get_data(t, "", 1)
-    p.get_data("", "", 0)
+    for i in range(0, 25):
+         t = (datetime.date.today() + datetime.timedelta(days=-i)).strftime("%Y-%m-%d")
+         print(t)
+         p.get_data(t, "", 1)
+   # p.get_data("", "", 0)
 

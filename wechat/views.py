@@ -14,9 +14,9 @@ import hashlib
 import logging
 from pyzbar.pyzbar import decode
 
-rdp_local = redis.ConnectionPool(host='47.95.217.37', port=6379, db=1)  # 默认db=0，测试使用db=1
+rdp_local = redis.ConnectionPool(host='127.0.0.1', port=6379, db=1)  # 默认db=0，测试使用db=1
 rdc_local = redis.StrictRedis(connection_pool=rdp_local)
-redis_conn = redis.Redis(connection_pool=redis.ConnectionPool(host='47.95.217.37', port=6379, db=2))
+redis_conn = redis.Redis(connection_pool=redis.ConnectionPool(host='127.0.0.1', port=6379, db=2))
 from django.db import connection
 from api.settings import MEDIA_ROOT
 

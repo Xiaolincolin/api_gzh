@@ -81,8 +81,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'adi',
         'USER': 'root',
-        'PASSWORD': 'Adi_mysql',
-        'HOST': '106.12.213.233',
+        'PASSWORD': 'timt!m',
+        'HOST': '127.0.0.1',
         # 'OPTIONS': {
         #     "init_command": "SET sql_mode='STRICT_TRANS_TABLES'",
         #     'sql_mode': 'traditional',
@@ -195,7 +195,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [(os.path.join(BASE_DIR, 'static'))]
+#STATICFILES_DIRS = [(os.path.join(BASE_DIR, 'static'))]
 STATIC_ROOT = os.path.join(BASE_DIR, "/static/")
 ATOMIC_REQUESTS: True
 APPEND_SLASH = False

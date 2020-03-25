@@ -213,6 +213,7 @@
         } else if (current_page + 8 < len) {
             for (let i = current_page; i < current_page + 8; i++) {
                 let per_data = history_data[i].toString().split(",");
+                alert(per_data);
                 per_tr = get_tr(9 + i, per_data[3], per_data[1], per_data[2], per_data[4]);
                 $('#tbd').append(per_tr)
 

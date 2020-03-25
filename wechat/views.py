@@ -381,7 +381,7 @@ class Index(View):
                                 "today_game_count": today_game_count,
                                 "today_app_count": today_app_count,
                                 "month_game_count": month_game_count,
-                                "month_app_count": month_game_count,
+                                "month_app_count": month_app_count,
                                 "history_game_count": history_game_count,
                                 "history_app_count": history_app_count,
                             })

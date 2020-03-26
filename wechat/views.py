@@ -339,7 +339,7 @@ class Index(View):
                                 ml = len(month_page)
                                 hl = len(history_page)
                                 per = list(per)
-                                per = ["无" if i=="" else i for i in per]
+                                per = ["无" if str(i)=="None" or i=="" else i for i in per]
                                 if not name:
                                     name = per[0]
                                 ad_type = per[3]

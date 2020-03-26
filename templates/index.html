@@ -235,7 +235,6 @@
     });
 
     $("#month_per").on("click", function () {
-        alert("month");
         if (len_month <= 8) {
             for (let i = 0; i < month_data.length; i++) {
                 let per_data = month_data[i];
@@ -267,7 +266,7 @@
         let a = '<tr><th scope="row">' + id + '</th>';
         let b = '<td>' + ad_type + '</td>';
         let c = '<td>' + product + '</td>';
-        let d = '<td>' + create + '</td></tr>';
+        let d = '<td>' + create + '</td>';
         let e = '<td>' + ts + '</td></tr>';
         return a + b + c + d + e
     }

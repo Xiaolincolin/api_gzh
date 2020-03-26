@@ -339,6 +339,7 @@ class Index(View):
                                 ml = len(month_page)
                                 hl = len(history_page)
                                 per = list(per)
+                                per = ["无" if i=="" else i for i in per]
                                 if not name:
                                     name = per[0]
                                 ad_type = per[3]
@@ -370,7 +371,6 @@ class Index(View):
                                         month_game_count += 1
                                     else:
                                         month_app_count += 1
-                            print(month_data)
                             return render(request, "index.html", {
                                 "openid": openid,
                                 "name": name,
@@ -1106,7 +1106,4 @@ class Video(View):
 
 class Test(View):
     def get(self, request):
-        test_list = [["name","product","create","ad_type","ts"],["name","product","create","ad_type","ts"],["name","product","create","ad_type","ts"],["name","product","create","ad_type","ts"]]
-        return render(request,'tx.html',{
-            "test_list":test_list
-        })
+        return JsonResponse("功能开发中")

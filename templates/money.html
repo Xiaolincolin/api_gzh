@@ -209,6 +209,7 @@
 
         } else if (tx_je > withdrawable) {
             let result = tx_je - withdrawable;
+            result = result.toFixed(2);
             alert("您的可提现金额只有" + withdrawable + "元，距离您的小目标还差" + result + "元");
         } else {
             if (confirm("你确定现在就要提现" + tx_je + "元，不再多攒点？再次提现需本次审核通过才能发起")) {

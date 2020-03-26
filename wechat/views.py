@@ -561,7 +561,7 @@ class Launch(View):
         data = {}
         today = (datetime.date.today()).strftime("%d")
         ts = (datetime.date.today()).strftime("%Y-%m-%d")
-        if str(today) == "15" or str(today) == "16":
+        if str(today) == "15" or str(today) == "26":
             if openid:
                 # openid不存在
                 qr_sql = "select openid from wechat_pay_img where openid='{openid}'".format(

@@ -370,6 +370,7 @@ class Index(View):
                                         month_game_count += 1
                                     else:
                                         month_app_count += 1
+                            print(month_data)
                             return render(request, "index.html", {
                                 "openid": openid,
                                 "name": name,
@@ -1105,4 +1106,7 @@ class Video(View):
 
 class Test(View):
     def get(self, request):
-        return HttpResponse("功能开发中")
+        test_list = [["name","product","create","ad_type","ts"],["name","product","create","ad_type","ts"],["name","product","create","ad_type","ts"],["name","product","create","ad_type","ts"]]
+        return render(request,'tx.html',{
+            "test_list":test_list
+        })

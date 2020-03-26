@@ -234,8 +234,8 @@
                         //data是json类型
                         alert(data["msg"]);
                         if (data["code"] == "1") {
-                            $('#withdrawable').html(data["withdrawable"].toFixed(2));
-                            $('#alread').html(data["alread"].toFixed(2));
+                            $('#withdrawable').html(data["withdrawable"]);
+                            $('#alread').html(data["alread"]);
                             $('.user_code').html("审核中");
                             $('#tx_jl').append(get_li(username,money))
                         }

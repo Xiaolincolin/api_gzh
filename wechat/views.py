@@ -638,8 +638,8 @@ class Launch(View):
                                                     # 订单生成成功
                                                     data["code"] = "1"
                                                     data["msg"] = "提现成功"
-                                                    data["withdrawable"] = str(withdrawable - money)
-                                                    data["alread"] = str(alread + money)
+                                                    data["withdrawable"] = str(round(withdrawable - money,2))
+                                                    data["alread"] = str(round(alread + money,2))
                                                     msg = openid + " " + str(orderid) + " " + str(money) + " 提现发起成功"
                                                     logger_money.info(msg)
                                                     if str(order_status) == "3":

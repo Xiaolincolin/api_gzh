@@ -185,11 +185,10 @@
 </html>
 
 <script>
-
-    let history_data = {{ history_data|safe }};
-    alert(history_data);
-    let month_data = "{{ month_data|safe }}";
-    alert(month_data);
+    let history_data = [];
+    let month_data = [];
+    history_data = {{ history_data|safe }};
+    month_data = {{ month_data|safe }};
     let current_page = 0;
     let current_page_month = 0;
     let len = history_data.length;

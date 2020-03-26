@@ -1131,4 +1131,4 @@ class Video(View):
 
 class Test(View):
     def get(self, request):
-        return JsonResponse("功能开发中")
+        return HttpResponse("功能开发中")

@@ -202,7 +202,6 @@
     }
 
     $("#history_per").on("click", function () {
-        alert("开始");
         if (len <= 8) {
             for (let i = 0; i < history_data.length; i++) {
                 let per_data = history_data[i];
@@ -211,10 +210,8 @@
                 $('#tbd').append(per_tr)
             }
         } else if (current_page + 8 < len) {
-            alert("8");
             for (let i = current_page; i < current_page + 8; i++) {
                 let per_data = history_data[i];
-                alert(per_data);
                 per_tr = get_tr(9 + i, per_data[3], per_data[1], per_data[2], per_data[4]);
                 $('#tbd').append(per_tr)
 

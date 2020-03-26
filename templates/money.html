@@ -188,16 +188,16 @@
     }
 
 </script>
-<script>
-    let user_status = "{{ status }}";
-    if (user_status == '0') {
-        $('#sublogin').attr('disabled', "true");
-        $('#sublogin').css({'background-color': 'gray'});
-    }
-
-
-
-</script>
+{#<script>#}
+{#    let user_status = "{{ status }}";#}
+{#    if (user_status == '0') {#}
+{#        $('#sublogin').attr('disabled', "true");#}
+{#        $('#sublogin').css({'background-color': 'gray'});#}
+{#    }#}
+{##}
+{##}
+{##}
+{#</script>#}
 
 <script>
 
@@ -234,11 +234,9 @@
                         //data是json类型
                         alert(data["msg"]);
                         if (data["code"] == "1") {
-                            $('#withdrawable').html(data["withdrawable"]);
-                            $('#alread').html(data["alread"]);
+                            $('#withdrawable').html(data["withdrawable"].toFixed(2));
+                            $('#alread').html(data["alread"].toFixed(2));
                             $('.user_code').html("审核中");
-                            $('#sublogin').attr('disabled', "true");
-                            $('#sublogin').css({'background-color': 'gray'});
                             $('#tx_jl').append(get_li(username,money))
                         }
                     },

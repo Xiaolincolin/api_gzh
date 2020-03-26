@@ -79,13 +79,14 @@
                     <input type="text" id="remarks" name="remark" placeholder="写点啥呢">
                 </div>
                 <input type='hidden' name='openid' value='{{ openid }}'/>
-                <div>
+                <div style="padding-left: 20px">
                     <p style="padding-left: 5px"><code>*</code>当前可提现金额x元：最低10元起提</p>
                     <p style="padding-left: 5px"><code>*</code>可申请提现时间：每月15,16日，每天可申请5次</p>
                     <p style="padding-left: 5px"><code>*</code>单次提现金额上限：100元</p>
                     <p style="padding-left: 5px"><code>*</code>提现成功后，将在3-5个工作日进行审核</p>
                     <p style="padding-left: 5px"><code>*</code>审核通过后直接到账微信零钱</p>
                 </div>
+                <div></div>>
                 <button type="button" id="sublogin">确定</button>
                 {% csrf_token %}
             </form>

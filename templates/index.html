@@ -14,30 +14,6 @@
     <link rel="apple-touch-icon" sizes="180x180" href="{% static 'assets/img/apple-touch-icon.png' %}">
     <link rel="icon" type="image/png" href="{% static 'assets/img/favicon.png' %}" sizes="32x32">
     <link rel="shortcut icon" href="{% static 'assets/img/favicon.png' %}">
-    <style>
-
-table tbody {
-    display:block;
-    height:200px; //高度根据实际自定义
-    overflow-y:scroll;
-    -webkit-overflow-scrolling: touch; // 为了滚动顺畅
-}
-
-table tbody::-webkit-scrollbar {
-    display: none; // 隐藏滚动条，不需要可取消
-}
-
-table thead, table tbody tr {
-    display:table;
-    width:100%;
-    table-layout:fixed;//fixed：固定表格布局
-}
-
-table thead {
-    width: calc( 100% - 1em ); //函数计算宽度
-}
-
-    </style>
 </head>
 
 <body>
@@ -120,7 +96,7 @@ table thead {
                         </div>
                         <div class="wide-block p-0">
 
-                            <div class="table-responsive">
+                            <div class="table-responsive" style="overflow:scroll">
                                 <table class="table table-dark">
                                     <thead>
                                     <tr>
@@ -158,7 +134,7 @@ table thead {
                         </div>
                         <div class="wide-block p-0">
 
-                            <div class="table-responsive">
+                            <div class="table-responsive" style="overflow:scroll">
                                 <table class="table table-dark">
                                     <thead>
                                     <tr>

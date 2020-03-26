@@ -189,6 +189,7 @@
     let month_data = [];
     history_data = {{ history_data|safe }};
     month_data = {{ month_data|safe }};
+    alert(month_data);
     let current_page = 0;
     let current_page_month = 0;
     let len = history_data.length;
@@ -235,6 +236,7 @@
     });
 
     $("#month_per").on("click", function () {
+        alert("month");
         if (len_month <= 8) {
             for (let i = 0; i < month_data.length; i++) {
                 let per_data = month_data[i];
@@ -244,8 +246,10 @@
 
             }
         } else if (current_page_month + 8 < len_month) {
+            alert("8");
             for (let i = current_page_month; i < current_page_month + 8; i++) {
                 let per_data = month_data[i];
+                alert(per_data);
                 per_tr = get_tr(9 + i, per_data[3], per_data[1], per_data[2], per_data[4]);
                 $('#tbm').append(per_tr)
             }

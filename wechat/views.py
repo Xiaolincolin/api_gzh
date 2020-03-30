@@ -344,10 +344,6 @@ class Index(View):
                                     name = per[0]
                                 ad_type = per[3]
 
-                                if str(ad_type) == "1":
-                                    history_game_count += 1
-                                else:
-                                    history_app_count += 1
 
                                 if hl <= 7:
                                     if per not in history_page:

@@ -343,34 +343,53 @@ class Index(View):
                                 if not name:
                                     name = per[0]
                                 ad_type = per[3]
+
                                 if str(ad_type) == "1":
                                     history_game_count += 1
                                 else:
                                     history_app_count += 1
 
                                 if hl <= 7:
-                                    history_page.append(per)
+                                    if per not in history_page:
+                                        if str(ad_type) == "1":
+                                            history_game_count += 1
+                                        else:
+                                            history_app_count += 1
+                                        history_page.append(per)
                                 else:
-                                    history_data.append(per)
+                                    if per not in history_page:
+                                        if str(ad_type) == "1":
+                                            history_game_count += 1
+                                        else:
+                                            history_app_count += 1
+                                        history_data.append(per)
 
                                 days = per[4]
                                 if str(days) == time_now:
-                                    if str(ad_type) == "1":
-                                        today_game_count += 1
-                                    else:
-                                        today_app_count += 1
-                                    today_data.append(per)
+                                    if per not in today_data:
+                                        if str(ad_type) == "1":
+                                            today_game_count += 1
+                                        else:
+                                            today_app_count += 1
+                                        today_data.append(per)
 
                                 per_month = str(per[4]).split("-")[1]
                                 if month == per_month:
                                     if ml <= 7:
-                                        month_page.append(per)
+                                        if per not in month_page:
+                                            if str(ad_type) == "1":
+                                                month_game_count += 1
+                                            else:
+                                                month_app_count += 1
+                                            month_page.append(per)
                                     else:
-                                        month_data.append(per)
-                                    if str(ad_type) == "1":
-                                        month_game_count += 1
-                                    else:
-                                        month_app_count += 1
+                                        if per not in month_page:
+                                            if str(ad_type) == "1":
+                                                month_game_count += 1
+                                            else:
+                                                month_app_count += 1
+                                            month_data.append(per)
+
                             return render(request, "index.html", {
                                 "openid": openid,
                                 "name": name,

@@ -67,8 +67,8 @@
                                     <tr>
                                         <th scope="col">#</th>
                                         <th scope="col">类型</th>
-                                        <th scope="col">名字</th>
-                                        <th scope="col">文案</th>
+                                        <th scope="col">广告内容</th>
+                                        <th scope="col">收益</th>
                                         <th scope="col">日期</th>
                                     </tr>
                                     </thead>
@@ -77,8 +77,8 @@
                                         <tr>
                                             <th scope="row">{{ forloop.counter }}</th>
                                             <td>{% if item.3 == 1 %}游戏{% else %}应用{% endif %}</td>
-                                            <td>{{ item.1 }}</td>
                                             <td>{{ item.2 }}</td>
+                                            <td>{% if item.3 == 1 %}+1{% else %}+0.8{% endif %}</td>
                                             <td>{{ item.4 }}</td>
                                         </tr>
                                     {% endfor %}
@@ -102,8 +102,8 @@
                                     <tr>
                                         <th scope="col">#</th>
                                         <th scope="col">类型</th>
-                                        <th scope="col">名字</th>
-                                        <th scope="col">文案</th>
+                                        <th scope="col">广告内容</th>
+                                        <th scope="col">收益</th>
                                         <th scope="col">日期</th>
                                     </tr>
                                     </thead>
@@ -112,8 +112,8 @@
                                         <tr>
                                             <th scope="row">{{ forloop.counter }}</th>
                                             <td>{% if item.3 == 1 %}游戏{% else %}应用{% endif %}</td>
-                                            <td>{{ item.1 }}</td>
                                             <td>{{ item.2 }}</td>
+                                            <td>{% if item.3 == 1 %}+1{% else %}+0.8{% endif %}</td>
                                             <td>{{ item.4 }}</td>
                                         </tr>
                                     {% endfor %}
@@ -140,8 +140,8 @@
                                     <tr>
                                         <th scope="col">#</th>
                                         <th scope="col">类型</th>
-                                        <th scope="col">名字</th>
-                                        <th scope="col">文案</th>
+                                        <th scope="col">广告内容</th>
+                                        <th scope="col">收益</th>
                                         <th scope="col">日期</th>
                                     </tr>
                                     </thead>
@@ -150,8 +150,8 @@
                                         <tr>
                                             <th scope="row">{{ forloop.counter }}</th>
                                             <td>{% if item.3 == 1 %}游戏{% else %}应用{% endif %}</td>
-                                            <td>{{ item.1 }}</td>
                                             <td>{{ item.2 }}</td>
+                                            <td>{% if item.3 == 1 %}+1{% else %}+0.8{% endif %}</td>
                                             <td>{{ item.4 }}</td>
                                         </tr>
                                     {% endfor %}
@@ -261,15 +261,18 @@
     });
 
     let get_tr = function (id, ad_type, product, create, ts) {
+        let je = 0;
         if ((ad_type.toString()) == "1") {
-            ad_type = "游戏"
+            ad_type = "游戏";
+            je = 1;
         } else {
             ad_type = "应用"
+            je = 0.8
         }
         let a = '<tr><th scope="row">' + id + '</th>';
         let b = '<td>' + ad_type + '</td>';
-        let c = '<td>' + product + '</td>';
-        let d = '<td>' + create + '</td>';
+        let c = '<td>' + create + '</td>';
+        let d = '<td>' + je + '</td>';
         let e = '<td>' + ts + '</td></tr>';
         return a + b + c + d + e
     }

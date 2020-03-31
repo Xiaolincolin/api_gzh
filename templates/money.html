@@ -61,8 +61,8 @@
         <div class="aui-palace aui-palace-three">
             <form method="post" action="#">
                 <div class="input-group">
-                    <label for="khname" style="padding-left:34px;">名字</label>
-                    <input type="text" id="name" name="user" placeholder="收款码上的名字,填错审核不通过">
+                    <label for="khname" style="padding-left:34px;">姓名</label>
+                    <input type="text" id="name" name="user" placeholder="请输入真实姓名">
                 </div>
                 {#				<div class="input-group">#}
                 {#					<label for="khname" style="padding-left:34px;">账号</label>#}
@@ -71,12 +71,12 @@
                 <div class="input-group">
                     <label for="khname" style="padding-left:34px;">金额</label>
                     <input type="text" id="money" name="money" placeholder="金额不能小于10元"
-                           onclick="clearDefaultText(this,'仅限于大于10的正整数')">
+                           onclick="clearDefaultText(this,'请输入整数金额')">
                 </div>
 
                 <div class="input-group">
                     <label for="khname" style="padding-left:34px;">备注</label>
-                    <input type="text" id="remarks" name="remark" placeholder="写点啥呢">
+                    <input type="text" id="remarks" name="remark" placeholder="(选填)">
                 </div>
                 <input type='hidden' name='openid' value='{{ openid }}'/>
                 <div >
@@ -102,7 +102,7 @@
 {#        <div class="divHeight"></div>#}
         <div class="aui-flex b-line">
             <div class="aui-flex-box">
-                <h2>待提现</h2>
+                <h2>待审核</h2>
             </div>
         </div>
         <div class="aui-flex b-line">
@@ -182,7 +182,7 @@
                 obj.setAttribute("placeholder", "金额不能小于10元");
             } else if (!(/(^[1-9]\d*$)/.test(obj.value))) {
                 obj.value = "";
-                obj.setAttribute("placeholder", "仅限于大于10的正整数");
+                obj.setAttribute("placeholder", "请输入整数金额");
             }
         }
     }

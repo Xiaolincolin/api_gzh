@@ -71,7 +71,7 @@
                 <div class="input-group">
                     <label for="khname" style="padding-left:34px;">金额</label>
                     <input type="text" id="money" name="money" placeholder="金额不能小于10元"
-                           onclick="clearDefaultText(this,'请输入大于10元的整数金额')">
+                           onclick="clearDefaultText(this,'请输入大于10元的(整数)金额')">
                 </div>
 
                 <div class="input-group">
@@ -205,7 +205,7 @@
         let tx_je = parseFloat($('#money').val());
         let withdrawable = parseFloat({{ withdrawable }});
         if (!tx_je) {
-            alert("请输入大于10元的整数金额");
+            alert("请输入大于10元的(整数)金额");
 
         } else if (tx_je > withdrawable) {
             let result = tx_je - withdrawable;

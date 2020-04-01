@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html>
     <head>
         {% load static %}
@@ -44,6 +43,7 @@
 <script>
     let test_lsit = [];
     test_lsit = {{ test_list|safe }};
+    console.log(test_lsit);
     alert(test_lsit)
 
 

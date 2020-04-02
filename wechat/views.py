@@ -311,7 +311,7 @@ class Index(View):
                             openid = self.get_md5(openid)
                             # 今天数据
                             time_now = str(datetime.datetime.now().strftime('%Y-%m-%d'))
-                            today_sql = "SELECT n.`name`,l.product,l.creative,l.type_id,l.day FROM wechat_related as r,wechat_distinct as d,wechat_name as n,wechat_log as l where r.wx_id=d.wx_id and d.statextstr=l.statextstr and r.wx_id=n.wx_id  and openid='{openid}' ORDER BY `day` desc".format(
+                            today_sql = "SELECT n.`name`,l.product,l.creative,l.type_id,l.day FROM wechat_related as r,wechat_distinct as d,wechat_name as n,wechat_log as l where r.wx_id=d.wx_id and d.statextstr=l.statextstr and r.wx_id=n.wx_id  and openid='{openid}' and `day`>'2020-03-31' ORDER BY `day` desc".format(
                                 openid=openid)
                             all_data = self.select_data(today_sql)
                             month = str(datetime.datetime.now().strftime('%m'))

@@ -112,10 +112,10 @@ class PayAsy:
                                 sum_money += update_game
 
                             if app_flag == 1 and update_app == 0:
-                                sum_money += round(app * 0.8, 2)
+                                sum_money += round(app * 0.4, 2)
                             else:
                                 update_app = float(update_app)
-                                sum_money += round(update_app * 0.8, 2)
+                                sum_money += round(update_app * 0.4, 2)
 
                             if not select_result:
                                 insert_sql = "insert into wechat_money(openid,withdrawable,totalmoney,alread,add_time) values (%s,%s,%s,0,NOW())"

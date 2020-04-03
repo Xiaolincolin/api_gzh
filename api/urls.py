@@ -22,6 +22,7 @@ from api.settings import MEDIA_ROOT
 from django.views.static import serve
 from wechat.views import Wechat, Weteam, Tutorial, \
     Index, BeginMakeMoney, CashWithdrawal, Launch, UploadImage, Test, Withdraw,Video
+from baidu.views import Baidu
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -41,4 +42,5 @@ urlpatterns = [
     url(r'^withdraw', Withdraw.as_view(), name="withdraw"),
     # Video
     url(r'^video', Video.as_view(), name="test"),
+    url(r'^bd', csrf_exempt(Baidu.as_view()), name="bd"),
 ]

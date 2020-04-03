@@ -198,7 +198,7 @@ class PayAsy:
 
 if __name__ == '__main__':
     p = PayAsy()
-    for i in range(0, 25):
+    for i in range(0, 4):
          t = (datetime.date.today() + datetime.timedelta(days=-i)).strftime("%Y-%m-%d")
          print(t)
          p.get_data(t, "", 1)

@@ -120,7 +120,7 @@ LOGGING = {
             'format': '[%(levelname)s][%(asctime)s][%(filename)s:%(lineno)d]%(message)s'
         },
         'money': {
-            'format': '%(asctime)s|%(message)s'
+            'format': '%(message)s'
         }
     },
     'filters': {  # 定义日志的过滤器

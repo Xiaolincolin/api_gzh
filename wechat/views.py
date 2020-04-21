@@ -130,14 +130,13 @@ class Wechat(View):
                         if eventkey:
                             master = str(eventkey).replace("qrscene_", "")
                             if master != apprentice:
-                                master_md5 = self.get_md5(master)
                                 apprentice_md5 = self.get_md5(apprentice)
                                 select_sql = "SELECT `master` from wechat_apprentice where `master`='{m}' and Apprentice='{a}'".format(
-                                    m=master_md5, a=apprentice_md5)
+                                    m=master, a=apprentice_md5)
                                 info = self.select_openid(select_sql)
                                 if not info:
                                     insert_sql = "insert into wechat_apprentice(Apprentice,`master`,add_time) VALUES(%s,%s,NOW())"
-                                    self.insert_openid(insert_sql, [apprentice_md5, master_md5])
+                                    self.insert_openid(insert_sql, [apprentice_md5, master])
 
                         response_dict["xml"][
                             "Content"] = "感谢您关注球球趣玩！\n1.开始刷广告请点击教程\n2.查看收益，提现请点击赚钱\n3.上传收付款方法请发送收付款到公众号"
@@ -1180,7 +1179,7 @@ class Qrcode(View):
                                     "qrcode_url": qrcode_url
                                 })
                             else:
-                                return HttpResponse("获取分享码失败,保存分享码错误")
+                                return HttpResponse("获取分享码失败")
                     else:
                         return HttpResponse("获取分享码失败")
                 else:
@@ -1196,13 +1195,11 @@ class Qrcode(View):
         response = requests.get(access_token_url)
         if response.status_code == 200:
             token_json = response.json()
-            logger_qrcode.info(token_json)
             if token_json:
                 token = token_json.get("access_token", "")
                 if token:
                     qrcode_url = self.get_qrcode(token, myopenid)
                     if qrcode_url:
-                        logger_qrcode.info(qrcode_url)
                         # 保存到服务器
                         self.save_img(qrcode_url, myopenid)
                         # 保存到数据库
@@ -1232,7 +1229,6 @@ class Qrcode(View):
             res = requests.post(url=tick_url, json=data)
             if res.status_code == 200:
                 tick_json = res.json()
-                print(tick_json)
                 if tick_json:
                     tick = tick_json.get("ticket")
                     if tick:

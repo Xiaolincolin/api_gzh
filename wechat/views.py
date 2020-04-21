@@ -1028,7 +1028,7 @@ class Weteam(View):
         wid = rdc_local.get("wid")
         Authorization = str(Authorization, encoding='utf-8')
         wid = str(wid, encoding='utf-8')
-        url = "http://134.175.73.113:8080/sendText"
+        url = "http://xingshenapi.com/sendText"
         headers = {
             'Content-Type': 'application/json',
             'Authorization': Authorization

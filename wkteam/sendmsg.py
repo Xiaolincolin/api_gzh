@@ -11,7 +11,7 @@ import requests
 class Pyq:
     def set_http_address(self):
         Authorization = rdc_local.get("Authorization")
-        url = "http://134.175.73.113:8080/setHttpCallbackUrl"
+        url = "http://xingshenapi.com/setHttpCallbackUrl"
         headers = {
             'Content-Type': 'application/json',
             'Authorization': Authorization
@@ -24,7 +24,7 @@ class Pyq:
             print(res.json())
 
     def secondLogin(self, Authorization):
-        url = "http://134.175.73.113:8080/secondLogin"
+        url = "http://xingshenapi.com/secondLogin"
         headers = {
             'Content-Type': 'application/json',
             'Authorization': Authorization

@@ -14,7 +14,7 @@ import hashlib
 import logging
 from pyzbar.pyzbar import decode
 
-rdp_local = redis.ConnectionPool(host='127.0.0.1', port=6379, db=0)  # 默认db=0，测试使用db=1
+rdp_local = redis.ConnectionPool(host='127.0.0.1', port=6379, db=0, decode_responses=True)  # 默认db=0，测试使用db=1
 rdc_local = redis.StrictRedis(connection_pool=rdp_local)
 # redis_conn = redis.Redis(connection_pool=redis.ConnectionPool(host='127.0.0.1', port=6379, db=2))
 from django.db import connection
@@ -54,8 +54,10 @@ class Wechat(View):
                 else:
                     return JsonResponse({"msg": "fail"}, json_dumps_params={'ensure_ascii': False})
             else:
-                url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx96f147a2125ebb3a&secret=7941e17fbb775fee73d2dfbffd5c4dd3&code={code}&grant_type=authorization_code".format(
-                    code=code)
+                appid = rdc_local.get("appid")
+                secret = rdc_local.get("secret")
+                url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid={appid}&secret={secret}&code={code}&grant_type=authorization_code".format(
+                    appid=appid, secret=secret, code=code)
                 res = requests.get(url)
                 if res.status_code == 200:
                     json_data = res.json()
@@ -269,8 +271,10 @@ class Tutorial(View):
             code = request.GET.get("code")  # 获取随机字符串
 
             if code:
-                url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx96f147a2125ebb3a&secret=7941e17fbb775fee73d2dfbffd5c4dd3&code={code}&grant_type=authorization_code".format(
-                    code=code)
+                appid = rdc_local.get("appid")
+                secret = rdc_local.get("secret")
+                url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid={appid}&secret={secret}&code={code}&grant_type=authorization_code".format(
+                    appid=appid, secret=secret, code=code)
                 res = requests.get(url)
                 if res.status_code == 200:
                     json_data = res.json()
@@ -300,8 +304,10 @@ class Index(View):
         try:
             code = request.GET.get("code")  # 获取随机字符串
             if code:
-                url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx96f147a2125ebb3a&secret=7941e17fbb775fee73d2dfbffd5c4dd3&code={code}&grant_type=authorization_code".format(
-                    code=code)
+                appid = rdc_local.get("appid")
+                secret = rdc_local.get("secret")
+                url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid={appid}&secret={secret}&code={code}&grant_type=authorization_code".format(
+                    appid=appid, secret=secret, code=code)
                 res = requests.get(url)
                 if res.status_code == 200:
                     json_data = res.json()
@@ -343,7 +349,6 @@ class Index(View):
                                 if not name:
                                     name = per[0]
                                 ad_type = per[3]
-
 
                                 if hl <= 7:
                                     if per not in history_page:
@@ -437,8 +442,10 @@ class CashWithdrawal(View):
         try:
             code = request.GET.get("code")  # 获取随机字符串
             if code:
-                url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx96f147a2125ebb3a&secret=7941e17fbb775fee73d2dfbffd5c4dd3&code={code}&grant_type=authorization_code".format(
-                    code=code)
+                appid = rdc_local.get("appid")
+                secret = rdc_local.get("secret")
+                url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid={appid}&secret={secret}&code={code}&grant_type=authorization_code".format(
+                    appid=appid, secret=secret, code=code)
                 res = requests.get(url)
                 if res.status_code == 200:
                     json_data = res.json()
@@ -585,7 +592,7 @@ class Launch(View):
                 if ql_code:
                     # 判断是否上传收款码
                     order_sql = "SELECT openid,`status` from wechat_order where openid='{oid}'  and `status`!=1 and add_time like '{ts}%' ORDER BY add_time desc".format(
-                        oid=openid,ts=ts)
+                        oid=openid, ts=ts)
                     order_result = self.select_order(order_sql)
                     order_status = 0
                     if order_result:
@@ -653,8 +660,8 @@ class Launch(View):
                                                     # 订单生成成功
                                                     data["code"] = "1"
                                                     data["msg"] = "提现成功"
-                                                    data["withdrawable"] = str(round(withdrawable - money,2))
-                                                    data["alread"] = str(round(alread + money,2))
+                                                    data["withdrawable"] = str(round(withdrawable - money, 2))
+                                                    data["alread"] = str(round(alread + money, 2))
                                                     msg = openid + " " + str(orderid) + " " + str(money) + " 提现发起成功"
                                                     logger_money.info(msg)
                                                     if str(order_status) == "3":
@@ -885,8 +892,10 @@ class BeginMakeMoney(View):
         try:
             code = request.GET.get("code")  # 获取随机字符串
             if code:
-                url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx96f147a2125ebb3a&secret=7941e17fbb775fee73d2dfbffd5c4dd3&code={code}&grant_type=authorization_code".format(
-                    code=code)
+                appid = rdc_local.get("appid")
+                secret = rdc_local.get("secret")
+                url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid={appid}&secret={secret}&code={code}&grant_type=authorization_code".format(
+                    appid=appid, secret=secret, code=code)
                 res = requests.get(url)
                 if res.status_code == 200:
                     json_data = res.json()
@@ -1026,8 +1035,10 @@ class Weteam(View):
     def sendMsg(self, wcId, content):
         Authorization = rdc_local.get("Authorization")
         wid = rdc_local.get("wid")
-        Authorization = str(Authorization, encoding='utf-8')
-        wid = str(wid, encoding='utf-8')
+        if not isinstance(Authorization, str):
+            Authorization = str(Authorization, encoding='utf-8')
+        if not isinstance(wid, str):
+            wid = str(wid, encoding='utf-8')
         url = "http://xingshenapi.com/sendText"
         headers = {
             'Content-Type': 'application/json',
@@ -1083,8 +1094,10 @@ class Withdraw(View):
             code = request.GET.get("code")  # 获取随机字符串
 
             if code:
-                url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx96f147a2125ebb3a&secret=7941e17fbb775fee73d2dfbffd5c4dd3&code={code}&grant_type=authorization_code".format(
-                    code=code)
+                appid = rdc_local.get("appid")
+                secret = rdc_local.get("secret")
+                url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid={appid}&secret={secret}&code={code}&grant_type=authorization_code".format(
+                    appid=appid, secret=secret, code=code)
                 res = requests.get(url)
                 if res.status_code == 200:
                     json_data = res.json()
@@ -1148,5 +1161,3 @@ class Test(View):
     def get(self, request):
         # return render(request,"tx.html")
         return HttpResponse("功能开发中")
-
-

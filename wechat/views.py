@@ -1189,19 +1189,20 @@ class Qrcode(View):
             print(e)
 
     def save_qrcode(self, appid, secret, myopenid):
+        logger_qrcode = logging.getLogger('baidu')
         # 上限制两千次，单次有效两小时，暂时先用一次调一次
         access_token_url = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={appid}&secret={secret}'.format(
             appid=appid, secret=secret)
         response = requests.get(access_token_url)
         if response.status_code == 200:
             token_json = response.json()
-            print(token_json)
+            logger_qrcode.info(token_json)
             if token_json:
                 token = token_json.get("access_token", "")
                 if token:
                     qrcode_url = self.get_qrcode(token, myopenid)
                     if qrcode_url:
-                        print(qrcode_url)
+                        logger_qrcode.info(qrcode_url)
                         # 保存到服务器
                         self.save_img(qrcode_url, myopenid)
                         # 保存到数据库

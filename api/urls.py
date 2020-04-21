@@ -21,7 +21,7 @@ from django.views.generic import TemplateView
 from api.settings import MEDIA_ROOT
 from django.views.static import serve
 from wechat.views import Wechat, Weteam, Tutorial, \
-    Index, BeginMakeMoney, CashWithdrawal, Launch, UploadImage, Test, Withdraw,Video,Qrcode
+    Index, BeginMakeMoney, CashWithdrawal, Launch, UploadImage, Test, Withdraw, Video, Qrcode, MyApprentice
 from baidu.views import Baidu
 
 urlpatterns = [
@@ -44,4 +44,5 @@ urlpatterns = [
     url(r'^video', Video.as_view(), name="test"),
     url(r'^bd', csrf_exempt(Baidu.as_view()), name="bd"),
     url(r'^qrcode', csrf_exempt(Qrcode.as_view()), name="qr"),
+    url(r'^apprentice', csrf_exempt(MyApprentice.as_view()), name="myapprent"),
 ]

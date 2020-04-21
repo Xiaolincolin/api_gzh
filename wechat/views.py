@@ -134,6 +134,8 @@ class Wechat(View):
                                 select_sql = "SELECT `master` from wechat_apprentice where `master`='{m}' and Apprentice='{a}'".format(
                                     m=master, a=apprentice_md5)
                                 info = self.select_openid(select_sql)
+                                # 待实现 查询历史记录
+                                select_history = "SELECT a.amount FROM wechat_related as r,wechat_account_api as a where r.wx_id=a.wx_id and openid='{openid}'".format(openid=apprentice_md5)
                                 if not info:
                                     insert_sql = "insert into wechat_apprentice(Apprentice,`master`,add_time) VALUES(%s,%s,NOW())"
                                     self.insert_openid(insert_sql, [apprentice_md5, master])
@@ -811,6 +813,7 @@ class Launch(View):
             return 0
 
 
+
 class UploadImage(View):
     # 上传图片
     def get(self, request, code):
@@ -1296,3 +1299,7 @@ class Test(View):
     def get(self, request):
         # return render(request,"tx.html")
         return HttpResponse("功能开发中")
+
+class MyApprentice(View):
+    def get(self,request):
+        return render(request,'myapprentice.html')

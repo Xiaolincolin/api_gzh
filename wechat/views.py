@@ -54,7 +54,7 @@ class Wechat(View):
                 else:
                     return JsonResponse({"msg": "fail"}, json_dumps_params={'ensure_ascii': False})
             else:
-                url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx96f147a2125ebb3a&secret=a063a2cfbdbe0a948b2af3cbaa62e45d&code={code}&grant_type=authorization_code".format(
+                url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx96f147a2125ebb3a&secret=7941e17fbb775fee73d2dfbffd5c4dd3&code={code}&grant_type=authorization_code".format(
                     code=code)
                 res = requests.get(url)
                 if res.status_code == 200:
@@ -269,7 +269,7 @@ class Tutorial(View):
             code = request.GET.get("code")  # 获取随机字符串
 
             if code:
-                url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx96f147a2125ebb3a&secret=a063a2cfbdbe0a948b2af3cbaa62e45d&code={code}&grant_type=authorization_code".format(
+                url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx96f147a2125ebb3a&secret=7941e17fbb775fee73d2dfbffd5c4dd3&code={code}&grant_type=authorization_code".format(
                     code=code)
                 res = requests.get(url)
                 if res.status_code == 200:
@@ -300,7 +300,7 @@ class Index(View):
         try:
             code = request.GET.get("code")  # 获取随机字符串
             if code:
-                url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx96f147a2125ebb3a&secret=a063a2cfbdbe0a948b2af3cbaa62e45d&code={code}&grant_type=authorization_code".format(
+                url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx96f147a2125ebb3a&secret=7941e17fbb775fee73d2dfbffd5c4dd3&code={code}&grant_type=authorization_code".format(
                     code=code)
                 res = requests.get(url)
                 if res.status_code == 200:
@@ -437,7 +437,7 @@ class CashWithdrawal(View):
         try:
             code = request.GET.get("code")  # 获取随机字符串
             if code:
-                url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx96f147a2125ebb3a&secret=a063a2cfbdbe0a948b2af3cbaa62e45d&code={code}&grant_type=authorization_code".format(
+                url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx96f147a2125ebb3a&secret=7941e17fbb775fee73d2dfbffd5c4dd3&code={code}&grant_type=authorization_code".format(
                     code=code)
                 res = requests.get(url)
                 if res.status_code == 200:
@@ -885,7 +885,7 @@ class BeginMakeMoney(View):
         try:
             code = request.GET.get("code")  # 获取随机字符串
             if code:
-                url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx96f147a2125ebb3a&secret=a063a2cfbdbe0a948b2af3cbaa62e45d&code={code}&grant_type=authorization_code".format(
+                url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx96f147a2125ebb3a&secret=7941e17fbb775fee73d2dfbffd5c4dd3&code={code}&grant_type=authorization_code".format(
                     code=code)
                 res = requests.get(url)
                 if res.status_code == 200:
@@ -1083,7 +1083,7 @@ class Withdraw(View):
             code = request.GET.get("code")  # 获取随机字符串
 
             if code:
-                url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx96f147a2125ebb3a&secret=a063a2cfbdbe0a948b2af3cbaa62e45d&code={code}&grant_type=authorization_code".format(
+                url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx96f147a2125ebb3a&secret=7941e17fbb775fee73d2dfbffd5c4dd3&code={code}&grant_type=authorization_code".format(
                     code=code)
                 res = requests.get(url)
                 if res.status_code == 200:

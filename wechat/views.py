@@ -1152,6 +1152,141 @@ class Withdraw(View):
             return 0
 
 
+class Qrcode(View):
+    def get(self, request):
+        try:
+            code = request.GET.get("code")  # 获取随机字符串
+
+            if code:
+                appid = rdc_local.get("appid")
+                secret = rdc_local.get("secret")
+                url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid={appid}&secret={secret}&code={code}&grant_type=authorization_code".format(
+                    appid=appid, secret=secret, code=code)
+                res = requests.get(url)
+                if res.status_code == 200:
+                    json_data = res.json()
+                    if json_data:
+                        openid = json_data.get("openid", "")
+                        if openid:
+                            myopenid = self.get_md5(openid)
+                            select_sql = "select id from wechat_qrcode where openid=%s" % myopenid
+                            select_result = self.select_openid(select_sql)
+                            result = ""
+                            if not select_result:
+                                result = self.save_qrcode(appid, secret, myopenid)
+                            if result:
+                                qrcode_url = 'http://wxapi.adinsights.cn/media/qrcode/' + myopenid + '.png'
+                                return render(request, "qrcode.html", {
+                                    "qrcode_url": qrcode_url
+                                })
+                            else:
+                                return HttpResponse("获取分享码失败")
+                    else:
+                        return HttpResponse("获取分享码失败")
+                else:
+                    return HttpResponse("获取分享码失败")
+        except Exception as e:
+            print(e)
+
+    def save_qrcode(self, appid, secret, myopenid):
+        # 上限制两千次，单次有效两小时，暂时先用一次调一次
+        access_token_url = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={appid}&secret={secret}'.format(
+            appid=appid, secret=secret)
+        response = requests.get(access_token_url)
+        if response.status_code == 200:
+            token_json = response.json()
+            if token_json:
+                token = token_json.get("access_token", "")
+                if token:
+                    qrcode_url = self.get_qrcode(token, myopenid)
+                    if qrcode_url:
+                        # 保存到服务器
+                        self.save_img(qrcode_url, myopenid)
+                        # 保存到数据库
+                        qrcode_sql = "insert into wechat_qrcode(openid,add_time) values(%s,NOW())"
+                        self.insert_openid(qrcode_sql, [myopenid])
+                        return True
+                    else:
+                        return False
+                else:
+                    return False
+            else:
+                return False
+        else:
+            return False
+
+    def get_qrcode(self, token, myopenid):
+        try:
+            tick_url = "https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=%s" % token
+            data = {
+                "action_name": "QR_LIMIT_STR_SCENE",
+                "action_info": {
+                    "scene": {
+                        "scene_str": myopenid
+                    }
+                }
+            }
+            res = requests.post(url=tick_url, json=data)
+            if res.status_code == 200:
+                tick_json = res.json()
+                if tick_json:
+                    tick = tick_json.get("ticket")
+                    if tick:
+                        qrcode_url = "https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=" + str(tick)
+                        return qrcode_url
+                    else:
+                        return False
+                else:
+                    return False
+            else:
+                return False
+        except Exception as e:
+            print(e)
+            return False
+
+    def get_md5(self, strs):
+        m1 = hashlib.md5()
+        m1.update(strs.encode("utf-8"))
+        strs_md5 = m1.hexdigest()
+        return strs_md5
+
+    def save_img(self, url, openid):
+        # 保存收款码并且判断是不是收款码
+        try:
+            res = requests.get(url)
+            if res.status_code == 200:
+                img = res.content
+                file_name = str(MEDIA_ROOT) + "/qrcode/" + str(openid) + ".png"
+                with open(file_name, 'wb+') as f:
+                    f.write(img)
+                return True
+        except Exception as e:
+            print("判断收款码报错", e)
+            return False
+
+    def select_openid(self, sql):
+        try:
+            cursor = connection.cursor()
+            info = cursor.execute(sql)
+            cursor.close()
+            return info
+        except Exception as e:
+            print(e)
+            print("查询openid有误")
+            return 0
+
+    def insert_openid(self, sql, param):
+        try:
+            cursor = connection.cursor()
+            info = cursor.execute(sql, param)
+            cursor.close()
+            return info
+        except Exception as e:
+            print(e)
+            print("插入数据有误")
+            return 0
+
+
 class Video(View):
     def get(self, request):
         return render(request, "video.html")

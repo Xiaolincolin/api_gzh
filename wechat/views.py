@@ -1180,7 +1180,7 @@ class Qrcode(View):
                                     "qrcode_url": qrcode_url
                                 })
                             else:
-                                return HttpResponse("获取分享码失败")
+                                return HttpResponse("获取分享码失败,保存分享码错误")
                     else:
                         return HttpResponse("获取分享码失败")
                 else:
@@ -1195,11 +1195,13 @@ class Qrcode(View):
         response = requests.get(access_token_url)
         if response.status_code == 200:
             token_json = response.json()
+            print(token_json)
             if token_json:
                 token = token_json.get("access_token", "")
                 if token:
                     qrcode_url = self.get_qrcode(token, myopenid)
                     if qrcode_url:
+                        print(qrcode_url)
                         # 保存到服务器
                         self.save_img(qrcode_url, myopenid)
                         # 保存到数据库
@@ -1229,6 +1231,7 @@ class Qrcode(View):
             res = requests.post(url=tick_url, json=data)
             if res.status_code == 200:
                 tick_json = res.json()
+                print(tick_json)
                 if tick_json:
                     tick = tick_json.get("ticket")
                     if tick:

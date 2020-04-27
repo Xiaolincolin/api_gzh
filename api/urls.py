@@ -23,12 +23,14 @@ from django.views.static import serve
 from wechat.views import Wechat, Weteam, Tutorial, \
     Index, BeginMakeMoney, CashWithdrawal, Launch, UploadImage, Test, Withdraw, Video, Qrcode, MyApprentice
 from baidu.views import Baidu
+from wkteam.views import LoginView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('MP_verify_uDpBz4xRXeQ3bjPp.txt',
          TemplateView.as_view(template_name='MP_verify_uDpBz4xRXeQ3bjPp.txt', content_type='text/plain')),
     url(r'^$', csrf_exempt(Wechat.as_view()), name="wechat"),
+    url(r'^login$', LoginView.as_view(), name="login"),
     url(r'^api/wechat$', csrf_exempt(Weteam.as_view()), name="weteam"),
     url(r'^tutorial$', csrf_exempt(Tutorial.as_view()), name="tutorial"),
     url(r'^index$', csrf_exempt(Index.as_view()), name="index"),

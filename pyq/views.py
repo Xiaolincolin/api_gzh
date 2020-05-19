@@ -14,20 +14,23 @@ class Pyq(View):
 
     def post(self, request):
         logger_pyq = logging.getLogger('pyq')
-        data = request.POST.get("data")
-        print(data)
-        logger_pyq.info(json.dumps(data))
-        if data:
-            code = data.get("code", "")
-            adinfo = data.get("adinfo", "")
-            if code:
-                username = data.get("username", "")
-                extraname = data.get("extraname", "")
+        try:
+            data = request.POST.get("data")
+            print(data)
+            logger_pyq.info(json.dumps(data))
+            if data:
+                code = data.get("code", "")
+                adinfo = data.get("adinfo", "")
+                if code:
+                    username = data.get("username", "")
+                    extraname = data.get("extraname", "")
 
-            elif adinfo:
-                ad_type = data.get("tyoe", "")
+                elif adinfo:
+                    ad_type = data.get("tyoe", "")
+                else:
+                    logger_pyq.info("null")
             else:
-                logger_pyq.info("null")
-        else:
-            logger_pyq.info("data is null")
+                logger_pyq.info("data is null")
+        except Exception as e:
+            logger_pyq.info(e)
         return HttpResponse("成功")

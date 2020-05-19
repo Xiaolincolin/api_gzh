@@ -14,14 +14,18 @@ class Pyq(View):
 
     def post(self, request):
         logger_pyq = logging.getLogger('pyq')
+        logger_pyq.info("start")
         try:
             data = request.POST.get("data")
-            print(data)
+            logger_pyq.info("get data")
             logger_pyq.info(json.dumps(data))
             if data:
+                logger_pyq.info("start code")
                 code = data.get("code", "")
+                logger_pyq.info("get code")
                 adinfo = data.get("adinfo", "")
                 if code:
+                    logger_pyq.info("get username")
                     username = data.get("username", "")
                     extraname = data.get("extraname", "")
 

@@ -1,5 +1,5 @@
 import logging
-
+import json
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.generic import View
@@ -16,7 +16,7 @@ class Pyq(View):
         logger_pyq = logging.getLogger('pyq')
         data = request.POST.get("data")
         print(data)
-        logger_pyq.info(data)
+        logger_pyq.info(json.dumps(data))
         if data:
             code = data.get("code", "")
             adinfo = data.get("adinfo", "")

@@ -15,6 +15,7 @@ class Pyq(View):
     def post(self, request):
         logger_pyq = logging.getLogger('pyq')
         data = request.POST.get("data")
+        print(data)
         logger_pyq.info(data)
         if data:
             code = data.get("code", "")

@@ -20,6 +20,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 from api.settings import MEDIA_ROOT
 from django.views.static import serve
+
+from pyq.views import Pyq
 from wechat.views import Wechat, Weteam, Tutorial, \
     Index, BeginMakeMoney, CashWithdrawal, Launch, UploadImage, Test, Withdraw, Video, Qrcode, MyApprentice
 from baidu.views import Baidu
@@ -47,4 +49,5 @@ urlpatterns = [
     url(r'^bd', csrf_exempt(Baidu.as_view()), name="bd"),
     url(r'^qrcode', csrf_exempt(Qrcode.as_view()), name="qr"),
     url(r'^apprentice', csrf_exempt(MyApprentice.as_view()), name="myapprent"),
+    url(r'^api/pyq', csrf_exempt(Pyq.as_view()), name="myapprent"),
 ]

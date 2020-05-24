@@ -16,8 +16,8 @@ MYSQL_DB_NAME = "adi"
 MYSQL_DB_USER = "root"
 MYSQL_DB_PWD = "timt!m"
 # MYSQL_DB_PWD = "xiaolin"
-# MYSQL_DB_HOST = "127.0.0.1"
-MYSQL_DB_HOST = "39.104.143.109"
+MYSQL_DB_HOST = "127.0.0.1"
+# MYSQL_DB_HOST = "39.104.143.109"
 
 pool = PooledDB(pymysql, host=MYSQL_DB_HOST, user=MYSQL_DB_USER, passwd=MYSQL_DB_PWD, db='adi', port=3306,
                 charset="utf8")

@@ -584,7 +584,7 @@ class Launch(View):
         data = {}
         today = (datetime.date.today()).strftime("%d")
         ts = (datetime.date.today()).strftime("%Y-%m-%d")
-        if str(today) == "15" or str(today) == "16":
+        if str(today) == "1" or str(today) == "12":
             if openid:
                 # openid不存在
                 qr_sql = "select openid from wechat_pay_img where openid='{openid}'".format(
@@ -741,8 +741,8 @@ class Launch(View):
                 logger_money.info(msg)
         else:
             data["code"] = 0
-            data["msg"] = "只能每月15或者16号发起提现"
-            msg = openid + " " + str(money) + " " + "非15或者16号发起"
+            data["msg"] = "只能每月1号或者2号发起提现"
+            msg = openid + " " + str(money) + " " + "非1或者2号发起"
             logger_money.info(msg)
 
         return JsonResponse(data, json_dumps_params={'ensure_ascii': False})
